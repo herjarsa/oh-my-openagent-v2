@@ -38,7 +38,7 @@
   ],
   "bin": {
     "oh-my-openagent-v2": "bin/oh-my-opencode.js",
-    "omo-agent-toolkit": "bin/oh-my-opencode.js",
+    "omo-agent-toolkit": "bin/oh-my-opencode.js"
   },
   "files": [
     "THIRD-PARTY-NOTICES.md",
