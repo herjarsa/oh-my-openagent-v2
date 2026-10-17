@@ -65,3 +65,12 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Write job summary
+        if: always()
+        run: |
+          {
+            echo "## Fork publish"
+            echo ""
+            echo "Published `@herjarsa/oh-my-openagent-v2` from tag `${GITHUB_REF_NAME}`."
+          } >> "$GITHUB_STEP_SUMMARY"
+

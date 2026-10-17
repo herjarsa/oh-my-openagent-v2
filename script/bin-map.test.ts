@@ -19,9 +19,9 @@ describe("root package.json bin map", () => {
     expect(packageJson.bin["omo-agent-toolkit"]).toBe("bin/oh-my-opencode.js");
   });
 
-  test("#given the renamed bin map #when inspecting entries #then the four surviving aliases keep the shared entry", () => {
+  test("#given the renamed bin map #when inspecting entries #then the fork aliases keep the shared entry", () => {
     // given
-    const survivingAliases = ["oh-my-opencode", "oh-my-openagent", "lazycodex", "lazycodex-ai"];
+    const survivingAliases = ["oh-my-openagent-v2", "omo-agent-toolkit"];
 
     // then
     for (const alias of survivingAliases) {
