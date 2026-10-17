@@ -1,11 +1,13 @@
 name: publish-fork
 
 # Lean npm publish for the herjarsa fork (@herjarsa/oh-my-openagent-v2).
-# Manual dispatch only. No platform launchers, no lazycodex alias,
-# no marketplace sync, no auto-merge. Requires repo secret NPM_TOKEN
-# (classic token with publish rights on @herjarsa/oh-my-openagent-v2).
+# Release flow: push a tag like v2-0.1.0 (no merge to dev needed).
+# Manual dispatch also supported once this file exists on the default branch.
+# Requires repo secret NPM_TOKEN (classic token with publish rights).
 
 on:
+  push:
+    tags: ["v2-*"]
   workflow_dispatch:
     inputs:
       bump:
@@ -34,21 +36,30 @@ jobs:
           bun-version: 1.4.0
       - name: Install
         run: bun install
+      - name: Resolve version
+        run: |
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            echo "PKG_VERSION=${GITHUB_REF_NAME#v2-}" >> "$GITHUB_ENV"
+          elif [ -n "${{ inputs.version }}" ]; then
+            echo "PKG_VERSION=${{ inputs.version }}" >> "$GITHUB_ENV"
+          else
+            echo "PKG_VERSION=bump:${{ inputs.bump }}" >> "$GITHUB_ENV"
+          fi
+      - name: Apply version
+        run: |
+          set -euo pipefail
+          if [ "${PKG_VERSION#bump:}" != "${PKG_VERSION}" ]; then
+            npm version "${PKG_VERSION#bump:}" --no-git-tag-version
+          else
+            CURRENT=$(node -p "require('./package.json').version")
+            if [ "${CURRENT}" != "${PKG_VERSION}" ]; then echo "mismatch: want ${PKG_VERSION}, package.json has ${CURRENT}"; exit 1; fi
+          fi
       - name: Typecheck
         run: bun run typecheck
       - name: Tests
         run: bun test
       - name: Build
         run: bun run build
-      - name: Bump version and commit
-        run: |
-          set -euo pipefail
-          npm version "${{ inputs.version || inputs.bump }}" --no-git-tag-version
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add package.json bun.lock
-          git commit -m "release(fork)" || echo nothing-to-commit
-          git push origin HEAD:${{ github.ref_name }}
       - name: Publish to npm
         run: npm publish --access public
         env:
