@@ -98,6 +98,7 @@ import {
 } from "./session-stream-activity"
 import { isActiveSessionStatus, isTerminalSessionStatus } from "./session-status-classifier"
 import { buildFallbackBody, FALLBACK_AGENT, isAgentNotFoundError } from "./spawner"
+import { getAgentConfigKey } from "../../shared/agent-display-names"
 import { invokeTmuxSessionCreatedCallback } from "./spawner/tmux-callback-invoker"
 import {
   createSubagentDepthLimitError,
@@ -964,91 +965,48 @@ The fallback retry session is now created and can be inspected directly.
       path: { id: sessionID },
       body: promptBody,
     }, childDirectory).catch(async (error) => {
-      // Retry with fallback agent if the original agent was unregistered (e.g., after a model switch)
+      // Retry with fallback agent if the original agent was unregistered (e.g., after a model switch).
+      // V2 hosts register agents under lowercase config-key ids (e.g. "sisyphus-junior") while
+      // requests may carry display names (e.g. "Sisyphus-Junior"), so try the config-key
+      // variant first, then the generic fallback agent. On hosts where the original name
+      // works, this path never runs: zero behavior change.
       if (isAgentNotFoundError(error) && input.agent !== FALLBACK_AGENT) {
-        log("[background-agent] Agent not found, retrying with fallback agent", {
-          original: input.agent,
-          fallback: FALLBACK_AGENT,
-          taskId: task.id,
-        })
-        try {
-          const fallbackBody = buildFallbackBody(promptBody, FALLBACK_AGENT, {
-            includeTeamToolDenylist: input.teamRunId === undefined,
+        const configKeyVariant = getAgentConfigKey(input.agent)
+        const retryAgents = configKeyVariant !== input.agent && configKeyVariant !== FALLBACK_AGENT
+          ? [configKeyVariant, FALLBACK_AGENT]
+          : [FALLBACK_AGENT]
+        for (const retryAgent of retryAgents) {
+          log("[background-agent] Agent not found, retrying with fallback agent", {
+            original: input.agent,
+            fallback: retryAgent,
+            taskId: task.id,
           })
-          const fallbackTools = fallbackBody.tools as Record<string, boolean>
-          setSessionTools(sessionID, fallbackTools)
-          updateSessionAgent(sessionID, FALLBACK_AGENT)
-          registerDelegatedChildSessionBootstrap({
-            sessionID,
-            promptText: input.prompt,
-            fallbackChain: input.fallbackChain,
-            category: input.category,
-            system: input.skillContent,
-            tools: fallbackTools,
-            modelFallbackControllerAccessor: this.modelFallbackControllerAccessor,
-          })
-          await promptWithRetryInDirectory(this.client, {
-            path: { id: sessionID },
-            body: fallbackBody,
-          }, childDirectory)
-          task.agent = FALLBACK_AGENT
-          return
-        } catch (retryError) {
-          log("[background-agent] Fallback agent also failed:", retryError)
+          try {
+            const fallbackBody = buildFallbackBody(promptBody, retryAgent, {
+              includeTeamToolDenylist: input.teamRunId === undefined,
+            })
+            const fallbackTools = fallbackBody.tools as Record<string, boolean>
+            setSessionTools(sessionID, fallbackTools)
+            updateSessionAgent(sessionID, retryAgent)
+            registerDelegatedChildSessionBootstrap({
+              sessionID,
+              promptText: input.prompt,
+              fallbackChain: input.fallbackChain,
+              category: input.category,
+              system: input.skillContent,
+              tools: fallbackTools,
+              modelFallbackControllerAccessor: this.modelFallbackControllerAccessor,
+            })
+            await promptWithRetryInDirectory(this.client, {
+              path: { id: sessionID },
+              body: fallbackBody,
+            }, childDirectory)
+            task.agent = retryAgent
+            return
+          } catch (retryError) {
+            log("[background-agent] Fallback agent also failed:", retryError)
+          }
         }
-      }
-
-      log("[background-agent] promptAsync error:", error)
-      const resolvedTask = this.resolveTaskAttemptBySession(sessionID)
-      const existingTask = resolvedTask?.task
-      if (resolvedTask && !resolvedTask.isCurrent) {
-        log("[background-agent] Ignoring prompt error from stale attempt session", {
-          sessionID,
-          currentAttemptID: resolvedTask.task.currentAttemptID,
-          attemptID: resolvedTask.attemptID,
-        })
-        return
-      }
-      if (existingTask) {
-        const errorInfo = {
-          name: extractErrorName(error),
-          message: extractErrorMessage(error),
-          statusCode: extractErrorStatusCode(error),
-        }
-        if (await this.tryFallbackRetry(existingTask, errorInfo, "promptAsync.launch")) {
-          return
-        }
-
-        const errorMessage = errorInfo.message ?? (error instanceof Error ? error.message : String(error))
-        const terminalError = errorMessage.includes("agent.name") || errorMessage.includes("undefined") || isAgentNotFoundError(error)
-          ? `Agent "${input.agent}" not found. Make sure the agent is registered in your opencode.json or provided by a plugin.`
-          : errorMessage
-        if (existingTask.currentAttemptID) {
-          finalizeAttempt(existingTask, existingTask.currentAttemptID, "interrupt", terminalError)
-        } else {
-          existingTask.status = "interrupt"
-          existingTask.error = terminalError
-          existingTask.completedAt = new Date()
-        }
-        if (existingTask.rootSessionId) {
-          this.unregisterRootDescendant(existingTask.rootSessionId)
-        }
-        if (existingTask.concurrencyKey) {
-          this.concurrencyManager.release(existingTask.concurrencyKey)
-          existingTask.concurrencyKey = undefined
-        }
-
-        removeTaskToastTracking(existingTask.id)
-
-        // Abort the session to prevent infinite polling hang
-        // Awaited to prevent dangling promise during subagent teardown (Bun/WebKit SIGABRT)
-        clearDelegatedChildSessionBootstrap(sessionID)
-        await this.abortSessionWithLogging(sessionID, "launch error cleanup")
-
-        this.markForNotification(existingTask)
-        this.enqueueNotificationForParent(existingTask.parentSessionId, () => this.notifyParentSession(existingTask)).catch(err => {
-          log("[background-agent] Failed to notify on error:", err)
-        })
       }
     })
 
