@@ -98,7 +98,7 @@ import {
 } from "./session-stream-activity"
 import { isActiveSessionStatus, isTerminalSessionStatus } from "./session-status-classifier"
 import { buildFallbackBody, FALLBACK_AGENT, isAgentNotFoundError } from "./spawner"
-import { getAgentConfigKey } from "../../shared/agent-display-names"
+import { getAgentConfigKey } from "../../shared/agent-display-names";
 import { invokeTmuxSessionCreatedCallback } from "./spawner/tmux-callback-invoker"
 import {
   createSubagentDepthLimitError,
@@ -1007,6 +1007,59 @@ The fallback retry session is now created and can be inspected directly.
             log("[background-agent] Fallback agent also failed:", retryError)
           }
         }
+      }
+
+      log("[background-agent] promptAsync error:", error)
+      const resolvedTask = this.resolveTaskAttemptBySession(sessionID)
+      const existingTask = resolvedTask?.task
+      if (resolvedTask && !resolvedTask.isCurrent) {
+        log("[background-agent] Ignoring prompt error from stale attempt session", {
+          sessionID,
+          currentAttemptID: resolvedTask.task.currentAttemptID,
+          attemptID: resolvedTask.attemptID,
+        })
+        return
+      }
+      if (existingTask) {
+        const errorInfo = {
+          name: extractErrorName(error),
+          message: extractErrorMessage(error),
+          statusCode: extractErrorStatusCode(error),
+        }
+        if (await this.tryFallbackRetry(existingTask, errorInfo, "promptAsync.launch")) {
+          return
+        }
+
+        const errorMessage = errorInfo.message ?? (error instanceof Error ? error.message : String(error))
+        const terminalError = errorMessage.includes("agent.name") || errorMessage.includes("undefined") || isAgentNotFoundError(error)
+          ? `Agent "${input.agent}" not found. Make sure the agent is registered in your opencode.json or provided by a plugin.`
+          : errorMessage
+        if (existingTask.currentAttemptID) {
+          finalizeAttempt(existingTask, existingTask.currentAttemptID, "interrupt", terminalError)
+        } else {
+          existingTask.status = "interrupt"
+          existingTask.error = terminalError
+          existingTask.completedAt = new Date()
+        }
+        if (existingTask.rootSessionId) {
+          this.unregisterRootDescendant(existingTask.rootSessionId)
+        }
+        if (existingTask.concurrencyKey) {
+          this.concurrencyManager.release(existingTask.concurrencyKey)
+          existingTask.concurrencyKey = undefined
+        }
+
+        removeTaskToastTracking(existingTask.id)
+
+        // Abort the session to prevent infinite polling hang
+        // Awaited to prevent dangling promise during subagent teardown (Bun/WebKit SIGABRT)
+        clearDelegatedChildSessionBootstrap(sessionID)
+        await this.abortSessionWithLogging(sessionID, "launch error cleanup")
+
+        this.markForNotification(existingTask)
+        this.enqueueNotificationForParent(existingTask.parentSessionId, () => this.notifyParentSession(existingTask)).catch(err => {
+          log("[background-agent] Failed to notify on error:", err)
+        })
       }
     })
 
