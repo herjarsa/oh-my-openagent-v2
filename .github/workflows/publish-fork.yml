@@ -1,0 +1,56 @@
+name: publish-fork
+
+# Lean npm publish for the herjarsa fork (@herjarsa/oh-my-openagent-v2).
+# Manual dispatch only. No platform launchers, no lazycodex alias,
+# no marketplace sync, no auto-merge. Requires repo secret NPM_TOKEN
+# (classic token with publish rights on @herjarsa/oh-my-openagent-v2).
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: Semver bump
+        required: true
+        type: choice
+        default: patch
+        options: [patch, minor, major]
+      version:
+        description: Explicit version (takes precedence over bump)
+        required: false
+        type: string
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
+      - name: Install
+        run: bun install
+      - name: Typecheck
+        run: bun run typecheck
+      - name: Tests
+        run: bun test
+      - name: Build
+        run: bun run build
+      - name: Bump version and commit
+        run: |
+          set -euo pipefail
+          npm version "${{ inputs.version || inputs.bump }}" --no-git-tag-version
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add package.json bun.lock
+          git commit -m "release(fork)" || echo nothing-to-commit
+          git push origin HEAD:${{ github.ref_name }}
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+

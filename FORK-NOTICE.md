@@ -10,3 +10,9 @@ This is a modified copy of `code-yeongyu/oh-my-openagent` at release
   This fork is published free of charge for non-commercial purposes only.
 - **Prior state preserved:** the pre-port fork `dev` (May 2026, incl. 22 own
   commits) is tagged `archive-dev-2026-05-pre-v2-port`.
+
+## npm (fork)
+
+Published as `@herjarsa/oh-my-openagent-v2` (own versioning from `0.1.0`).
+Replaces upstream, do not install both: same plugin id and `~/.omo` state.
+Install: `npm i -g @herjarsa/oh-my-openagent-v2` (needs `NPM_TOKEN` in CI, see `publish-fork.yml`).

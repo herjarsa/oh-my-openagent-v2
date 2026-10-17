@@ -1,7 +1,7 @@
 {
-  "name": "oh-my-opencode",
-  "version": "5.0.0-beta.90",
-  "description": "The Best AI Agent Harness - Batteries-Included OpenCode Plugin with Multi-Model Orchestration, Parallel Background Agents, and Crafted LSP/AST Tools",
+  "name": "@herjarsa/oh-my-openagent-v2",
+  "version": "0.1.0",
+  "description": "The Best AI Agent Harness - Batteries-Included OpenCode Plugin with Multi-Model Orchestration, Parallel Background Agents, and Crafted LSP/AST Tools (herjarsa fork for OpenCode 2 (oh-my-openagent-v2))",
   "main": "./dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
@@ -37,11 +37,8 @@
     "packages/omo-native"
   ],
   "bin": {
-    "oh-my-opencode": "bin/oh-my-opencode.js",
-    "oh-my-openagent": "bin/oh-my-opencode.js",
+    "oh-my-openagent-v2": "bin/oh-my-opencode.js",
     "omo-agent-toolkit": "bin/oh-my-opencode.js",
-    "lazycodex": "bin/oh-my-opencode.js",
-    "lazycodex-ai": "bin/oh-my-opencode.js"
   },
   "files": [
     "THIRD-PARTY-NOTICES.md",
