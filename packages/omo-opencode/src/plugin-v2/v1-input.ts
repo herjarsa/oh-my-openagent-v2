@@ -1,4 +1,4 @@
-import { $ } from "bun"
+import type { $ as BunShell } from "bun"
 import type { PluginInput } from "@opencode-ai/plugin"
 import type { Plugin as V2Plugin } from "@opencode/plugin"
 
@@ -14,6 +14,19 @@ export function v2LocationDirectory(ctx: V2Context): string {
 function v2LocationProject(ctx: V2Context): unknown {
   const location = (ctx as unknown as { location?: { project?: unknown } }).location
   return location?.project ?? null
+}
+
+/**
+ * Bun's shell handle without a top-level `bun` import: the dist bundle must
+ * stay loadable under plain node, so no `= globalThis.Bun` destructure may
+ * remain at module scope (see shared/dist-bundle-bun-globals.test.ts).
+ * Under the real V2 host (bun runtime) this returns the live `$`;
+ * elsewhere (plain node) it is undefined — a documented fallback, this
+ * builder never throws.
+ */
+function bunShell(): BunShell | undefined {
+  if (typeof globalThis.Bun === "undefined") return undefined
+  return globalThis.Bun.$
 }
 
 /**
@@ -40,7 +53,7 @@ export function buildV1Input(ctx: V2Context, client: unknown): PluginInput {
       },
     },
     serverUrl: undefined,
-    $,
+    $: bunShell(),
   }
   return input as unknown as PluginInput
 }

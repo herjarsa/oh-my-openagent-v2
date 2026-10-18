@@ -73,7 +73,13 @@ const builtExtensionPath = join(packageRoot, "plugin", "extensions", "omo.js")
 // and this branch rebuilds to 1,260,200 (+58,012, +4.8%), so the growth is attributable to the versions
 // and not to the build host. 1,300,000 keeps ~3.2% headroom rather than the failing value. Trimming it
 // back needs a lazy-load or split of the inlined validator, which is a refactor and not a version bump.
-const BUDGET_BYTES = 1_300_000
+// Raised 1,300,000 -> 1,640,000 for the v2-port train release (0.1.1): the last committed bundle
+// (1,297,566 bytes, Oct 3) predates the V2 bridge + compat layers entering the extension entry,
+// so any fresh build from current sources lands at ~1.59 MB - both the CI ubuntu/bun-1.4.0 build
+// (1,590,353) and a local Windows/bun-1.3.14 rebuild (1,590,525) agree to within 0.02%, i.e. this
+// is source growth, not a build-host artifact. bundle-purity stays green (no new third-party
+// dependency inlined), so 1,640,000 keeps ~3.1% headroom rather than the failing value.
+const BUDGET_BYTES = 1_640_000
 
 describe("omo-senpi bundle size budget", () => {
   it("#given the built extension #when its byte size is measured #then it stays within the documented byte budget", () => {
