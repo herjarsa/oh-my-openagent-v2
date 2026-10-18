@@ -155,7 +155,7 @@
   "license": "SUL-1.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/code-yeongyu/oh-my-openagent.git"
+    "url": "git+https://github.com/herjarsa/oh-my-openagent-v2.git"
   },
   "bugs": {
     "url": "https://github.com/code-yeongyu/oh-my-openagent/issues"
