@@ -25,6 +25,7 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 permissions:
   contents: write
+  id-token: write
 
 jobs:
   publish:
@@ -66,9 +67,11 @@ jobs:
           node-version: 24
           registry-url: "https://registry.npmjs.org"
       - name: Publish to npm
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        # OIDC trusted publishing: no NPM_TOKEN needed. setup-node wrote an
+        # .npmrc pointing at the registry; npm exchanges the GitHub OIDC
+        # token automatically. --provenance is required for trusted publishers
+        # and adds Sigstore attestation gratis.
+        run: npm publish --access public --provenance
 
       - name: Write job summary
         if: always()
