@@ -1,6 +1,5 @@
 import { afterEach, describe, expect, test } from "bun:test"
 import {
-  existsSync,
   mkdirSync,
   mkdtempSync,
   readFileSync,
@@ -119,16 +118,10 @@ function collectPackageNames(value: unknown): Set<string> {
 
 function findPackageRoot(specifier: string): string {
   const packageName = packageNameOf(specifier)
-  let current = dirname(requireFromPackage.resolve(specifier))
-  for (;;) {
-    const manifestPath = join(current, "package.json")
-    if (existsSync(manifestPath)) {
-      const manifest = JSON.parse(readFileSync(manifestPath, "utf8")) as { name?: unknown }
-      if (manifest.name === packageName) return current
-    }
-
-    const parent = dirname(current)
-    if (parent === current) throw new Error(`Could not locate package root for ${specifier}`)
-    current = parent
-  }
+  // Resolve the manifest directly instead of walking up from the entry
+  // point: install layouts (isolated store dirs, symlinked hoisting) do not
+  // guarantee the entry file lives under a same-named package directory, but
+  // the manifest lookup is layout-independent as long as the package itself
+  // resolves - which the loop above already established.
+  return dirname(requireFromPackage.resolve(`${packageName}/package.json`))
 }

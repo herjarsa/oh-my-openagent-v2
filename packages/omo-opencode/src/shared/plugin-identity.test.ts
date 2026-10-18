@@ -2,6 +2,7 @@ import { describe, it, expect } from "bun:test"
 import {
   ACCEPTED_PACKAGE_NAMES,
   CACHE_DIR_NAME,
+  FORK_PACKAGE_NAME,
   LEGACY_PLUGIN_NAME,
   LOG_FILENAME,
   PLUGIN_NAME,
@@ -47,7 +48,7 @@ describe("plugin-identity constants", () => {
       // when
 
       // then
-      expect(ACCEPTED_PACKAGE_NAMES).toEqual([PLUGIN_NAME, LEGACY_PLUGIN_NAME])
+      expect(ACCEPTED_PACKAGE_NAMES).toEqual([PLUGIN_NAME, LEGACY_PLUGIN_NAME, FORK_PACKAGE_NAME])
     })
   })
 
