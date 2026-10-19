@@ -83,9 +83,12 @@ cost if ignored).
   computer schema, `omo-native` doctor/probe/skill, `senpi-task`
   child-extension-events + SessionAncestry. Typecheck green; desktop +
   component suites green except 3 `permission-child` process-relay tests
-  (see gap). Engine binary NOT committed: fetched at install/test time
-  from upstream releases (`packages/senpi-desktop-engine/native/` is
-  gitignored); fork versions resolve to the pinned upstream release
+  (see gap). Engine binary NOT committed, except the linux-x64 test binary
+  vendored in-repo (`native/prebuilds/linux-x64/`, force-added, sha256-verified
+  against the 5.1.38 release checksums): GitHub's release-asset CDN 404s
+  sustainedly from Actions egress while working elsewhere, so CI cannot fetch
+  it. Other platforms: fetched at install/test time from upstream releases
+  (`native/` is gitignored); fork versions resolve to the pinned upstream release
   (`FORK_PINNED_ENGINE_RELEASE`) since tags `v2-*` publish npm only.
   Upstream #10439 (empty plugin + Native toast) still not backported.
 - Gap (follow-up): cross-process permission relay needs the upstream
