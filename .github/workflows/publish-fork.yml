@@ -75,10 +75,32 @@ jobs:
           fi
           chmod +x "$DEST"
           "$DEST" --selftest
-      - name: Tests
-        # Explicit ceiling (upstream CI passes --timeout too): the default 5 s
-        # kills legitimately slow engine/process tests on loaded runners.
-        run: bun test --timeout 30000
+      - name: Tests (tooling + script)
+        # Shard 1 of 3 (serial, one process each: a single whole-repo bun test
+        # OOM-kills runners now that the port added heavy process-spawning suites).
+        run: bun test --timeout 30000 script postinstall.test.ts .agents/skills/senpi-qa/scripts/resolve-evidence-dir.test.mjs
+      - name: Tests (computer-use port)
+        # Shard 2 of 3: the v2-0.1.2 port scope.
+        run: bun test --timeout 30000 packages/senpi-desktop-prelude packages/senpi-desktop-protocol packages/senpi-desktop-tool packages/senpi-desktop-engine packages/senpi-desktop-service packages/omo-config-core packages/omo-native packages/omo-senpi/src/components/computer-use packages/omo-senpi/src/bundle-size.test.ts packages/omo-senpi/src/bundle-purity.test.ts
+      - name: Tests (repo remainder)
+        # Shard 3 of 3: everything the other shards already covered stays out
+        # via --path-ignore-patterns (repeatable).
+        run: >
+          bun test --timeout 30000
+          --path-ignore-patterns 'script/**'
+          --path-ignore-patterns 'postinstall.test.ts'
+          --path-ignore-patterns '.agents/**'
+          --path-ignore-patterns 'packages/senpi-desktop-prelude/**'
+          --path-ignore-patterns 'packages/senpi-desktop-protocol/**'
+          --path-ignore-patterns 'packages/senpi-desktop-tool/**'
+          --path-ignore-patterns 'packages/senpi-desktop-engine/**'
+          --path-ignore-patterns 'packages/senpi-desktop-service/**'
+          --path-ignore-patterns 'packages/omo-config-core/**'
+          --path-ignore-patterns 'packages/omo-native/**'
+          --path-ignore-patterns 'packages/omo-senpi/src/components/computer-use/**'
+          --path-ignore-patterns 'packages/omo-senpi/src/bundle-size.test.ts'
+          --path-ignore-patterns 'packages/omo-senpi/src/bundle-purity.test.ts'
+          .
       - name: Build
         run: bun run build
       - name: Setup Node for npm publish
