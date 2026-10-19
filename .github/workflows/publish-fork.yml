@@ -84,9 +84,18 @@ jobs:
         run: bun test --timeout 30000 packages/senpi-desktop-prelude packages/senpi-desktop-protocol packages/senpi-desktop-tool packages/senpi-desktop-engine packages/senpi-desktop-service packages/omo-config-core packages/omo-native packages/omo-senpi/src/components/computer-use packages/omo-senpi/src/bundle-size.test.ts packages/omo-senpi/src/bundle-purity.test.ts
       - name: Tests (repo remainder)
         # Shard 3 of 3: everything the other shards already covered stays out
-        # via --path-ignore-patterns (repeatable).
+        # via --path-ignore-patterns (repeatable). NOTE: the CLI flag REPLACES
+        # bunfig's pathIgnorePatterns instead of adding to it, so the bunfig
+        # list is repeated here too.
         run: >
           bun test --timeout 30000
+          --path-ignore-patterns 'dist/**'
+          --path-ignore-patterns 'packages/web/**'
+          --path-ignore-patterns 'packages/lsp-tools-mcp/**'
+          --path-ignore-patterns 'packages/lsp-daemon/**'
+          --path-ignore-patterns 'packages/omo-codex/plugin/**'
+          --path-ignore-patterns 'packages/omo-codex/scripts/**'
+          --path-ignore-patterns 'packages/shared-skills/upstreams/**'
           --path-ignore-patterns 'script/**'
           --path-ignore-patterns 'postinstall.test.ts'
           --path-ignore-patterns '.agents/**'
