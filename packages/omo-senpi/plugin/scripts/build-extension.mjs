@@ -62,6 +62,12 @@ const toolkitSdkEntryPath = join(packageRoot, "src", "extension", "agent-toolkit
 const toolkitSdkOutputPath = join(process.env.OMO_SENPI_PLUGIN_OUTPUT ?? pluginRoot, "runtime", "agent-toolkit-sdk", "sdk.js")
 const advisorRuntimeEntryPath = join(packageRoot, "src", "components", "init-deep-advisor", "runtime.ts")
 const advisorRuntimeOutputPath = process.env.OMO_SENPI_PLUGIN_OUTPUT === undefined ? join(pluginRoot, "extensions", "omo-init-deep-advisor.js") : join(process.env.OMO_SENPI_PLUGIN_OUTPUT, "extensions", "omo-init-deep-advisor.js")
+// The computer-use prelude JSON: bundled modules read it from beside the bundle (extensions/),
+// the same contract as the staged personas, so omo.js carries none of the ~29 KB of prelude text.
+// Upstream stages this next to the bundle; without it the packaged extension throws ENOENT on
+// the first computer-use read (packages/senpi-desktop-prelude/src/assets.ts).
+export const COMPUTER_PRELUDE_ASSET_NAME = "assets.generated.json"
+const computerPreludeAssetSource = join(repoRoot, "packages", "senpi-desktop-prelude", "src", "assets.generated.json")
 const builtinModuleNames = builtinModules
   .filter((moduleName) => !moduleName.startsWith("_"))
   .sort()
@@ -115,9 +121,10 @@ export async function buildExtension(options = {}) {
   const supervisorInputs = await buildEntry(supervisorEntryPath, supervisorOutput, buildDefines)
   const advisorRuntimeInputs = await buildEntry(advisorRuntimeEntryPath, advisorRuntimeOutput, buildDefines)
   // Bundling inlines assets.ts but its markdown is read from disk at runtime next to the bundle,
-  // so the persona must be staged into the extension output directory the loader executes from.
+  // so the persona and the computer-use prelude are staged into the directory the loader runs from.
   await Promise.all([
     stageRuntimePersonas(repoRoot, dirname(output)),
+    writeFile(join(dirname(output), COMPUTER_PRELUDE_ASSET_NAME), await readFile(computerPreludeAssetSource, "utf8")),
   ])
   return { mainInputs, taskInputs, memberInputs, supervisorInputs, advisorRuntimeInputs, toolkitSdkInputs }
 }
