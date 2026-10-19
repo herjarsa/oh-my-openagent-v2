@@ -44,7 +44,7 @@ function manifestVersion(packageDir: string, names: readonly string[]): string |
  * fork acquires the engine from the newest upstream release the ported code
  * was verified against. Bump together with the computer-use port.
  */
-export const FORK_PINNED_ENGINE_RELEASE = "5.1.35";
+export const FORK_PINNED_ENGINE_RELEASE = "5.1.38";
 
 /** Release that names the GitHub download: the running upstream release, else the fork-pinned one. */
 export function engineReleaseVersion(env: Env = process.env): string | undefined {
