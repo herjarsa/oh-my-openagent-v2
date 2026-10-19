@@ -76,13 +76,29 @@ cost if ignored).
   active here"). This fork's `plugin-v2/*` bridge IS the real
   implementation (tools + hooks live on host 2.0.x, see V2-QA-EVIDENCE).
   We lead upstream here — nothing to backport.
-- Computer-use: NOT ported in this fork (no tools bridged, no guide).
-  Upstream (experimental) needs per-platform desktop engines
-  (win32-arm64/x64 landed Oct 2026, #10442), the herdr side pane, and
-  foreground-grant QA. Delivery slots exist
-  (`packages/oh-my-opencode-windows-*`, binaries fetched at install),
-  but the tools + docs port is a future phase. Interest confirmed
-  2026-10-19.
+- Computer-use: PORTED (train v2-0.1.2, base pinned beta.90 + upstream dev
+  ~2026-10-19 for this feature only). `packages/senpi-desktop-{prelude,
+  protocol,engine,service,tool}` (new workspaces, vitest->bun:test),
+  `omo-senpi/.../components/computer-use/` (~20 tests), `omo-config-core`
+  computer schema, `omo-native` doctor/probe/skill, `senpi-task`
+  child-extension-events + SessionAncestry. Typecheck green; desktop +
+  component suites green except 3 `permission-child` process-relay tests
+  (see gap). Engine binary NOT committed: fetched at install/test time
+  from upstream releases (`packages/senpi-desktop-engine/native/` is
+  gitignored); fork versions resolve to the pinned upstream release
+  (`FORK_PINNED_ENGINE_RELEASE`) since tags `v2-*` publish npm only.
+  Upstream #10439 (empty plugin + Native toast) still not backported.
+- Gap (follow-up): cross-process permission relay needs the upstream
+  rpc-process generation (child `extension_event` forwarding in
+  `rpc-process/handle` + manager wiring to `pi.events`). The fork's
+  `RpcProcessRunner`/`handle` drops child `extension_event` lines, so
+  process/nested `permission-child` relay tests get zero events while
+  in-process relay passes. Requires backporting `senpi-task` rpc core
+  (a generation ahead: 123 upstream-only files) - deliberately out of
+  this release to protect the stable train. Also dropped:
+  `acquire-errors.test.ts` EACCES case (node-ESM-only `vi.spyOn(fs)`
+  technique; bun:test needs `mock.module`, behavior covered by sibling
+  acquire tests).
 - Watchlist (backport on symptoms only, not proactively): `rpc-seam`
   session fixes, atlas retry-runaway guard, senpi runtime bumps, bun
   1.4.3 (repo tests pin 1.4.2; CI green).

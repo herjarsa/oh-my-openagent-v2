@@ -17,6 +17,8 @@ packages/omo-codex/plugin/skills/
 packages/*/bin/oh-my-opencode
 packages/*/bin/oh-my-opencode.exe
 packages/*/bin/*.map
+# Desktop engine binaries (fetched from upstream releases at install/test time, never committed)
+packages/senpi-desktop-engine/native/
 
 # IDE
 .idea/

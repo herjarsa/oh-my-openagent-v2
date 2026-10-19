@@ -79,7 +79,13 @@ const builtExtensionPath = join(packageRoot, "plugin", "extensions", "omo.js")
 // (1,590,353) and a local Windows/bun-1.3.14 rebuild (1,590,525) agree to within 0.02%, i.e. this
 // is source growth, not a build-host artifact. bundle-purity stays green (no new third-party
 // dependency inlined), so 1,640,000 keeps ~3.1% headroom rather than the failing value.
-const BUDGET_BYTES = 1_640_000
+// Raised 1,640,000 -> 1,700,000 for the computer-use port: the `computer-use` component
+// (settings, permission relay, control/input/observe/run facades, engine source/probe/status,
+// full-access gate, telemetry) plus its bundled skill surface enters the extension entry for the
+// first time. First-party code only - bundle-purity stays green with no new third-party
+// dependency inlined. Measured 1,659,453 bytes after minification (win32, bun 1.3.14);
+// 1,700,000 keeps ~2.5% headroom rather than the failing value.
+const BUDGET_BYTES = 1_700_000
 
 describe("omo-senpi bundle size budget", () => {
   it("#given the built extension #when its byte size is measured #then it stays within the documented byte budget", () => {

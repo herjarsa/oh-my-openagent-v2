@@ -46,7 +46,9 @@ describe("omo-senpi bundle purity", () => {
       expect(toolkitSdkInputs.length).toBeGreaterThan(0)
       expect(toolkitSdkInputs.filter(input => input.replaceAll("\\\\", "/").includes("node_modules/"))).toEqual([])
     } finally { await rm(root, { recursive: true, force: true }) }
-  }, 120_000)
+  // Fork note: the computer-use port grows the inspected module graph past 1100
+  // modules; slow hosts need more than upstream's 120 s ceiling. Behavior unchanged.
+  }, 300_000)
 
   it("#given the senpi loader aliases #when tested #then the shared build constant pins all 19 peers", () => {
     expect(SENPI_LOADER_ALIASES).toEqual([...EXPECTED_SENPI_LOADER_ALIASES])

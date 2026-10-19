@@ -41,6 +41,13 @@ const adapterPackagePaths: readonly string[] = [
   "packages/omo-opencode",
   "packages/omo-native",
 ] as const
+const enginePackagePaths: readonly string[] = [
+  "packages/senpi-desktop-prelude",
+  "packages/senpi-desktop-protocol",
+  "packages/senpi-desktop-engine",
+  "packages/senpi-desktop-service",
+  "packages/senpi-desktop-tool",
+] as const
 const skillPackagePaths: readonly string[] = ["packages/shared-skills"] as const
 const shimSourceRoots: readonly string[] = ["packages/omo-opencode/src", "packages/omo-codex/src"] as const
 const reExportShimFirstLinePattern = /^export (\*|\{).*from ["'](@oh-my-opencode\/[^/"']+)/
@@ -48,6 +55,7 @@ const reExportShimFirstLinePattern = /^export (\*|\{).*from ["'](@oh-my-opencode
 const layerRanks = {
   skill: 1,
   core: 2,
+  engine: 2,
   mcp: 3,
   adapter: 4,
 } as const
@@ -172,6 +180,7 @@ async function collectReExportShims(): Promise<readonly ReExportShim[]> {
 function isManagedWorkspacePackage(path: string): boolean {
   return (
     corePackagePaths.includes(path) ||
+    enginePackagePaths.includes(path) ||
     mcpPackagePaths.includes(path) ||
     adapterPackagePaths.includes(path) ||
     skillPackagePaths.includes(path)
@@ -192,6 +201,7 @@ function isRootManagedTypecheckPackage(path: string): boolean {
 
 function packageLayer(path: string): keyof typeof layerRanks | undefined {
   if (corePackagePaths.includes(path)) return "core"
+  if (enginePackagePaths.includes(path)) return "engine"
   if (mcpPackagePaths.includes(path)) return "mcp"
   if (adapterPackagePaths.includes(path)) return "adapter"
   if (skillPackagePaths.includes(path)) return "skill"
@@ -343,5 +353,7 @@ describe("package registration audit", () => {
     expect(documentedTotal).toBe(shims.length)
     expect(missingTargetPackages).toEqual([])
     expect(missingPaths).toEqual([])
-  }, { timeout: 20_000 })
+  // Fork note: the computer-use port adds 5 workspaces to the shim scan; slow
+  // hosts need more than 20 s. Behavior unchanged.
+  }, { timeout: 90_000 })
 })

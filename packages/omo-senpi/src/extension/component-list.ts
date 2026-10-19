@@ -2,6 +2,7 @@ import { createAstGrepComponent } from "../components/ast-grep"
 import { createBuiltinMcpsComponent } from "../components/builtin-mcps"
 import { createBundledSkillsComponent } from "../components/bundled-skills"
 import { createCommentCheckerComponent } from "../components/comment-checker"
+import { createComputerUseComponent } from "../components/computer-use"
 import { createConfigStartupComponent } from "../components/config-startup"
 import { createConfigWatchComponent } from "../components/config-watch"
 import { createFallbackArchitectComponent } from "../components/fallback-architect"
@@ -47,6 +48,7 @@ export function createOmoSenpiComponents(taskComponent: OmoSenpiComponent): OmoS
     createLspComponent(),
     createXSearchComponent(),
     createCommentCheckerComponent(),
+    createComputerUseComponent(),
     taskComponent,
     createThreadComponent(),
     createMemoryComponent(),
