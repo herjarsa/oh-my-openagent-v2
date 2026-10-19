@@ -8,7 +8,7 @@ import { buildAgent, isFactory } from "../agent-builder"
 import { resolveAgentSkills } from "../agent-skill-resolution"
 import { applyOverrides } from "./agent-overrides"
 import { applyEnvironmentContext } from "./environment-context"
-import { applyModelResolution, getFirstFallbackModel } from "./model-resolution"
+import { applyModelResolution, getFirstFallbackModel, primaryOverrideModel } from "./model-resolution"
 import { log } from "../../shared/logger"
 
 export function collectPendingBuiltinAgents(input: {
@@ -75,23 +75,24 @@ export function collectPendingBuiltinAgents(input: {
     }
 
     const isPrimaryAgent = isFactory(source) && source.mode === "primary"
+    const overridePrimaryModel = primaryOverrideModel(override)
 
     let resolution = applyModelResolution({
-      uiSelectedModel: (isPrimaryAgent && override?.model === undefined) ? uiSelectedModel : undefined,
-      userModel: override?.model,
+      uiSelectedModel: (isPrimaryAgent && overridePrimaryModel === undefined) ? uiSelectedModel : undefined,
+      userModel: overridePrimaryModel,
       requirement,
       availableModels,
       systemDefaultModel,
     })
     if (!resolution) {
-      if (override?.model) {
+      if (overridePrimaryModel) {
         // User explicitly configured a model but resolution failed (e.g., cold cache).
         // Honor the user's choice directly instead of falling back to hardcoded chain.
         log("[agent-registration] User-configured model not resolved, using as-is", {
           agent: agentName,
-          configuredModel: override.model,
+          configuredModel: overridePrimaryModel,
         })
-        resolution = { model: override.model, provenance: "override" as const }
+        resolution = { model: overridePrimaryModel, provenance: "override" as const }
       } else {
         resolution = getFirstFallbackModel(requirement)
       }
@@ -99,7 +100,7 @@ export function collectPendingBuiltinAgents(input: {
     if (!resolution) {
       log("[agent-registration] Agent skipped: model resolution returned no result", {
         agent: agentName,
-        configuredModel: override?.model,
+        configuredModel: overridePrimaryModel,
       })
       continue
     }

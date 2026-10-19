@@ -18,6 +18,7 @@ import type { AgentConfig } from "@opencode-ai/sdk"
 import type { AgentMode } from "../types"
 import { isGlmModel, isGpt5_5Model, isGpt5_6Model, isGpt6Model, isGptModel, isGeminiModel, isKimiK2CodeModel, isKimiK2Model, isKimiK3Model, buildClaudeThinkingConfig } from "../types"
 import type { AgentOverrideConfig } from "../../config/schema"
+import { primaryOverrideModel } from "../builtin-agents/model-resolution"
 import {
   createAgentToolRestrictions,
   migrateAgentConfig,
@@ -115,7 +116,7 @@ export function createSisyphusJuniorAgentWithOverrides(
     override = undefined
   }
 
-  const overrideModel = (override as { model?: string } | undefined)?.model
+  const overrideModel = primaryOverrideModel(override)
   const model = overrideModel ?? systemDefaultModel ?? SISYPHUS_JUNIOR_DEFAULTS.model
   const temperature = override?.temperature ?? SISYPHUS_JUNIOR_DEFAULTS.temperature
 

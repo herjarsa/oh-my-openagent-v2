@@ -314,4 +314,34 @@ describe("maybeCreateSisyphusConfig", () => {
       expect(config?.permission).toHaveProperty("apply_patch", "allow");
     });
   });
+
+  describe("#given models array without singular model (omo.jsonc shape)", () => {
+    test("#when config is created #then first models entry wins over hardcoded chains", () => {
+      // given
+      const agentOverrides = {
+        sisyphus: {
+          models: ["opencode-go/muse-spark-1.3-contributor", "opencode-omniroute/auto/best-reasoning"],
+        },
+      } as unknown as AgentOverrides;
+      const mergedCategories: Record<string, CategoryConfig> = {};
+
+      // when
+      const config = maybeCreateSisyphusConfig({
+        disabledAgents: [],
+        agentOverrides,
+        availableModels: new Set<string>(),
+        systemDefaultModel: "openai/gpt-5-nano",
+        isFirstRunNoCache: true,
+        availableAgents: [],
+        availableSkills: [],
+        availableCategories: [],
+        mergedCategories,
+        useTaskSystem: false,
+      });
+
+      // then
+      expect(config).toBeDefined();
+      expect(config?.model).toBe("opencode-go/muse-spark-1.3-contributor");
+    });
+  });
 });

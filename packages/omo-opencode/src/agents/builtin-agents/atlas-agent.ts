@@ -5,7 +5,7 @@ import type { AvailableAgent, AvailableSkill } from "../dynamic-agent-prompt-bui
 import { AGENT_MODEL_REQUIREMENTS } from "../../shared"
 import { log } from "../../shared/logger"
 import { applyOverrides } from "./agent-overrides"
-import { applyModelResolution } from "./model-resolution"
+import { applyModelResolution, primaryOverrideModel } from "./model-resolution"
 import { createAtlasAgent } from "../atlas"
 
 export function maybeCreateAtlasConfig(input: {
@@ -38,25 +38,26 @@ export function maybeCreateAtlasConfig(input: {
 
   const orchestratorOverride = agentOverrides["atlas"]
   const atlasRequirement = AGENT_MODEL_REQUIREMENTS["atlas"]
+  const atlasPrimaryModel = primaryOverrideModel(orchestratorOverride)
 
   let atlasResolution = applyModelResolution({
-    uiSelectedModel: orchestratorOverride?.model !== undefined ? undefined : uiSelectedModel,
-    userModel: orchestratorOverride?.model,
+    uiSelectedModel: atlasPrimaryModel !== undefined ? undefined : uiSelectedModel,
+    userModel: atlasPrimaryModel,
     requirement: atlasRequirement,
     availableModels,
     systemDefaultModel,
   })
 
-  if (!atlasResolution && orchestratorOverride?.model) {
+  if (!atlasResolution && atlasPrimaryModel) {
     // User explicitly configured a model but resolution failed (e.g., cold cache, no system default).
     // Honor the user's choice directly instead of dropping Atlas entirely.
-    atlasResolution = { model: orchestratorOverride.model, provenance: "override" as const }
+    atlasResolution = { model: atlasPrimaryModel, provenance: "override" as const }
   }
 
   if (!atlasResolution) {
     log("[agent-registration] Agent skipped: model resolution returned no result", {
       agent: "atlas",
-      configuredModel: orchestratorOverride?.model,
+      configuredModel: atlasPrimaryModel,
     })
     return undefined
   }

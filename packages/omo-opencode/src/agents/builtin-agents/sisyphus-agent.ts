@@ -6,7 +6,7 @@ import { AGENT_MODEL_REQUIREMENTS, isAnyFallbackModelAvailable } from "../../sha
 import { log } from "../../shared/logger"
 import { applyEnvironmentContext } from "./environment-context"
 import { applyOverrides } from "./agent-overrides"
-import { applyModelResolution, getFirstFallbackModel } from "./model-resolution"
+import { applyModelResolution, getFirstFallbackModel, primaryOverrideModel } from "./model-resolution"
 import { createSisyphusAgent } from "../sisyphus"
 import { applyFrontierToolSchemaPermission } from "../frontier-tool-schema-guard"
 import { setSisyphusRuntimePromptContext } from "../sisyphus-runtime-prompt-reconciler"
@@ -60,21 +60,21 @@ export function maybeCreateSisyphusConfig(input: {
   if (disabledAgents.includes("sisyphus") || !meetsSisyphusAnyModelRequirement) return undefined
 
   let sisyphusResolution = applyModelResolution({
-    uiSelectedModel: sisyphusOverride?.model !== undefined ? undefined : uiSelectedModel,
-    userModel: sisyphusOverride?.model,
+    uiSelectedModel: primaryOverrideModel(sisyphusOverride) !== undefined ? undefined : uiSelectedModel,
+    userModel: primaryOverrideModel(sisyphusOverride),
     requirement: sisyphusRequirement,
     availableModels,
     systemDefaultModel,
   })
 
-  if (isFirstRunNoCache && !sisyphusOverride?.model && !uiSelectedModel) {
+  if (isFirstRunNoCache && !primaryOverrideModel(sisyphusOverride) && !uiSelectedModel) {
     sisyphusResolution = getFirstFallbackModel(sisyphusRequirement)
   }
 
   if (!sisyphusResolution) {
     log("[agent-registration] Agent skipped: model resolution returned no result", {
       agent: "sisyphus",
-      configuredModel: sisyphusOverride?.model,
+      configuredModel: primaryOverrideModel(sisyphusOverride),
     })
     return undefined
   }

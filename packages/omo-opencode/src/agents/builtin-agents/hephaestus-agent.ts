@@ -7,7 +7,7 @@ import { log } from "../../shared/logger"
 import { createHephaestusAgent, isHephaestusSupportedModel } from "../hephaestus"
 import { applyEnvironmentContext } from "./environment-context"
 import { applyCategoryOverride, mergeAgentConfig } from "./agent-overrides"
-import { applyModelResolution, getFirstFallbackModel } from "./model-resolution"
+import { applyModelResolution, getFirstFallbackModel, primaryOverrideModel } from "./model-resolution"
 import { applyFrontierToolSchemaPermission } from "../frontier-tool-schema-guard"
 
 export function maybeCreateHephaestusConfig(input: {
@@ -60,13 +60,13 @@ export function maybeCreateHephaestusConfig(input: {
   }
 
   let hephaestusResolution = applyModelResolution({
-    userModel: hephaestusOverride?.model,
+    userModel: primaryOverrideModel(hephaestusOverride),
     requirement: hephaestusRequirement,
     availableModels,
     systemDefaultModel,
   })
 
-  if (isFirstRunNoCache && !hephaestusOverride?.model) {
+  if (isFirstRunNoCache && !primaryOverrideModel(hephaestusOverride)) {
     hephaestusResolution = getFirstFallbackModel(hephaestusRequirement)
   }
 

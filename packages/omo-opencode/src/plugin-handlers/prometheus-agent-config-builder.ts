@@ -1,5 +1,6 @@
 import type { CategoryConfig } from "../config/schema";
 import type { FallbackModels } from "../config/schema/fallback-models";
+import { primaryOverrideModel } from "../agents/builtin-agents/model-resolution";
 import { PROMETHEUS_PERMISSION, getPrometheusPrompt } from "../agents/prometheus";
 import { resolvePromptAppend } from "../agents/builtin-agents/resolve-file-uri";
 import { AGENT_MODEL_REQUIREMENTS } from "../shared/model-requirements";
@@ -59,7 +60,7 @@ export async function buildPrometheusAgentConfig(params: {
   });
 
   const configuredPrometheusModel =
-    params.pluginPrometheusOverride?.model ?? categoryConfig?.model;
+    primaryOverrideModel(params.pluginPrometheusOverride) ?? categoryConfig?.model;
 
   const shouldUseCurrentModel = isModelInFallbackChain(
     params.currentModel,
@@ -73,7 +74,7 @@ export async function buildPrometheusAgentConfig(params: {
         : shouldUseCurrentModel
           ? params.currentModel
           : undefined,
-      userModel: params.pluginPrometheusOverride?.model,
+      userModel: primaryOverrideModel(params.pluginPrometheusOverride),
       categoryDefaultModel: categoryConfig?.model,
     },
     constraints: { availableModels },

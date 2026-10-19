@@ -29,3 +29,25 @@ export function getFirstFallbackModel(requirement?: {
     variant: entry.variant,
   }
 }
+
+/**
+ * Primary model from an agent override.
+ * Users write `models: [...]` (array) far more often than `model` (singular);
+ * the registration path only honored the singular form, silently dropping the
+ * array and falling through to hardcoded chains. The first entry wins.
+ */
+export function primaryOverrideModel(override?: { model?: unknown; models?: unknown }): string | undefined {
+  if (!override) return undefined
+  if (typeof override.model === "string" && override.model.length > 0) return override.model
+  const models = override.models
+  if (Array.isArray(models)) {
+    for (const entry of models) {
+      if (typeof entry === "string" && entry.length > 0) return entry
+      if (entry !== null && typeof entry === "object" && typeof (entry as { model?: unknown }).model === "string") {
+        const m = (entry as { model: string }).model
+        if (m.length > 0) return m
+      }
+    }
+  }
+  return undefined
+}
