@@ -128,8 +128,8 @@ jobs:
         if: always()
         run: |
           {
-            echo "## Fork publish"
-            echo ""
-            echo "Published `@herjarsa/oh-my-openagent-v2` from tag `${GITHUB_REF_NAME}`."
+            echo '## Fork publish'
+            echo ''
+            echo "Published \`@herjarsa/oh-my-openagent-v2\` from tag \`${GITHUB_REF_NAME}\`."
           } >> "$GITHUB_STEP_SUMMARY"
 

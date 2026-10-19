@@ -64,6 +64,20 @@ The curated plan agents were renamed to `plan-consultant` and `plan-reviewer`; `
 | `delegation_started` | `name` | `string` | `visual-engineering`, `artistry`, `ultrabrain`, `deep-low`, `deep-high`, `quick`, `unspecified-low`, `unspecified-high`, `architect`, `writing`, `explore`, `librarian`, `plan-consultant`, `plan-reviewer`, `custom` |
 | `feature_used` | `$session_id` | `string` | - |
 | `feature_used` | `feature` | `string` | `goal_tool`, `team_create`, `memory_tool` |
+| `computer_use_activation` | `$session_id` | `string` | - |
+| `computer_use_activation` | `active` | `boolean` | - |
+| `computer_use_activation` | `backend` | `string` | `quartz`, `x11`, `wayland`, `win32`, `fake`, `unavailable`, `other` |
+| `computer_use_activation` | `host_platform` | `string` | `darwin`, `linux`, `win32`, `other` |
+| `computer_use_activation` | `source` | `string` | `tool_call`, `command_on`, `command_off`, `other` |
+| `computer_use_permission_denied` | `$session_id` | `string` | - |
+| `computer_use_permission_denied` | `backend` | `string` | `quartz`, `x11`, `wayland`, `win32`, `fake`, `unavailable`, `other` |
+| `computer_use_permission_denied` | `host_platform` | `string` | `darwin`, `linux`, `win32`, `other` |
+| `computer_use_permission_denied` | `permission` | `string` | `capture`, `input`, `ax`, `read`, `exec` |
+| `computer_use_permission_denied` | `scope` | `string` | `os`, `tier` |
+| `computer_use_engine_error` | `$session_id` | `string` | - |
+| `computer_use_engine_error` | `backend` | `string` | `quartz`, `x11`, `wayland`, `win32`, `fake`, `unavailable`, `other` |
+| `computer_use_engine_error` | `code` | `string` | `PermissionDenied`, `CaptureFailed`, `InputFailed`, `BackgroundUnavailable`, `WindowNotFound`, `InvalidTarget`, `InvalidKey`, `InvalidCoordinateFrame`, `StaleRef`, `AxUnsupported`, `AxFailed`, `Timeout`, `Closed`, `Internal`, `StopPathUnavailable`, `Suspended`, `ScreenLocked`, `Cancelled`, `CursorRestoreFailed`, `FocusRestoreFailed`, `TransactionFailed`, `InputBusy`, `ControlRequired`, `CaptureUnavailable`, `native-unavailable`, `quarantined`, `abi-mismatch`, `other` |
+| `computer_use_engine_error` | `host_platform` | `string` | `darwin`, `linux`, `win32`, `other` |
 | `kibitzer_summary` | `$session_id` | `string` | - |
 | `kibitzer_summary` | `buffered_cooldown` | `number` | - |
 | `kibitzer_summary` | `buffered_no_new_candidate` | `number` | - |
