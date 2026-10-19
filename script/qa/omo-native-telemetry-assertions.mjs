@@ -18,13 +18,23 @@ const expectedNativeEvents = new Set([
   "feature_used",
   "kibitzer_summary",
   "parallelism_summary",
+  "computer_use_activation",
+  "computer_use_engine_error",
+  "computer_use_permission_denied",
 ])
 
 // Session-conditional events the scripted scenario cannot produce: `kibitzer_summary` is emitted only
 // when the memory sidecar actually woke, which needs recall enabled and a committed memory corpus. They
 // stay in the coverage check above (a dropped or misspelled event still fails) but are not required to
 // appear in a capture, because demanding one here would only be satisfiable by faking the emission.
-const conditionalNativeEvents = new Set(["kibitzer_summary"])
+const conditionalNativeEvents = new Set([
+  "kibitzer_summary",
+  // Computer-use events fire only when the computer tool actually runs (foreground
+  // grant + engine); the scripted telemetry scenario never enables computer mode.
+  "computer_use_activation",
+  "computer_use_engine_error",
+  "computer_use_permission_denied",
+])
 
 export function assertAllowlistCoverage(allowlists) {
   const actual = new Set(Object.keys(allowlists))
