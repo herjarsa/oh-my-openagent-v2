@@ -61,12 +61,17 @@ jobs:
         # The engine binary is gitignored (never committed). Engine tests run
         # the real binary; fetch it from the upstream release the fork pins in
         # FORK_PINNED_ENGINE_RELEASE (engine-source.ts), same as local QA.
+        # Retries + sha256 check: release-asset downloads flake occasionally.
         run: |
           set -euo pipefail
           PINNED=$(node -e "const s=require('fs').readFileSync('packages/omo-senpi/src/components/computer-use/engine-source.ts','utf8'); console.log(s.match(/FORK_PINNED_ENGINE_RELEASE = \"([^\"]+)\"/)[1])")
           DEST="packages/senpi-desktop-engine/native/prebuilds/linux-x64/senpi-desktop-engine"
           mkdir -p "$(dirname "$DEST")"
-          curl -sSL -o "$DEST" "https://github.com/code-yeongyu/oh-my-openagent/releases/download/${PINNED}/senpi-desktop-engine-linux-x64"
+          BASE="https://github.com/code-yeongyu/oh-my-openagent/releases/download/${PINNED}"
+          curl -sSL --retry 5 --retry-all-errors -o "$DEST" "$BASE/senpi-desktop-engine-linux-x64"
+          curl -sSL --retry 5 --retry-all-errors -o "$DEST.sha256" "$BASE/senpi-desktop-engine-checksums.txt"
+          (cd "$(dirname "$DEST")" && grep "senpi-desktop-engine-linux-x64$" senpi-desktop-engine.sha256 | sha256sum -c -)
+          rm "$DEST.sha256"
           chmod +x "$DEST"
           "$DEST" --selftest
       - name: Tests
