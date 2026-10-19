@@ -67,3 +67,22 @@ cost if ignored).
   audit provider dependence first — primary chains are `opencode-go`/`opencode`).
 - Cherry-picking the 22 archived May commits (evaluate after Phase 1; the
   team-mode relaunch fix is confirmed absent upstream).
+
+## Upstream divergence on V2 (surveyed 2026-10-19, base pinned beta.90)
+
+- Upstream #10439 ("load on OpenCode 2", merged 2026-10-18) is NOT a
+  real port: it registers an empty plugin on the V2 host and toasts a
+  notice redirecting to OmO Native ("agents, tools and hooks are not
+  active here"). This fork's `plugin-v2/*` bridge IS the real
+  implementation (tools + hooks live on host 2.0.x, see V2-QA-EVIDENCE).
+  We lead upstream here — nothing to backport.
+- Computer-use: NOT ported in this fork (no tools bridged, no guide).
+  Upstream (experimental) needs per-platform desktop engines
+  (win32-arm64/x64 landed Oct 2026, #10442), the herdr side pane, and
+  foreground-grant QA. Delivery slots exist
+  (`packages/oh-my-opencode-windows-*`, binaries fetched at install),
+  but the tools + docs port is a future phase. Interest confirmed
+  2026-10-19.
+- Watchlist (backport on symptoms only, not proactively): `rpc-seam`
+  session fixes, atlas retry-runaway guard, senpi runtime bumps, bun
+  1.4.3 (repo tests pin 1.4.2; CI green).
