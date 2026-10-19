@@ -17,8 +17,14 @@ packages/omo-codex/plugin/skills/
 packages/*/bin/oh-my-opencode
 packages/*/bin/oh-my-opencode.exe
 packages/*/bin/*.map
-# Desktop engine binaries (fetched from upstream releases at install/test time, never committed)
-packages/senpi-desktop-engine/native/
+# Desktop engine binaries fetched at install/test time (never committed), one
+# dir per host. EXCEPTION: the linux-x64 CI test binary is vendored in-repo
+# (release-asset CDN 404s from Actions egress), so linux-x64 is NOT ignored.
+packages/senpi-desktop-engine/native/prebuilds/win32-x64/
+packages/senpi-desktop-engine/native/prebuilds/win32-arm64/
+packages/senpi-desktop-engine/native/prebuilds/darwin-arm64/
+packages/senpi-desktop-engine/native/prebuilds/darwin-x64/
+packages/senpi-desktop-engine/native/prebuilds/linux-arm64/
 
 # IDE
 .idea/

@@ -76,7 +76,9 @@ jobs:
           chmod +x "$DEST"
           "$DEST" --selftest
       - name: Tests
-        run: bun test
+        # Explicit ceiling (upstream CI passes --timeout too): the default 5 s
+        # kills legitimately slow engine/process tests on loaded runners.
+        run: bun test --timeout 30000
       - name: Build
         run: bun run build
       - name: Setup Node for npm publish

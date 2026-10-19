@@ -81,7 +81,7 @@ describe("DesktopService", HANG_GUARD, () => {
 		expect(error).toBeInstanceOf(DesktopServiceError);
 		expect(error).toHaveProperty("message", "Timed out starting desktop engine");
 		expect(log.kills()).toBe(1);
-	});
+	}, { timeout: 30_000 });
 
 	it("refuses an engine with another ABI and kills it", async () => {
 		// Given

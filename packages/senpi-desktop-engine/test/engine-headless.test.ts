@@ -124,7 +124,9 @@ describe("senpi-desktop-engine over stdio with the fake backend", { timeout: TES
 		expect(timedOut.id).toBe(10);
 		expect(errorCode(timedOut)).toBe("Timeout");
 		expect(at(seen[seen.length - 1], "params", "action")).toBe("typeText");
-	});
+	// The backend sleeps 5 s and close waits it out: exceeds bun's 5 s default
+	// when the runner is invoked without --timeout (fork CI runs plain bun test).
+	}, { timeout: 30_000 });
 
 	it("answers a cancelled pending input Cancelled", async () => {
 		const scenario = scenarios.twoDisplaysWith({ delay_ms: { type_text: 5000 } });
