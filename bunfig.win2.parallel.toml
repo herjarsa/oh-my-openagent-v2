@@ -9,7 +9,6 @@ pathIgnorePatterns = [
   "packages/omo-opencode/**",
   "packages/memory-core/**",
   "packages/shared-skills/provenance-gate.test.ts",
-  "script/release-version.test.ts",
 ]
 
 [loader]

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test"
 import { spawnSync } from "node:child_process"
-import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs"
+import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 
@@ -12,6 +12,22 @@ type WorkflowExpectation = {
 const workflowDirectory = ".github/workflows"
 const WINDOWS_INTEGRATION_TEST_TIMEOUT = process.platform === "win32" ? 20_000 : 5_000
 
+/** Git for Windows ships a real bash; the `bash` on PATH is often the WSL launcher, which cannot run a checkout. */
+const WINDOWS_GIT_BASH_CANDIDATES = [
+  "C:\\Program Files\\Git\\bin\\bash.exe",
+  "C:\\Program Files\\Git\\usr\\bin\\bash.exe",
+  "C:\\Program Files (x86)\\Git\\bin\\bash.exe",
+] as const
+
+/** The shared job-summary writer is a POSIX shell script, so it needs a POSIX shell to run. */
+function resolvePosixShell(): string {
+  if (process.platform !== "win32") return "bash"
+  for (const candidate of WINDOWS_GIT_BASH_CANDIDATES) {
+    if (existsSync(candidate)) return candidate
+  }
+  return "bash"
+}
+
 const workflowExpectations = [
   {
     path: ".github/workflows/ci.yml",
@@ -20,11 +36,7 @@ const workflowExpectations = [
       "block-master-pr",
       "test",
       "typecheck",
-      "codex-compatibility",
-      "senpi-compatibility",
-      "lazycodex-published-smoke",
       "build",
-      "omo-ai-payload-check",
       "auto-commit-schema",
       "draft-release",
     ],
@@ -37,20 +49,6 @@ const workflowExpectations = [
   { path: ".github/workflows/package-labels.yml", jobs: ["ensure-labels", "label-pull-request", "label-issue"] },
   { path: ".github/workflows/publish-fork.yml", jobs: ["publish"] },
   { path: ".github/workflows/publish-platform.yml", jobs: ["build", "publish", "smoke-linux-arm64"] },
-  {
-    path: ".github/workflows/publish.yml",
-    jobs: [
-      "gate-reuse",
-      "preflight-trust",
-      "release-metadata",
-      "prepare-release-state",
-      "dispatch-provenance-safe-publish",
-      "publish-main",
-      "verify-release-notes",
-      "release",
-      "post-publish-verify",
-    ],
-  },
   {
     path: ".github/workflows/review-claims.yml",
     jobs: ["gate", "claim", "release-claim", "stale-sweep"],
@@ -181,7 +179,7 @@ describe("GitHub workflow job summaries", () => {
     const summaryPath = join(tempDir, "summary.md")
     writeFileSync(summaryPath, "")
 
-    const result = spawnSync("bash", [".github/scripts/write-job-summary.sh"], {
+    const result = spawnSync(resolvePosixShell(), [".github/scripts/write-job-summary.sh"], {
       cwd: new URL("..", import.meta.url),
       encoding: "utf8",
       env: {

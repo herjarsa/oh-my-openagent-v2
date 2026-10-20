@@ -150,7 +150,7 @@ describe("full-matrix classification", () => {
 
   describe("#given a platform-sensitive changed path", () => {
     test.each([
-      ["basename contains windows", "packages/senpi-task/src/runners/rpc-process.windows.test.ts"],
+      ["basename contains windows", "packages/memory-core/src/locks/process-identity.windows-console.test.ts"],
       ["basename contains win32", "packages/utils/src/spawn-win32.ts"],
       ["powershell script", "script/qa/run-smoke.ps1"],
       ["ci workflow", ".github/workflows/ci.yml"],
@@ -224,7 +224,8 @@ describe("full-matrix workflow wiring", () => {
   })
 
   describe("#given the OS matrix jobs", () => {
-    test.each(["test", "codex-compatibility", "senpi-compatibility"])(
+    // The fork ships the OpenCode edition only, so the root test job is the single OS matrix job.
+    test.each(["test"])(
       "#then every heavy step in %s is ubuntu-first",
       (jobName) => {
         // given
@@ -249,7 +250,7 @@ describe("full-matrix workflow wiring", () => {
       },
     )
 
-    test.each(["test", "codex-compatibility", "senpi-compatibility"])(
+    test.each(["test"])(
       "#then checkout and summary steps in %s stay unconditional",
       (jobName) => {
         // given

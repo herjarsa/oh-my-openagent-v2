@@ -57,31 +57,12 @@ jobs:
           fi
       - name: Typecheck
         run: bun run typecheck
-      - name: Fetch desktop engine (linux-x64, pinned upstream release)
-        # The engine binary is normally gitignored (never committed) — EXCEPT
-        # the linux-x64 test binary, which is vendored in-repo (force-added)
-        # because GitHub's release-asset CDN 404s sustainedly from Actions
-        # egress while working elsewhere. If the pin moves, re-vendor the
-        # matching binary from the upstream release (verify sha256).
-        run: |
-          set -euo pipefail
-          DEST="packages/senpi-desktop-engine/native/prebuilds/linux-x64/senpi-desktop-engine"
-          if [ ! -f "$DEST" ]; then
-            echo "ERROR: vendored engine binary missing at $DEST."
-            echo "Download senpi-desktop-engine-linux-x64 from the upstream release"
-            echo "named by FORK_PINNED_ENGINE_RELEASE, verify its sha256 against the"
-            echo "release checksums, and force-add it (git add -f $DEST)."
-            exit 1
-          fi
-          chmod +x "$DEST"
-          "$DEST" --selftest
       - name: Tests (tooling + script)
         # Shard 1 of 3 (serial, one process each: a single whole-repo bun test
         # OOM-kills runners now that the port added heavy process-spawning suites).
-        run: bun test --timeout 30000 script postinstall.test.ts .agents/skills/senpi-qa/scripts/resolve-evidence-dir.test.mjs
+        run: bun test --timeout 30000 script postinstall.test.ts
       - name: Tests (computer-use port)
         # Shard 2 of 3: the v2-0.1.2 port scope.
-        run: bun test --timeout 30000 packages/senpi-desktop-prelude packages/senpi-desktop-protocol packages/senpi-desktop-tool packages/senpi-desktop-engine packages/senpi-desktop-service packages/omo-config-core packages/omo-native packages/omo-senpi/src/components/computer-use packages/omo-senpi/src/bundle-size.test.ts packages/omo-senpi/src/bundle-purity.test.ts
       - name: Tests (repo remainder)
         # Shard 3 of 3: everything the other shards already covered stays out
         # via --path-ignore-patterns (repeatable). NOTE: the CLI flag REPLACES
@@ -93,22 +74,11 @@ jobs:
           --path-ignore-patterns 'packages/web/**'
           --path-ignore-patterns 'packages/lsp-tools-mcp/**'
           --path-ignore-patterns 'packages/lsp-daemon/**'
-          --path-ignore-patterns 'packages/omo-codex/plugin/**'
-          --path-ignore-patterns 'packages/omo-codex/scripts/**'
           --path-ignore-patterns 'packages/shared-skills/upstreams/**'
           --path-ignore-patterns 'script/**'
           --path-ignore-patterns 'postinstall.test.ts'
           --path-ignore-patterns '.agents/**'
-          --path-ignore-patterns 'packages/senpi-desktop-prelude/**'
-          --path-ignore-patterns 'packages/senpi-desktop-protocol/**'
-          --path-ignore-patterns 'packages/senpi-desktop-tool/**'
-          --path-ignore-patterns 'packages/senpi-desktop-engine/**'
-          --path-ignore-patterns 'packages/senpi-desktop-service/**'
           --path-ignore-patterns 'packages/omo-config-core/**'
-          --path-ignore-patterns 'packages/omo-native/**'
-          --path-ignore-patterns 'packages/omo-senpi/src/components/computer-use/**'
-          --path-ignore-patterns 'packages/omo-senpi/src/bundle-size.test.ts'
-          --path-ignore-patterns 'packages/omo-senpi/src/bundle-purity.test.ts'
           .
       - name: Build
         run: bun run build

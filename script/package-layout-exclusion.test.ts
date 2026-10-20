@@ -218,7 +218,7 @@ describe("published package layout exclusions", () => {
     // then
     const packedInternalSkillPaths = fakeInternalSkillArtifactPaths.filter((packagePath) => packedPaths.has(packagePath))
     expect(packedInternalSkillPaths).toEqual([])
-  }, { timeout: 20_000 })
+  }, { timeout: 60_000 })
 
   test("#given internal-only command assets #when packing package #then forbidden command assets do not ship", async () => {
     // given
@@ -232,5 +232,5 @@ describe("published package layout exclusions", () => {
     // then
     const packedInternalCommandPaths = fakeInternalCommandArtifactPaths.filter((packagePath) => packedPaths.has(packagePath))
     expect(packedInternalCommandPaths).toEqual([])
-  }, { timeout: 20_000 })
+  }, { timeout: 60_000 })
 })

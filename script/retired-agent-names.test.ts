@@ -42,7 +42,7 @@ const SISYPHUS_ALLOWLIST = /Sisyphus Labs|justsisyphus|sisyphuslabs|sisyphus-dev
 const ORACLE_AGENT_CONTEXT = /subagent_type\s*[:=]\s*["']?oracle\b|@oracle\b|agents\.oracle\b/
 const ALLOWED_MARKER = "<!-- retired-name-allowed -->"
 const ALLOWED_MARKER_LINE_END = new RegExp(`${ALLOWED_MARKER.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&")}\\s*$`)
-const MAX_ALLOWED_MARKERS = 6
+const MAX_ALLOWED_MARKERS = 3
 
 function toPosix(path: string): string {
   return path.replaceAll("\\", "/")
@@ -83,10 +83,24 @@ async function scanSurface(surface: GovernedSurface): Promise<string[]> {
   return violations
 }
 
-function trackedFiles(): string[] {
-  const result = spawnSync("git", ["ls-files", "-z"], { cwd: REPO_ROOT, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 })
-  if (result.status !== 0) throw new Error(`git ls-files failed: ${result.stderr}`)
-  return result.stdout.split("\0").filter((entry) => entry.length > 0).map(toPosix)
+/**
+ * Tracked files that contain a literal, resolved with `git grep`.
+ *
+ * The marker allowance is a repo-wide rule, so every tracked file is in scope. `git grep` reads
+ * that set natively and reports only the files that contain the literal, which keeps the gate in
+ * the same order of magnitude as the rest of the suite instead of opening every tracked file from
+ * the test process.
+ */
+function trackedFilesContaining(literal: string): string[] {
+  const result = spawnSync("git", ["grep", "-F", "-l", "-a", "-e", literal], {
+    cwd: REPO_ROOT,
+    encoding: "utf8",
+    maxBuffer: 64 * 1024 * 1024,
+  })
+  if (result.status !== 0 && result.status !== 1) {
+    throw new Error(`git grep failed: ${result.stderr}`)
+  }
+  return result.stdout.split("\n").map((line) => line.trim()).filter((line) => line.length > 0).map(toPosix)
 }
 
 describe("retired agent names gate", () => {
@@ -105,11 +119,10 @@ describe("retired agent names gate", () => {
 
   test(`at most ${MAX_ALLOWED_MARKERS} lines repo-wide end with the retired-name-allowed marker`, async () => {
     const markerLines: string[] = []
-    for (const relativePath of trackedFiles()) {
+    for (const relativePath of trackedFilesContaining(ALLOWED_MARKER)) {
       const file = Bun.file(join(REPO_ROOT, relativePath))
       if (!(await file.exists())) continue
       const text = await file.text()
-      if (!text.includes(ALLOWED_MARKER)) continue
       text.split(/\r?\n/).forEach((line, index) => {
         if (ALLOWED_MARKER_LINE_END.test(line)) markerLines.push(`${relativePath}:${index + 1}`)
       })

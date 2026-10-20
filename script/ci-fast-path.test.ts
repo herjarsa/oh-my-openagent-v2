@@ -158,11 +158,7 @@ describe("CI fast-path workflow wiring", () => {
     for (const jobName of [
       "test",
       "typecheck",
-      "codex-compatibility",
-      "senpi-compatibility",
-      "lazycodex-published-smoke",
       "build",
-      "omo-ai-payload-check",
     ]) {
       const job = jobs[jobName]
       if (!isRecord(job)) throw new Error(`CI must define ${jobName}`)

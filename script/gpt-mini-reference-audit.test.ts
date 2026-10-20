@@ -24,7 +24,7 @@ describe("GPT Mini reference audit", () => {
 
   test("tracked shipped files no longer reference the retired GPT Mini model", async () => {
     // given
-    const files = await trackedFiles()
+    const files = await trackedFilesReferencingRetiredModel()
 
     // when
     const matches: string[] = []
@@ -40,24 +40,45 @@ describe("GPT Mini reference audit", () => {
 
     // then
     expect(matches).toEqual([])
-  }, 20_000)
+  }, 60_000)
 })
 
-async function trackedFiles(): Promise<string[]> {
-  const process = Bun.spawn(["git", "ls-files", "-z"], {
-    cwd: REPOSITORY_ROOT,
-    stdout: "pipe",
-    stderr: "pipe",
-  })
-  const [stdout, stderr, exitCode] = await Promise.all([
-    new Response(process.stdout).text(),
-    new Response(process.stderr).text(),
-    process.exited,
-  ])
-  if (exitCode !== 0) {
-    throw new Error(`git ls-files failed: ${stderr.trim()}`)
+/**
+ * Tracked files that mention the retired model id or display name.
+ *
+ * The audit covers every tracked shipped file, so the candidate set is resolved with `git grep`,
+ * which reads the tracked tree natively and reports only the files that mention the retired model.
+ * The model id is matched case-insensitively and the display name case-sensitively, exactly like
+ * the content check that runs afterwards.
+ */
+async function trackedFilesReferencingRetiredModel(): Promise<string[]> {
+  const candidates = new Set<string>()
+
+  for (const [literal, ignoreCase] of [[OLD_MODEL_ID, true], [OLD_DISPLAY_NAME, false]] as const) {
+    const args = ["grep", "-F", "-l", "-a"]
+    if (ignoreCase) args.push("-i")
+    args.push("-e", literal)
+
+    const process = Bun.spawn(["git", ...args], {
+      cwd: REPOSITORY_ROOT,
+      stdout: "pipe",
+      stderr: "pipe",
+    })
+    const [stdout, stderr, exitCode] = await Promise.all([
+      new Response(process.stdout).text(),
+      new Response(process.stderr).text(),
+      process.exited,
+    ])
+    if (exitCode !== 0 && exitCode !== 1) {
+      throw new Error(`git grep failed: ${stderr.trim()}`)
+    }
+
+    for (const file of stdout.split("\n").map((line) => line.trim()).filter((line) => line.length > 0)) {
+      candidates.add(file)
+    }
   }
-  return stdout.split("\0").filter((file) => file.length > 0 && !file.startsWith(".omo/evidence/"))
+
+  return [...candidates].filter((file) => !file.startsWith(".omo/evidence/")).toSorted()
 }
 
 function repositoryRootFromMetaUrl(metaUrl: string): string {

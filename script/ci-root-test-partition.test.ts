@@ -196,36 +196,6 @@ describe("root test CI partition", () => {
     expect(job).toContain("WINDOWS_TEST_SHARD: ${{ matrix.shard }}")
   })
 
-  test("#given Windows Senpi compatibility tests #when the package gate runs #then telemetry wraps the flaky test invocation", () => {
-    const job = senpiCompatibilityJob()
-    const windowsStepName = "      - name: Run Senpi compatibility tests with Windows telemetry"
-    const windowsStepStart = job.indexOf(windowsStepName)
-
-    expect(
-      windowsStepStart,
-      "Windows Senpi compatibility tests must be telemetry-wrapped",
-    ).toBeGreaterThanOrEqual(0)
-
-    const windowsStep = job.slice(
-      windowsStepStart,
-      job.indexOf("      - name: Upload Windows Senpi telemetry", windowsStepStart),
-    )
-    const uploadStep = job.slice(
-      job.indexOf("      - name: Upload Windows Senpi telemetry"),
-      job.indexOf("      - name: Write job summary"),
-    )
-
-    expect(windowsStep).toContain("runner.os == 'Windows'")
-    expect(windowsStep).toContain("shell: pwsh")
-    expect(windowsStep).toContain("& .github/scripts/windows-ci-telemetry.ps1")
-    expect(windowsStep).toContain('-Invocation "senpi-compatibility"')
-    expect(windowsStep).toContain('-TestArguments @("test", "packages/omo-senpi")')
-    expect(windowsStep).toContain("exit $LASTEXITCODE")
-    expect(uploadStep).toContain("if: always() && runner.os == 'Windows'")
-    expect(uploadStep).toContain("continue-on-error: true")
-    expect(uploadStep).toContain("uses: actions/upload-artifact@v6")
-  })
-
   test("#given Windows telemetry files #when a matrix leg finishes #then immutable artifacts always upload without gating", () => {
     const job = rootTestJob()
     const uploadStep = job.slice(

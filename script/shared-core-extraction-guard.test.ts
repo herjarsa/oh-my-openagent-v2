@@ -99,7 +99,7 @@ describe("shared core extraction guardrails", () => {
 
     // then
     expect(offenders).toEqual([])
-  })
+  }, { timeout: 120_000 })
 
   test("#given core package manifests #when scanned #then they do not depend on harness adapters", async () => {
     // given

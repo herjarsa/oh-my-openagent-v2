@@ -9,7 +9,9 @@
 // commands and both bunfig configs against this array.
 //
 // Entries are removed only when the underlying isolation requirement is fixed
-// at its root, never to make a leg faster.
+// at its root, never to make a leg faster. The release-version entry left with the
+// publish workflow metadata gate it existed for: that gate was the only spawner in
+// the file, so the file no longer needs a serial process of its own.
 
 export interface SerialQuarantineEntry {
   /** Repo-relative test path, exactly as bun test and pathIgnorePatterns spell it. */
@@ -22,10 +24,6 @@ export const ROOT_TEST_SERIAL_QUARANTINE: readonly SerialQuarantineEntry[] = [
   {
     path: "packages/shared-skills/provenance-gate.test.ts",
     reason: "walks the whole shared-skills tree and is starved by concurrent filesystem load",
-  },
-  {
-    path: "script/release-version.test.ts",
-    reason: "five sequential Git Bash spawns of the publish workflow's metadata step; one spawn exhausted its 10s budget under Windows --parallel while the test's own work is string parsing (run 34962017319)",
   },
 ] as const
 

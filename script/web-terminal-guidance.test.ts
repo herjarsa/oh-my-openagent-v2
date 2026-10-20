@@ -8,7 +8,6 @@ describe("web terminal visual QA guidance", () => {
     const centralDoc = readFileSync(new URL("docs/reference/web-terminal-visual-qa.md", repo), "utf8")
     const pointerFiles = [
       ".agents/skills/opencode-qa/SKILL.md",
-      ".agents/skills/codex-qa/SKILL.md",
     ] as const
 
     // when

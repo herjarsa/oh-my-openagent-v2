@@ -8,6 +8,17 @@ function readAgents(): string {
   return readFileSync(AGENTS_PATH, "utf8")
 }
 
+/**
+ * CLAUDE.md is a pointer file: it names the shared AGENTS.md document instead of duplicating it, so
+ * the Claude side can never drift from the OpenCode side. Resolve the pointer before asserting the
+ * shared dev-environment contract.
+ */
+function readClaudeEntryDoc(): string {
+  const claudeContent = readFileSync(join(import.meta.dir, "..", "CLAUDE.md"), "utf8").trim()
+  if (claudeContent !== "AGENTS.md") return claudeContent
+  return readAgents()
+}
+
 describe("AGENTS.md dev-environment documentation", () => {
   test("#given root AGENTS.md #when scanned #then it documents the shared setup/cleanup scripts and every harness wiring", () => {
     // given
@@ -56,7 +67,7 @@ describe("CLAUDE.md (shared with the Claude side)", () => {
 
     // when / then
     expect(existsSync(claudePath), "CLAUDE.md must exist so Claude Code shares the infra").toBe(true)
-    const content = readFileSync(claudePath, "utf8")
+    const content = readClaudeEntryDoc()
     expect(content).toContain("DEVELOPMENT ENVIRONMENT")
     expect(content).toContain("script/agent/setup.sh")
   })

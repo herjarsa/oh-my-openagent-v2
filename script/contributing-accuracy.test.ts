@@ -47,16 +47,24 @@ describe("CONTRIBUTING.md accuracy", () => {
     }
   })
 
-  test("#given the contributor guide #when scanned for testing + QA discipline #then bun test, codex suite, and evidence rules are present", () => {
+  test("#given the contributor guide #when scanned for testing + QA discipline #then bun test and the OpenCode QA rules are present", () => {
     // given
     const content = readContributing()
 
     // then
     expect(content).toContain("bun test")
-    expect(content).toContain("test:codex")
     expect(content).toContain(".omo/evidence")
     expect(content).toContain("opencode-qa")
-    expect(content).toContain("codex-qa")
+
+    // The fork ships the OpenCode edition only: the retired harness suites and QA skills
+    // must not be documented as the way to test or QA a change.
+    expect(content).not.toContain("test:codex")
+    expect(content).not.toContain("codex-qa")
+    expect(content).not.toContain("senpi-qa")
+    expect(content).not.toContain("omo-codex")
+    expect(content).not.toContain("omo-senpi")
+    expect(content).not.toContain("senpi-task")
+    expect(content).not.toContain("lazycodex")
   })
 
   test("#given the contributor guide #when scanned for the dev-environment sections #then cross-harness setup, credentials, and isolation are documented", () => {

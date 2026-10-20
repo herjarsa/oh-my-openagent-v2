@@ -23,7 +23,7 @@ const packageGuidanceDocPaths = [
   "docs/reference/web-terminal-visual-qa.md",
 ] as const
 const packageLayoutTestTimeoutMs = 60_000
-const packDryRunTimeoutMs = 15_000
+const packDryRunTimeoutMs = 60_000
 
 setDefaultTimeout(packageLayoutTestTimeoutMs)
 

@@ -1,16 +1,16 @@
 # Re-export Shim Inventory
 
-This inventory tracks adapter shims that preserve old `packages/omo-opencode/src/` and `packages/omo-codex/src/` import paths while the implementation lives in extracted packages. These files should stay thin: a shim re-exports from `@oh-my-opencode/*` and should not regain local logic.
+This inventory tracks the adapter shims that preserve the old `packages/omo-opencode/src/` import paths while the implementation lives in the extracted packages. These files should stay thin: a shim re-exports from `@oh-my-opencode/*` and should not regain local logic.
 
-Exact scan definition: a shim is a tracked `.ts` file under `packages/omo-opencode/src` or `packages/omo-codex/src` whose first line matches `/^export (\*|\{).*from ["']@oh-my-opencode\//`.
+Exact scan definition: a shim is a tracked `.ts` file under `packages/omo-opencode/src` whose first line matches `/^export (\*|\{).*from ["']@oh-my-opencode\//`.
 
 Generated command:
 
 ```bash
-git ls-files packages/omo-opencode/src packages/omo-codex/src | grep '\.ts$' | sort | xargs awk 'FNR==1 && /^export (\*|\{).*from ["'"'"']@oh-my-opencode\// { print FILENAME }'
+git ls-files packages/omo-opencode/src | grep '\.ts$' | sort | xargs awk 'FNR==1 && /^export (\*|\{).*from ["'"'"']@oh-my-opencode\// { print FILENAME }'
 ```
 
-Snapshot date: 2026-08-31. Total shim exports found: 255.
+Snapshot date: 2026-10-20. Total shim exports found: 213.
 
 ## Aggregate By Target Package
 
@@ -18,17 +18,17 @@ Snapshot date: 2026-08-31. Total shim exports found: 255.
 |---|---:|
 | `@oh-my-opencode/agents-md-core` | 2 |
 | `@oh-my-opencode/boulder-state` | 1 |
-| `@oh-my-opencode/claude-code-compat-core` | 36 |
+| `@oh-my-opencode/claude-code-compat-core` | 17 |
 | `@oh-my-opencode/delegate-core` | 1 |
 | `@oh-my-opencode/hashline-core` | 6 |
 | `@oh-my-opencode/mcp-client-core` | 21 |
-| `@oh-my-opencode/model-core` | 7 |
+| `@oh-my-opencode/model-core` | 6 |
 | `@oh-my-opencode/openclaw-core` | 30 |
 | `@oh-my-opencode/rules-engine` | 4 |
-| `@oh-my-opencode/skills-loader-core` | 65 |
+| `@oh-my-opencode/skills-loader-core` | 35 |
 | `@oh-my-opencode/team-core` | 45 |
 | `@oh-my-opencode/tmux-core` | 3 |
-| `@oh-my-opencode/utils` | 53 |
+| `@oh-my-opencode/utils` | 42 |
 
 ## Exhaustive Shim Paths
 

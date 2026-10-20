@@ -157,7 +157,7 @@ For QA isolation, run:
 source script/agent/qa-sandbox.sh
 ```
 
-This exports an isolated, throwaway environment with its own `XDG_*` directories and a fresh `CODEX_HOME` under a `mktemp` directory. It also sets `OPENCODE_DISABLE_AUTOUPDATE=1` and `OPENCODE_DISABLE_MODELS_FETCH=1`. QA never reads or writes the host's real `~/.config/opencode` or `~/.codex`. This mirrors the conventions used by the `opencode-qa` and `codex-qa` skills.
+This exports an isolated, throwaway environment with its own `XDG_*` directories and a fresh `CODEX_HOME` under a `mktemp` directory. It also sets `OPENCODE_DISABLE_AUTOUPDATE=1` and `OPENCODE_DISABLE_MODELS_FETCH=1`. QA never reads or writes the host's real `~/.config/opencode` or `~/.codex`. This mirrors the conventions used by the `opencode-qa` skill.
 
 For containerized environments (Codespaces, Dev Containers, Docker), see `.devcontainer/README.md`. It documents injecting provider credentials (via `.env`, Codespaces secrets, or `remoteEnv`) and bind-mounting your `~/.codex`, `~/.claude`, and `~/.config/opencode` config into the container so OpenCode, Codex, and Claude Code all work inside it.
 
@@ -168,7 +168,7 @@ The repository is a monorepo with layered packages under `packages/`.
 ```
 oh-my-opencode/
 ├── packages/
-│   ├── omo-opencode/          # OpenCode Ultimate edition adapter and build entry
+│   ├── omo-opencode/          # OpenCode edition adapter and build entry
 │   │   └── src/
 │   │       ├── index.ts         # Thin wrapper default-exporting PluginModule via createPluginModule()
 │   │       ├── plugin-config.ts # JSONC multi-level config (Zod v4)
@@ -182,7 +182,6 @@ oh-my-opencode/
 │   │       ├── cli/             # CLI: install, run, doctor, mcp-oauth, boulder, ulw-loop (Commander.js)
 │   │       ├── plugin/          # OpenCode hook handlers + 5-tier hook composition
 │   │       └── plugin-handlers/ # 6-phase config loading pipeline
-│   ├── omo-codex/               # Codex Light edition / lazycodex
 │   ├── utils/                   # Core package
 │   ├── model-core/              # Core package
 │   ├── prompts-core/            # Core package
@@ -204,12 +203,12 @@ oh-my-opencode/
 │   ├── lsp-tools-mcp/           # MCP package
 │   ├── lsp-daemon/              # MCP package
 │   ├── git-bash-mcp/            # MCP package
-│   ├── shared-skills/           # Cross-harness SKILL.md bundle
+│   ├── shared-skills/           # SKILL.md bundle
 │   └── web/                     # Marketing site (Next.js 15 + Cloudflare Workers)
 └── dist/                        # Build output (ESM + .d.ts)
 ```
 
-The multi-harness refactor is in progress. See `ROADMAP.md` for the current state.
+The package layering refactor is in progress. See `ROADMAP.md` for the current state.
 
 ## Development Workflow
 
@@ -233,8 +232,6 @@ bun run build:schema
 
 # Run the root Bun test suite
 bun test
-
-# Run the Codex Light compatibility suite
 ```
 
 Tests are co-located as `*.test.ts` files and follow a given/when/then style.
@@ -326,7 +323,7 @@ export function createMyHook(deps: { logger: Logger }) {
 
 ## QA Discipline
 
-Any change to `packages/omo-opencode` (the OpenCode side) must be QA'd with the `opencode-qa` skill. Any change to `packages/omo-codex` (the Codex Light side) must be QA'd with the `codex-qa` skill. Any change to `packages/omo-senpi` or `packages/senpi-task` (the Senpi side) must be QA'd with the `senpi-qa` skill. Record QA evidence under `.omo/evidence/<date>-<slug>/`; live Senpi QA records it under `.omo/evidence/omo-senpi-adapter/<slug>/`, resolved by `.agents/skills/senpi-qa/scripts/resolve-evidence-dir.mjs`. Evidence stays local: `.omo/evidence/` is gitignored and `script/tracked-evidence-paths-audit.test.ts` fails when any evidence path is tracked, so summarize the captures in the PR's QA & Evidence section instead of committing them.
+Any change to `packages/omo-opencode` (the OpenCode edition, the only edition this fork ships) must be QA'd with the `opencode-qa` skill. Record QA evidence under `.omo/evidence/<date>-<slug>/`. Evidence stays local: `.omo/evidence/` is gitignored and `script/tracked-evidence-paths-audit.test.ts` fails when any evidence path is tracked, so summarize the captures in the PR's QA & Evidence section instead of committing them.
 
 "It typechecks" or "`bun test` is green" is not QA. You must drive the real harness and record the observed behavior.
 

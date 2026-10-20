@@ -166,15 +166,18 @@ describe("Docker QA harness", () => {
     expect(raw).toContain("--tui")
   })
 
-  test("#given both QA skills #when looking for the docker-qa reference #then each documents the Docker path", () => {
+  test("#given every shipped QA skill #when looking for the docker-qa reference #then each documents the Docker path", () => {
     // given
-    const oc = join(REPO_ROOT, ".agents", "skills", "opencode-qa", "references", "docker-qa.md")
-    const cx = join(REPO_ROOT, ".claude", "skills", "codex-qa", "references", "docker-qa.md")
+    // The fork ships one QA skill; every shipped QA skill must document the Docker QA path.
+    const qaSkillReferencePaths = [
+      ".agents/skills/opencode-qa/references/docker-qa.md",
+    ] as const
 
     // then
-    expect(existsSync(oc), "opencode-qa needs references/docker-qa.md").toBe(true)
-    expect(existsSync(cx), "codex-qa needs references/docker-qa.md").toBe(true)
-    expect(read(oc)).toContain("qa-docker.sh")
-    expect(read(cx)).toContain("qa-docker.sh")
+    for (const referencePath of qaSkillReferencePaths) {
+      const path = join(REPO_ROOT, ...referencePath.split("/"))
+      expect(existsSync(path), `${referencePath} must exist`).toBe(true)
+      expect(read(path), `${referencePath} must document the Docker QA runner`).toContain("qa-docker.sh")
+    }
   })
 })

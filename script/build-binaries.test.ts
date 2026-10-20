@@ -111,7 +111,7 @@ describe("build-binaries", () => {
       await writeFakeCli(tempDir);
       const nodeCliPath = join(tempDir, "dist", "cli-node", "index.js");
       await mkdir(join(tempDir, "dist", "cli-node"), { recursive: true });
-      await writeFile(nodeCliPath, "#!/usr/bin/env node\nconsole.log(`node-cli ${process.argv.slice(2).join(" ")}`);\n");
+      await writeFile(nodeCliPath, "#!/usr/bin/env node\nconsole.log(`node-cli ${process.argv.slice(2).join(' ')}`);\n");
       await chmod(nodeCliPath, 0o755);
 
       // when

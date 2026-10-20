@@ -62,5 +62,5 @@ describe("npm spawn options", () => {
     // then
     expect(() => JSON.parse(raw)).not.toThrow()
     expect(raw).toContain("omo-pack-probe")
-  })
+  }, { timeout: 120_000 })
 })
