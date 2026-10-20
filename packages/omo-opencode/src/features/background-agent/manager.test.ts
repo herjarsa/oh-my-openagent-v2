@@ -8809,3 +8809,55 @@ describe("BackgroundManager attempt lifecycle bindings", () => {
     manager.shutdown()
   })
 })
+
+describe("BackgroundManager launch agent key", () => {
+  test("sends the agent CONFIG KEY on the wire, not the display name", async () => {
+    //#given
+    clearAllDelegatedChildSessionBootstrap()
+    const promptCalls: Array<{ body: Record<string, unknown> }> = []
+    const client = {
+      session: {
+        get: async () => ({ data: { directory: tmpdir() } }),
+        create: async () => ({ data: { id: "ses_agent_key" } }),
+        promptAsync: async (args: { path: { id: string }; body: Record<string, unknown> }) => {
+          promptCalls.push({ body: args.body })
+          return {}
+        },
+        abort: async () => ({}),
+      },
+    }
+    const manager = new BackgroundManager({ pluginContext: createPluginInput(client) })
+    stubNotifyParentSession(manager)
+    const task = createMockTask({
+      id: "bg_agent_key",
+      parentSessionId: "parent-session",
+      status: "pending",
+      queuedAt: new Date(),
+      prompt: "agent-key-prompt-sentinel",
+      agent: "Sisyphus-Junior",
+      model: { providerID: "omniroute", modelID: "auto/best-reasoning" },
+    })
+    getTaskMap(manager).set(task.id, task)
+    const input = {
+      description: task.description,
+      prompt: task.prompt,
+      agent: task.agent,
+      parentSessionId: task.parentSessionId,
+      parentMessageId: task.parentMessageId,
+      parentModel: task.parentModel,
+      parentAgent: task.parentAgent,
+      parentTools: task.parentTools,
+      model: task.model,
+    }
+
+    //#when
+    await (cast<{ startTask: (item: { task: BackgroundTask; input: typeof input }) => Promise<void> }>(manager))
+      .startTask({ task, input })
+
+    //#then
+    expect(promptCalls.length).toBeGreaterThan(0)
+    expect(promptCalls[0].body.agent).toBe("sisyphus-junior")
+
+    manager.shutdown()
+  })
+})

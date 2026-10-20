@@ -98,7 +98,7 @@ import {
 } from "./session-stream-activity"
 import { isActiveSessionStatus, isTerminalSessionStatus } from "./session-status-classifier"
 import { buildFallbackBody, FALLBACK_AGENT, isAgentNotFoundError } from "./spawner"
-import { getAgentConfigKey } from "../../shared/agent-display-names";
+import { getAgentConfigKey, normalizeAgentForPromptKey } from "../../shared/agent-display-names";
 import { invokeTmuxSessionCreatedCallback } from "./spawner/tmux-callback-invoker"
 import {
   createSubagentDepthLimitError,
@@ -953,7 +953,9 @@ The fallback retry session is now created and can be inspected directly.
     })
 
     const promptBody = {
-      agent: input.agent,
+      // OpenCode 2 registers plugin agents under their CONFIG KEY, so the name that goes on
+      // the wire must be the key, not the display name. The sync path already normalizes.
+      agent: normalizeAgentForPromptKey(input.agent) ?? input.agent,
       ...(launchModel ? { model: launchModel } : {}),
       ...(launchVariant ? { variant: launchVariant } : {}),
       system: input.skillContent,
@@ -1443,7 +1445,7 @@ The fallback retry session is now created and can be inspected directly.
       input: {
         path: { id: existingTask.sessionId },
         body: {
-          agent: existingTask.agent,
+          agent: normalizeAgentForPromptKey(existingTask.agent) ?? existingTask.agent,
           ...(resumeModel ? { model: resumeModel } : {}),
           ...(resumeVariant ? { variant: resumeVariant } : {}),
           tools: (() => {
