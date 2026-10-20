@@ -61,10 +61,8 @@ jobs:
         # Shard 1 of 3 (serial, one process each: a single whole-repo bun test
         # OOM-kills runners now that the port added heavy process-spawning suites).
         run: bun test --timeout 30000 script postinstall.test.ts
-      - name: Tests (computer-use port)
-        # Shard 2 of 3: the v2-0.1.2 port scope.
       - name: Tests (repo remainder)
-        # Shard 3 of 3: everything the other shards already covered stays out
+        # Shard 2 of 2: everything the other shard already covered stays out
         # via --path-ignore-patterns (repeatable). NOTE: the CLI flag REPLACES
         # bunfig's pathIgnorePatterns instead of adding to it, so the bunfig
         # list is repeated here too.
