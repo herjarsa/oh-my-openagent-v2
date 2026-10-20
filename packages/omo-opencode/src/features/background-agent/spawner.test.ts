@@ -5,6 +5,7 @@ import {
 } from "../../shared/session-prompt-params-state"
 import { releaseAllPromptAsyncReservationsForTesting } from "../../shared/prompt-async-gate"
 import { buildFallbackBody, createTask, isAgentNotFoundError, resumeTask, startTask } from "./spawner"
+import { buildTaskPromptBody } from "./spawner/task-prompt-body"
 import type { BackgroundTask } from "./types"
 
 type PromptRequest = {
@@ -150,7 +151,8 @@ describe("background-agent spawner agent-not-found fallback", () => {
     //#then
     // Should have called promptAsync twice: once with original agent, once with fallback
     expect(promptCalls).toHaveLength(2)
-    expect(promptCalls[0].body.agent).toBe("Sisyphus-Junior")
+    // Wire carries the agent config key, not the display name
+    expect(promptCalls[0].body.agent).toBe("sisyphus-junior")
     expect(promptCalls[1].body.agent).toBe("general")
     // Original prompt content preserved in fallback
     expect(promptCalls[1].body.parts).toEqual(promptCalls[0].body.parts)
@@ -343,7 +345,8 @@ describe("background-agent spawner agent-not-found fallback", () => {
 
     //#then
     expect(promptCalls).toHaveLength(2)
-    expect(promptCalls[0].body.agent).toBe("Sisyphus-Junior")
+    // Wire carries the agent config key, not the display name
+    expect(promptCalls[0].body.agent).toBe("sisyphus-junior")
     expect(promptCalls[1].body.agent).toBe("general")
     expect(onTaskError).not.toHaveBeenCalled()
   })
@@ -833,7 +836,8 @@ describe("background-agent spawner fallback model promotion", () => {
 
     //#then
     expect(promptCalls).toHaveLength(1)
-    expect(promptCalls[0]?.body?.agent).toBe("Hephaestus - Deep Agent")
+    // Wire carries the agent config key, not the display name
+    expect(promptCalls[0]?.body?.agent).toBe("hephaestus")
   })
 
   test("persists the same normalized agent used by promptAsync into session-agent state (GH-3259 follow-up)", async () => {
@@ -893,8 +897,10 @@ describe("background-agent spawner fallback model promotion", () => {
     //#then
     expect(promptCalls).toHaveLength(1)
     const dispatchedAgent = promptCalls[0]?.body?.agent
-    expect(dispatchedAgent).toBe("Hephaestus - Deep Agent")
-    expect(getSessionAgent(sessionID)).toBe(dispatchedAgent)
+    // Wire carries the agent config key, not the display name
+    expect(dispatchedAgent).toBe("hephaestus")
+    // Session-agent state keeps the stripped display name (spawner.ts, untouched)
+    expect(getSessionAgent(sessionID)).toBe("Hephaestus - Deep Agent")
   })
 })
 
@@ -1014,5 +1020,61 @@ describe("background-agent spawner fallback helper characterization", () => {
         question: false,
       },
     })
+  })
+})
+
+describe("background-agent spawner task prompt agent key normalization", () => {
+  test("maps Sisyphus-Junior display name to sisyphus-junior config key", () => {
+    //#given
+    const options = {
+      kind: "launch",
+      agent: "Sisyphus-Junior",
+      model: undefined,
+      system: undefined,
+      prompt: "Do work",
+      includeTeamToolDenylist: false,
+    } as const
+
+    //#when
+    const body = buildTaskPromptBody(options)
+
+    //#then
+    expect(body.agent).toBe("sisyphus-junior")
+  })
+
+  test("passes through unknown custom agent name unchanged", () => {
+    //#given
+    const options = {
+      kind: "launch",
+      agent: "my-custom-agent",
+      model: undefined,
+      system: undefined,
+      prompt: "Do work",
+      includeTeamToolDenylist: false,
+    } as const
+
+    //#when
+    const body = buildTaskPromptBody(options)
+
+    //#then
+    expect(body.agent).toBe("my-custom-agent")
+  })
+
+  test("leaves plain builtin explore unchanged", () => {
+    //#given
+    const options = {
+      kind: "launch",
+      agent: "explore",
+      model: undefined,
+      system: undefined,
+      prompt: "Do work",
+      includeTeamToolDenylist: false,
+    } as const
+
+    //#when
+    const body = buildTaskPromptBody(options)
+
+    //#then
+    expect(body.agent).toBe("explore")
   })
 })
