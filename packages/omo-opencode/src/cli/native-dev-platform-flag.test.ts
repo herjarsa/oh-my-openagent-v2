@@ -43,7 +43,7 @@ describe("isNativeDevPlatformEnabled", () => {
 })
 
 describe("availableInstallPlatforms", () => {
-  test("#given no flag #when platforms are listed #then native is public and native-dev is absent", () => {
+  test("#given no flag #when platforms are listed #then only opencode is offered", () => {
     // given
     const env = {} satisfies NodeJS.ProcessEnv
 
@@ -51,10 +51,10 @@ describe("availableInstallPlatforms", () => {
     const platforms = availableInstallPlatforms(env)
 
     // then
-    expect(platforms).toEqual(["opencode", "codex", "both", "native"])
+    expect(platforms).toEqual(["opencode"])
   })
 
-  test("#given the flag enabled #when platforms are listed #then native-dev is offered last", () => {
+  test("#given the flag enabled #when platforms are listed #then only opencode is still offered", () => {
     // given
     const env = { [NATIVE_DEV_PLATFORM_ENV_FLAG]: "1" } satisfies NodeJS.ProcessEnv
 
@@ -62,10 +62,10 @@ describe("availableInstallPlatforms", () => {
     const platforms = availableInstallPlatforms(env)
 
     // then
-    expect(platforms).toEqual(["opencode", "codex", "both", "native", "native-dev"])
+    expect(platforms).toEqual(["opencode"])
   })
 
-  test("#given only the legacy flag #when platforms are listed #then native-dev is still offered", () => {
+  test("#given only the legacy flag #when platforms are listed #then only opencode is still offered", () => {
     // given
     const env = { [LEGACY_NATIVE_DEV_PLATFORM_ENV_FLAG]: "true" } satisfies NodeJS.ProcessEnv
 
@@ -73,6 +73,6 @@ describe("availableInstallPlatforms", () => {
     const platforms = availableInstallPlatforms(env)
 
     // then
-    expect(platforms).toEqual(["opencode", "codex", "both", "native", "native-dev"])
+    expect(platforms).toEqual(["opencode"])
   })
 })

@@ -4,7 +4,7 @@
 
 ## OVERVIEW
 
-Backend for the `monitor_*` tools: spawn long-running watcher processes, decode their stdout/stderr into lines, filter by regex, keep a per-monitor ring buffer, and inject batched output into the parent session as internal prompts. **OFF by default** — gated on `monitor.enabled` (schema in [`src/config/schema/monitor.ts`](../../config/schema/monitor.ts)). Tool wrappers live in [`src/tools/monitor/`](../../tools/monitor); this directory owns the manager, pipeline, and delivery logic.
+Backend for the `monitor_*` tools: spawn long-running watcher processes, decode their stdout/stderr into lines, filter by regex, keep a per-monitor ring buffer, and inject batched output into the parent session as internal prompts. **OFF by default** — gated on `monitor.enabled` (schema in `src/config/schema/monitor.ts`). Tool wrappers live in `src/tools/monitor/`; this directory owns the manager, pipeline, and delivery logic.
 
 ## STRUCTURE
 
@@ -37,11 +37,11 @@ Backend for the `monitor_*` tools: spawn long-running watcher processes, decode 
 
 | Where | What |
 |-------|------|
-| [`src/plugin/tool-registry-gated-tools.ts`](../../plugin/tool-registry-gated-tools.ts) | Registers `monitor_start` / `monitor_stop` / `monitor_list` / `monitor_output` (from `src/tools/monitor/create-monitor-tools.ts`) only when `monitor.enabled` and a manager exists |
-| [`src/plugin/event.ts`](../../plugin/event.ts) | Forwards session events to `monitorManager.handleEvent` |
-| [`src/plugin/event-session-lifecycle.ts`](../../plugin/event-session-lifecycle.ts) | `stopSessionMonitors(sessionID)` on session teardown |
-| [`create-transform-hooks.ts`](../../plugin/hooks/create-transform-hooks.ts) | `monitor-status-injector` Transform hook when enabled |
-| [`background-agent/process-cleanup`](../background-agent/process-cleanup.ts) | Manager registers itself so orphaned watcher processes die on plugin shutdown |
+| `src/plugin/tool-registry-gated-tools.ts` | Registers `monitor_start` / `monitor_stop` / `monitor_list` / `monitor_output` (from `src/tools/monitor/create-monitor-tools.ts`) only when `monitor.enabled` and a manager exists |
+| `src/plugin/event.ts` | Forwards session events to `monitorManager.handleEvent` |
+| `src/plugin/event-session-lifecycle.ts` | `stopSessionMonitors(sessionID)` on session teardown |
+| `create-transform-hooks.ts` | `monitor-status-injector` Transform hook when enabled |
+| `background-agent/process-cleanup` | Manager registers itself so orphaned watcher processes die on plugin shutdown |
 
 ## CONVENTIONS
 

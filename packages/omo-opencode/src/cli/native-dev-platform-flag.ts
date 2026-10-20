@@ -13,7 +13,6 @@ export function isNativeDevPlatformEnabled(env: NodeJS.ProcessEnv = process.env)
 }
 
 export function availableInstallPlatforms(env: NodeJS.ProcessEnv = process.env): InstallPlatform[] {
-  const platforms: InstallPlatform[] = ["opencode", "codex", "both", "native"]
-  if (isNativeDevPlatformEnabled(env)) platforms.push("native-dev")
-  return platforms
+  void env
+  return ["opencode"]
 }

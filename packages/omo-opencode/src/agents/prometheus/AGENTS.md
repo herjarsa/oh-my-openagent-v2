@@ -10,11 +10,11 @@ description: Developer reference for the Prometheus strategic planner agent thin
 ## OVERVIEW
 
 Prometheus is the interview-mode strategic planner. This directory is a thin OpenCode adapter over one harness-neutral prompt asset:
-[`packages/prompts-core/prompts/prometheus/default.md`](../../../../prompts-core/prompts/prometheus/default.md).
+`packages/prompts-core/prompts/prometheus/default.md`.
 
-The prompt is intentionally small. It identifies Prometheus as the planner, keeps plan mode sticky, and requires the path-backed [`ulw-plan`](../../../../shared-skills/skills/ulw-plan/SKILL.md) skill for the planning mechanics: exploration, clear/unclear intent routing, approval gate, plan scaffold, review flow, and final `.omo` plan output.
+The prompt is intentionally small. It identifies Prometheus as the planner, keeps plan mode sticky, and requires the path-backed `ulw-plan` skill for the planning mechanics: exploration, clear/unclear intent routing, approval gate, plan scaffold, review flow, and final `.omo` plan output.
 
-This shape follows the package layering refactor in [`ROADMAP.md`](../../../../../ROADMAP.md): prompts are harness-neutral core assets, shared planning behavior lives in the skill layer, and the OpenCode adapter keeps only runtime integration.
+This shape follows the package layering refactor in `ROADMAP.md`: prompts are harness-neutral core assets, shared planning behavior lives in the skill layer, and the OpenCode adapter keeps only runtime integration.
 
 ## FILES
 
@@ -52,8 +52,8 @@ Prometheus itself stays a planner. It reads, searches, and writes planning artif
 - Must explore codebase before planning (NEVER plan blind)
 - Plans saved to `.omo/plans/`
 - Acceptance criteria requiring "user manually tests" are FORBIDDEN
-- Prompt edits belong in [`packages/prompts-core/prompts/prometheus/default.md`](../../../../prompts-core/prompts/prometheus/default.md), not in TypeScript section files
-- Planning mechanics belong in the path-backed [`ulw-plan`](../../../../shared-skills/skills/ulw-plan/SKILL.md) skill
+- Prompt edits belong in `packages/prompts-core/prompts/prometheus/default.md`, not in TypeScript section files
+- Planning mechanics belong in the path-backed `ulw-plan` skill
 
 ## PLAN OUTPUT FORMAT
 

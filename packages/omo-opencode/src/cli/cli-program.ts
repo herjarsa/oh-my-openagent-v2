@@ -7,11 +7,7 @@ import { doctor, resolveDoctorTarget } from "./doctor"
 import { createMcpOAuthCommand } from "./mcp-oauth"
 import { configureRuntimeCommands } from "./runtime-commands"
 import { runConfigMigrate } from "./config-migrate"
-import {
-  availableInstallPlatforms,
-  isNativeDevPlatformEnabled,
-  NATIVE_DEV_PLATFORM_ENV_FLAG,
-} from "./native-dev-platform-flag"
+import { availableInstallPlatforms } from "./native-dev-platform-flag"
 import type { InstallArgs } from "./types"
 import type { RunOptions } from "./run"
 import type { GetLocalVersionOptions } from "./get-local-version/types"
@@ -61,14 +57,8 @@ export function resolveInstallArgs(
   options: InstallCommandOptions,
   invocationName: string | undefined = process.env.OMO_INVOCATION_NAME,
 ): InstallArgs {
-  const defaultPlatform =
-    process.env.OMO_EDITION === "codex" || invocationName === "lazycodex" || invocationName === "lazycodex-ai" ? "codex" : undefined
-  const platform = options.platform ?? defaultPlatform
-  if (platform === "native-dev" && !isNativeDevPlatformEnabled()) {
-    throw new Error(
-      `The native-dev install platform is not available in this release. Set ${NATIVE_DEV_PLATFORM_ENV_FLAG}=1 to enable it from a source checkout.`,
-    )
-  }
+  void invocationName
+  const platform = options.platform
 
   return {
     tui: options.tui !== false,
@@ -256,7 +246,7 @@ Examples:
 `)
   .action(async (options: DoctorCommandOptions) => {
     const rootOptions = program.opts<RootCommandOptions>()
-    const rootDoctorPlatform = rootOptions.platform === "opencode" || rootOptions.platform === "codex" ? rootOptions.platform : undefined
+    const rootDoctorPlatform = rootOptions.platform
     const mode = options.status ? "status" : options.verbose ? "verbose" : "default"
     const doctorOptions: DoctorOptions = {
       mode,

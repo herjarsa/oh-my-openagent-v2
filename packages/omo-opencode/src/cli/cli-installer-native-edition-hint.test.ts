@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, mock, spyOn } from "bun:test"
 import * as configManager from "./config-manager"
 import * as astGrepInstall from "./install-ast-grep-sg"
-import * as nativeDevInstaller from "./install-native-dev"
 import { runCliInstaller } from "./cli-installer"
 import { NATIVE_EDITION_GUIDE_URL, NATIVE_EDITION_INSTALL_COMMAND } from "./native-edition-hint"
 import type { InstallArgs } from "./types"
@@ -77,23 +76,5 @@ describe("runCliInstaller OmO Native hint", () => {
     expect(output).toContain(NATIVE_EDITION_GUIDE_URL)
   })
 
-  it("stays silent about OmO Native when the install target is the native development adapter", async () => {
-    // given
-    spyOn(nativeDevInstaller, "runNativeDevInstaller").mockResolvedValue({
-      ok: true,
-      action: "install",
-      agentDir: "/tmp/omo-agent",
-      settingsPath: "/tmp/omo-agent/settings.json",
-      pluginPath: "/tmp/repo/packages/omo-senpi/plugin",
-      changed: true,
-      backupPath: "/tmp/omo-agent/settings.json.20260921T000000000Z.backup",
-    })
-
-    // when
-    const result = await runCliInstaller({ tui: false, platform: "native-dev" }, "3.4.0")
-
-    // then
-    expect(result).toBe(0)
-    expect(printedOutput()).not.toContain(NATIVE_EDITION_INSTALL_COMMAND)
-  })
+)
 })

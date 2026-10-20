@@ -134,8 +134,7 @@ export function printBox(content: string, title?: string): void {
 export function validateNonTuiArgs(args: InstallArgs): { valid: boolean; errors: string[] } {
   const errors: string[] = []
   const platform = resolvePlatform(args)
-  const hasOpenCode = platform === "opencode" || platform === "both"
-  const hasCodexOnly = platform === "codex"
+  const hasOpenCode = platform === "opencode"
 
   if (hasOpenCode && args.claude === undefined) {
     errors.push("--claude is required (values: no, yes, max20)")
@@ -191,11 +190,6 @@ export function validateNonTuiArgs(args: InstallArgs): { valid: boolean; errors:
     errors.push(`Invalid --vercel-ai-gateway value: ${args.vercelAiGateway} (expected: no, yes)`)
   }
 
-  if (hasCodexOnly) {
-    const opencodeFlagErrors = collectCodexOnlyOpenCodeFlagErrors(args)
-    errors.push(...opencodeFlagErrors)
-  }
-
   return { valid: errors.length === 0, errors }
 }
 
@@ -203,29 +197,13 @@ function resolvePlatform(args: InstallArgs): InstallPlatform {
   return args.platform ?? "opencode"
 }
 
-function collectCodexOnlyOpenCodeFlagErrors(args: InstallArgs): string[] {
-  const errors: string[] = []
-  if (args.claude !== undefined) errors.push("--claude cannot be used with --platform=codex")
-  if (args.openai !== undefined) errors.push("--openai cannot be used with --platform=codex")
-  if (args.gemini !== undefined) errors.push("--gemini cannot be used with --platform=codex")
-  if (args.copilot !== undefined) errors.push("--copilot cannot be used with --platform=codex")
-  if (args.opencodeZen !== undefined) errors.push("--opencode-zen cannot be used with --platform=codex")
-  if (args.zaiCodingPlan !== undefined) errors.push("--zai-coding-plan cannot be used with --platform=codex")
-  if (args.kimiForCoding !== undefined) errors.push("--kimi-for-coding cannot be used with --platform=codex")
-  if (args.opencodeGo !== undefined) errors.push("--opencode-go cannot be used with --platform=codex")
-  if (args.bailianCodingPlan !== undefined) errors.push("--bailian-coding-plan cannot be used with --platform=codex")
-  if (args.minimaxCnCodingPlan !== undefined) errors.push("--minimax-cn-coding-plan cannot be used with --platform=codex")
-  if (args.minimaxCodingPlan !== undefined) errors.push("--minimax-coding-plan cannot be used with --platform=codex")
-  if (args.vercelAiGateway !== undefined) errors.push("--vercel-ai-gateway cannot be used with --platform=codex")
-  return errors
-}
 
 export function argsToConfig(args: InstallArgs): InstallConfig {
   const platform = resolvePlatform(args)
-  const hasOpenCode = platform === "opencode" || platform === "both"
-  const hasCodex = platform === "codex" || platform === "both"
-  const hasNative = platform === "native"
-  const hasNativeDev = platform === "native-dev"
+  const hasOpenCode = platform === "opencode"
+  const hasCodex = false
+  const hasNative = false
+  const hasNativeDev = false
 
   return {
     platform,
@@ -246,7 +224,7 @@ export function argsToConfig(args: InstallArgs): InstallConfig {
     hasMinimaxCnCodingPlan: hasOpenCode && args.minimaxCnCodingPlan === "yes",
     hasMinimaxCodingPlan: hasOpenCode && args.minimaxCodingPlan === "yes",
     hasVercelAiGateway: hasOpenCode && args.vercelAiGateway === "yes",
-    codexAutonomous: hasCodex && args.codexAutonomous !== false,
+    codexAutonomous: false,
   }
 }
 

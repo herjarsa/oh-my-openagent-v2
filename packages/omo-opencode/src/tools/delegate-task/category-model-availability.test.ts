@@ -50,7 +50,7 @@ function createExecutorContext(
 }
 
 describe("category canonical model availability", () => {
-  test("advances past unavailable entries while preserving the configured order", async () => {
+  test("keeps the configured primary even when the plugin catalog does not know it", async () => {
     // given
     const executorContext = createExecutorContext(
       {
@@ -70,8 +70,14 @@ describe("category canonical model availability", () => {
 
     // then
     expect(result.error).toBeUndefined()
-    expect(result.actualModel).toBe(`${MODEL_PROVIDER}/available-second`)
+    expect(result.actualModel).toBe(`${MODEL_PROVIDER}/missing-primary`)
+    expect(result.categoryModel).toMatchObject({
+      providerID: MODEL_PROVIDER,
+      modelID: "missing-primary",
+    })
     expect(result.fallbackChain).toEqual([
+      { providers: [MODEL_PROVIDER], model: "available-second", variant: undefined },
+      { providers: [MODEL_PROVIDER], model: "missing-middle", variant: undefined },
       { providers: [MODEL_PROVIDER], model: "available-fourth", variant: undefined },
       { providers: [MODEL_PROVIDER], model: "available-fifth", variant: undefined },
     ])
@@ -96,7 +102,7 @@ describe("category canonical model availability", () => {
     })
   })
 
-  test("preserves model-entry settings when availability resolution promotes a fallback", async () => {
+  test("preserves the configured primary entry settings and keeps the fallback entry settings in the chain", async () => {
     // given
     const executorContext = createExecutorContext(
       {
@@ -117,16 +123,21 @@ describe("category canonical model availability", () => {
 
     // then
     expect(result.error).toBeUndefined()
-    expect(result.actualModel).toBe(`${MODEL_PROVIDER}/available-second`)
+    expect(result.actualModel).toBe(`${MODEL_PROVIDER}/missing-primary`)
     expect(result.categoryModel).toMatchObject({
       providerID: MODEL_PROVIDER,
-      modelID: "available-second",
+      modelID: "missing-primary",
+    })
+    expect(result.fallbackChain).toHaveLength(1)
+    expect(result.fallbackChain[0]).toMatchObject({
+      providers: [MODEL_PROVIDER],
+      model: "available-second",
       reasoning: "high",
       temperature: 0.3,
     })
   })
 
-  test("errors with the configured chain when every entry is unavailable", async () => {
+  test("keeps the configured chain when no entry is known to the plugin catalog", async () => {
     // given
     const configuredModels = [
       `${MODEL_PROVIDER}/missing-primary`,
@@ -137,10 +148,17 @@ describe("category canonical model availability", () => {
     // when
     const result = await resolveCategoryExecution(args, executorContext, undefined, "system/default")
 
-    // then
-    expect(result.error).toContain("Configured model chain is unavailable")
-    expect(result.error).toContain(configuredModels.join(" -> "))
-    expect(result.actualModel).toBeUndefined()
-    expect(result.categoryModel).toBeUndefined()
+    // then: the user configured these models, so they are used as configured; the runtime
+    // fallback chain is what handles a request that the provider cannot serve.
+    expect(result.error).toBeUndefined()
+    expect(result.actualModel).toBe(configuredModels[0])
+    expect(result.categoryModel).toMatchObject({
+      providerID: MODEL_PROVIDER,
+      modelID: "missing-primary",
+    })
+    expect(result.fallbackChain).toEqual([
+      { providers: [MODEL_PROVIDER], model: "missing-fallback", variant: undefined },
+    ])
   })
+
 })

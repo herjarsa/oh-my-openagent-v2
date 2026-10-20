@@ -4,7 +4,7 @@
 
 ## OVERVIEW
 
-This module provides a bidirectional integration system: **outbound** session event notifications (Discord/Telegram/HTTP webhook/shell command) AND **inbound** reply handling (daemon polls chat apps, injects replies back into tmux session). Harness-neutral gateway, daemon, session registry, and tmux injection primitives are extracted to [`packages/openclaw-core/`](../../../../packages/openclaw-core); this directory keeps OpenCode startup/event wiring stable.
+This module provides a bidirectional integration system: **outbound** session event notifications (Discord/Telegram/HTTP webhook/shell command) AND **inbound** reply handling (daemon polls chat apps, injects replies back into tmux session). Harness-neutral gateway, daemon, session registry, and tmux injection primitives are extracted to `packages/openclaw-core/`; this directory keeps OpenCode startup/event wiring stable.
 
 ## BIDIRECTIONAL FLOW
 

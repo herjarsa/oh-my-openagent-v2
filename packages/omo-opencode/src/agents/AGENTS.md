@@ -9,13 +9,13 @@ description: Developer reference for all 11 Oh My OpenAgent agent definitions, f
 
 ## OVERVIEW
 
-11 built-in agents. Type enum: [`src/config/schema/agent-names.ts`](../config/schema/agent-names.ts) `BuiltinAgentNameSchema`. 10 of them register via [`builtin-agents.ts`](builtin-agents.ts) `agentSources` record (factory functions). **Prometheus is special-cased** — it has no `createPrometheusAgent` factory; instead [`prometheus-agent-config-builder.ts`](../plugin-handlers/prometheus-agent-config-builder.ts) constructs its config directly during `agent-config-handler` Phase 3.
+11 built-in agents. Type enum: `src/config/schema/agent-names.ts` `BuiltinAgentNameSchema`. 10 of them register via `builtin-agents.ts` `agentSources` record (factory functions). **Prometheus is special-cased** — it has no `createPrometheusAgent` factory; instead `prometheus-agent-config-builder.ts` constructs its config directly during `agent-config-handler` Phase 3.
 
-All factories follow `createXXXAgent(model) → AgentConfig`. Each carries a static `mode` property (`AgentFactory` type in [`src/agents/types.ts`](types.ts)). Composed via `buildAgent()`.
+All factories follow `createXXXAgent(model) → AgentConfig`. Each carries a static `mode` property (`AgentFactory` type in `src/agents/types.ts`). Composed via `buildAgent()`.
 
 ## AGENT INVENTORY
 
-Modes verified from each agent file's `const MODE: AgentMode = ...` and (for Prometheus) [`prometheus-agent-config-builder.ts:100`](../plugin-handlers/prometheus-agent-config-builder.ts#L100). Chains verified from [`src/shared/model-requirements.ts`](../shared/model-requirements.ts).
+Modes verified from each agent file's `const MODE: AgentMode = ...` and (for Prometheus) `prometheus-agent-config-builder.ts:100`. Chains verified from `src/shared/model-requirements.ts`.
 
 | Agent | Default Model | Temp | Mode | Fallback (after default) | Purpose |
 |-------|---------------|------|------|--------------------------|---------|
@@ -33,7 +33,7 @@ Modes verified from each agent file's `const MODE: AgentMode = ...` and (for Pro
 
 ## TOOL RESTRICTIONS
 
-Defined in [`src/shared/agent-tool-restrictions.ts`](../shared/agent-tool-restrictions.ts).
+Defined in `src/shared/agent-tool-restrictions.ts`.
 
 | Agent | Denied Tools |
 |-------|-------------|
@@ -47,7 +47,7 @@ Defined in [`src/shared/agent-tool-restrictions.ts`](../shared/agent-tool-restri
 
 ## TEAM-MODE ELIGIBILITY
 
-Authoritative registry: [`AGENT_ELIGIBILITY_REGISTRY`](../features/team-mode/types.ts) in `team-mode/types.ts`. Three verdict tiers:
+Authoritative registry: `AGENT_ELIGIBILITY_REGISTRY` in `team-mode/types.ts`. Three verdict tiers:
 
 | Verdict | Agents |
 |---------|--------|
@@ -55,7 +55,7 @@ Authoritative registry: [`AGENT_ELIGIBILITY_REGISTRY`](../features/team-mode/typ
 | `conditional` | hephaestus (lacks `teammate: "allow"` permission by default — see D-36 / `tool-config-handler.ts`; use `subagent_type: "sisyphus"` instead) |
 | `hard-reject` | oracle, librarian, explore, multimodal-looker, metis, momus, prometheus (each with a specific rejection message) |
 
-Read-only agents are rejected at TeamSpec parse time. For those, the lead delegates via `task` (delegate-task) instead. See [`team-mode/AGENTS.md`](../features/team-mode/AGENTS.md).
+Read-only agents are rejected at TeamSpec parse time. For those, the lead delegates via `task` (delegate-task) instead. See `team-mode/AGENTS.md`.
 
 ## STRUCTURE
 
@@ -105,11 +105,11 @@ leave temperature unset when they should use the selected model's
 default. Sisyphus, Hephaestus, and Prometheus leave temperature unset
 unless an override or category config supplies one.
 
-Model resolution: 4-step pipeline → override → category-default → provider-fallback → system-default. Defined in [`shared/model-resolution-pipeline.ts`](../shared/model-resolution-pipeline.ts).
+Model resolution: 4-step pipeline → override → category-default → provider-fallback → system-default. Defined in `shared/model-resolution-pipeline.ts`.
 
 ## MODES
 
-Definition (from [`src/agents/types.ts`](types.ts)):
+Definition (from `src/agents/types.ts`):
 
 - **`primary`** — respects user's UI-selected model. Used by: sisyphus, hephaestus, atlas, prometheus.
 - **`subagent`** — uses own fallback chain, ignores UI selection. Used by: oracle, librarian, explore, multimodal-looker, metis, momus, sisyphus-junior.
@@ -117,7 +117,7 @@ Definition (from [`src/agents/types.ts`](types.ts)):
 
 ## CANONICAL ORDER
 
-`Sisyphus → Hephaestus → Prometheus → Atlas` (primary core agents) then alphabetical for the rest. Enforced by [`installAgentSortShim()`](../shared/agent-sort-shim.ts) — patches `Array.prototype.{toSorted,sort}` narrowly when ≥2 canonical core agents are in the array. See [`src/plugin-handlers/AGENTS.md`](../plugin-handlers/AGENTS.md) for the full history.
+`Sisyphus → Hephaestus → Prometheus → Atlas` (primary core agents) then alphabetical for the rest. Enforced by `installAgentSortShim()` — patches `Array.prototype.{toSorted,sort}` narrowly when ≥2 canonical core agents are in the array. See `src/plugin-handlers/AGENTS.md` for the full history.
 
 ## DYNAMIC PROMPT BUILDER
 
