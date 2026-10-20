@@ -20,7 +20,7 @@ describe("cli-program", () => {
     expect(installBlock?.[1]).toContain('.alias("setup")')
   })
 
-  test("cleanup command exposes Codex cleanup for lazycodex migrations", async () => {
+  test("cleanup command exposes OpenCode cleanup", async () => {
     // given
     const cliProgramSource = await readFile(
       path.resolve(import.meta.dir, "cleanup-command.ts"),
@@ -35,8 +35,7 @@ describe("cli-program", () => {
     // then
     expect(cleanupBlock).not.toBeNull()
     expect(cleanupBlock?.[1]).toContain('new Option("--platform <platform>"')
-    expect(cleanupBlock?.[1]).toContain('.choices(["codex"])')
-    expect(cleanupBlock?.[1]).toContain("--codex-home")
+    expect(cleanupBlock?.[1]).toContain('.choices(["opencode"])')
     expect(cleanupBlock?.[1]).toContain("--project")
   })
 

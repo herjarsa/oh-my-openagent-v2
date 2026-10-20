@@ -15,7 +15,7 @@ Browser automation that maintains page state across script executions. Write sma
 
 ## Setup
 
-> **Installation**: See [references/installation.md](references/installation.md) for detailed setup instructions including Windows support.
+> **Installation**: See references/installation.md for detailed setup instructions including Windows support.
 
 Two modes available. Ask the user if unclear which to use.
 
@@ -113,7 +113,7 @@ const text = await page.evaluate(() => {
 
 ## Scraping Data
 
-For scraping large datasets, intercept and replay network requests rather than scrolling the DOM. See [references/scraping.md](references/scraping.md) for the complete guide covering request capture, schema discovery, and paginated API replay.
+For scraping large datasets, intercept and replay network requests rather than scrolling the DOM. See references/scraping.md for the complete guide covering request capture, schema discovery, and paginated API replay.
 
 ## Client API
 

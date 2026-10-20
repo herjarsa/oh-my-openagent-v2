@@ -30,10 +30,10 @@ describe("selectPreviousReleaseTag", () => {
 describe("isExcludedReleaseNoteSubject", () => {
   test.each([
     ["feat(senpi): add team tools", true],
-    ["fix(omo-senpi): persist member sidecar", true],
-    ["feat(senpi-task): wire message-durability fallbacks", true],
+    ["fix(omo-opencode): persist member sidecar", true],
+    ["feat(model-core): wire message-durability fallbacks", true],
     ["feat: improve senpi installer", true],
-    ["Merge pull request #5932 from code-yeongyu/code-yeongyu/senpi-task-w3-engine", true],
+    ["Merge pull request #5932 from code-yeongyu/code-yeongyu/omo-opencode-w3-engine", true],
     ["chore: bump internal tooling", true],
     ["test: add coverage", true],
     ["ci: tighten workflow", true],

@@ -1,7 +1,7 @@
 > [!NOTE]
 > **OmO Бета: OmO ❤️ Pi**
 > Попробуйте `bun add -g omo-ai@beta`: система памяти, CodeMode, подписки Anthropic. Всё включено.
-> [![OmO Herdr DAG - live OmO workflow DAGs in a Herdr side pane](./.github/assets/omo-herdr-dag.png)](https://github.com/jc01rho/omo-herdr-dag)
+> ![OmO Herdr DAG - live OmO workflow DAGs in a Herdr side pane](https://github.com/jc01rho/omo-herdr-dag)
 > *Просто добавьте "mass ulw" в свой промпт - и вы мастер графовой инженерии. Мультимодельный ultracode с улучшенной системой памяти. (Правая панель - [omo-herdr-dag](https://github.com/jc01rho/omo-herdr-dag))*
 
 
@@ -13,12 +13,12 @@
 > [!NOTE]
 > **Рефакторинг в сторону мульти-harness агентной ОС**
 >
-> Мы перестраиваем кодовую базу для поддержки нескольких agent harness (OpenCode, Codex, Pi, Claude Code и другие). Если вы хотите внести вклад, пожалуйста, ознакомьтесь с [ROADMAP](./ROADMAP.md) сначала. PR, связанные с ROADMAP, должны использовать метку `ROADMAP`.
+> Мы перестраиваем кодовую базу для поддержки нескольких agent harness (OpenCode, Codex, Pi, Claude Code и другие). Если вы хотите внести вклад, пожалуйста, ознакомьтесь с ROADMAP сначала. PR, связанные с ROADMAP, должны использовать метку `ROADMAP`.
 
 
 > [!NOTE]
 >
-> [![Sisyphus Labs - Meet Dori. Not a demo. Subscribes to everything.](./.github/assets/sisyphuslabs.png?v=4)](https://sisyphuslabs.ai)
+> ![Sisyphus Labs - Meet Dori. Not a demo. Subscribes to everything.](https://sisyphuslabs.ai)
 >
 > > **OmO поддерживается Jobdori — ИИ-ассистентом, показанным выше. Познакомьтесь со своим Jobdori — Dori. <br />Присоединяйтесь к листу ожидания [здесь](https://sisyphuslabs.ai).**
 
@@ -35,9 +35,9 @@
 
 <a href="https://github.com/code-yeongyu/oh-my-openagent#oh-my-openagent"><img src="./.github/assets/omo-icon-light.svg" alt="OmO" width="200" /></a>
 
-[![Oh My OpenAgent](./.github/assets/hero.jpg)](https://github.com/code-yeongyu/oh-my-openagent#oh-my-openagent)
+![Oh My OpenAgent](https://github.com/code-yeongyu/oh-my-openagent#oh-my-openagent)
 
-[![Preview](./.github/assets/omo.png)](https://github.com/code-yeongyu/oh-my-openagent#oh-my-openagent)
+![Preview](https://github.com/code-yeongyu/oh-my-openagent#oh-my-openagent)
 
 </div>
 
@@ -61,7 +61,7 @@
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/code-yeongyu/oh-my-openagent)
 [![Docs](https://img.shields.io/badge/docs-omo.dev-369eff?labelColor=black&logo=readthedocs&logoColor=white&style=flat-square)](https://omo.dev/docs)
 
-[English](README.md) | [한국어](README.ko.md) | [日本語](README.ja.md) | [简体中文](README.zh-cn.md) | [Русский](README.ru.md)
+English | 한국어 | 日本語 | 简体中文 | Русский
 
 </div>
 
@@ -110,7 +110,7 @@ Install and configure oh-my-openagent by following the instructions here:
 https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/refs/heads/dev/docs/guide/installation.md
 ```
 
-Или прочитайте [руководство по установке](docs/guide/installation.md), но серьёзно — пусть агент сделает это за вас. Люди ошибаются в конфигах.
+Или прочитайте руководство по установке, но серьёзно — пусть агент сделает это за вас. Люди ошибаются в конфигах.
 
 ### Для LLM-агентов
 
@@ -124,9 +124,9 @@ curl -fsSL https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/refs/h
 
 Рекомендуемый вызов через `bunx`/`npx` — `oh-my-openagent install` (или исходный `oh-my-opencode install`). После установки короткая команда — `omo-agent-toolkit`. Бинарник `omo` удалён из этих пакетов в текущем мажорном релизе; теперь это имя принадлежит редакции OmO Native, которая ставится через `bun add -g omo-ai@beta` (только beta-канал). **Не** используйте `bunx omo` или `npx omo`: `omo` в npm — это другой, не связанный с нами пакет другого автора, и эти команды попадут именно в него. Пакет редакции OmO Native называется `omo-ai`. `lazycodex-ai` — это узкоспециализированный Node/npm-пакет установщика: `npx lazycodex-ai install` напрямую запускает установщик Codex Light. Это не имя Codex marketplace (репозиторий marketplace — `code-yeongyu/lazycodex`). Codex видит marketplace `sisyphuslabs` и плагин `omo`, включённый как `omo@sisyphuslabs`.
 
-Анонимная телеметрия включена по умолчанию для подсчёта активных установок (DAU/WAU/MAU). Не более одного события на машину за UTC-сутки, использует хешированный идентификатор установки, никогда не использует исходное имя хоста, и не создаёт PostHog person profile. Можно отключить через `OMO_SEND_ANONYMOUS_TELEMETRY=0` или `OMO_DISABLE_POSTHOG=1`. См. [Политику конфиденциальности](docs/legal/privacy-policy.md) и [Условия обслуживания](docs/legal/terms-of-service.md).
+Анонимная телеметрия включена по умолчанию для подсчёта активных установок (DAU/WAU/MAU). Не более одного события на машину за UTC-сутки, использует хешированный идентификатор установки, никогда не использует исходное имя хоста, и не создаёт PostHog person profile. Можно отключить через `OMO_SEND_ANONYMOUS_TELEMETRY=0` или `OMO_DISABLE_POSTHOG=1`. См. Политику конфиденциальности и Условия обслуживания.
 
-**Ultimate, Light и OmO Native:** oh-my-openagent поставляется в трёх редакциях одного продукта: два плагина, которые загружаются в уже используемый вами хост, плюс одна standalone-редакция. **Ultimate** (`bunx oh-my-openagent install` или `--platform=opencode`, по умолчанию) — полнофункциональная редакция поверх OpenCode: 11 агентов, 54+ хука, Team Mode, 4 встроенных MCP (websearch, context7, grep_app, lsp), все слэш-команды, режимы IntentGate. **Light** (`npx lazycodex-ai install`) — портируемые компоненты omo для системы плагинов OpenAI Codex CLI: ядро (`rules`, `comment-checker`, `git-bash`, `lsp`, `ultrawork`, `ulw-loop`, `ulw-execute-continuation`, `telemetry`), а также `teammode` и вспомогательные компоненты (`bootstrap`, `lcx` и другие); TOML-файлы Codex-агентов устанавливаются в `~/.codex/agents/`. Чтобы установить обе плагинные редакции одной командой, используйте `--platform=both`. **OmO Native (standalone, beta)** — команда `omo` со встроенным расширением OMO: `bun add -g omo-ai@beta`, затем `omo`. Она ставится из `omo-ai@beta` и не загружается в OpenCode или Codex; доступен только beta-канал, простой `bun add -g omo-ai` намеренно завершается ошибкой. Переход с редакции для OpenCode описан в [Migrating from OpenCode](docs/guide/migrating-from-opencode.md). Телеметрию только для Codex можно отключить через `OMO_CODEX_DISABLE_POSTHOG=1` или `OMO_CODEX_SEND_ANONYMOUS_TELEMETRY=0`.
+**Ultimate, Light и OmO Native:** oh-my-openagent поставляется в трёх редакциях одного продукта: два плагина, которые загружаются в уже используемый вами хост, плюс одна standalone-редакция. **Ultimate** (`bunx oh-my-openagent install` или `--platform=opencode`, по умолчанию) — полнофункциональная редакция поверх OpenCode: 11 агентов, 54+ хука, Team Mode, 4 встроенных MCP (websearch, context7, grep_app, lsp), все слэш-команды, режимы IntentGate. **Light** (`npx lazycodex-ai install`) — портируемые компоненты omo для системы плагинов OpenAI Codex CLI: ядро (`rules`, `comment-checker`, `git-bash`, `lsp`, `ultrawork`, `ulw-loop`, `ulw-execute-continuation`, `telemetry`), а также `teammode` и вспомогательные компоненты (`bootstrap`, `lcx` и другие); TOML-файлы Codex-агентов устанавливаются в `~/.codex/agents/`. Чтобы установить обе плагинные редакции одной командой, используйте `--platform=both`. **OmO Native (standalone, beta)** — команда `omo` со встроенным расширением OMO: `bun add -g omo-ai@beta`, затем `omo`. Она ставится из `omo-ai@beta` и не загружается в OpenCode или Codex; доступен только beta-канал, простой `bun add -g omo-ai` намеренно завершается ошибкой. Переход с редакции для OpenCode описан в Migrating from OpenCode. Телеметрию только для Codex можно отключить через `OMO_CODEX_DISABLE_POSTHOG=1` или `OMO_CODEX_SEND_ANONYMOUS_TELEMETRY=0`.
 
 ------
 
@@ -159,8 +159,7 @@ Read this and tell me why it's not just another boilerplate: https://raw.githubu
 |     | Функция                                                  | Editions | Что делает                                                                                                                                                                                                                       |
 | --- | -------------------------------------------------------- | :------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 🤖   | **Дисциплинированные агенты**                            | Ultimate | Главный агент оркестрирует консультацию архитектора, Librarian, Explore и воркеров категорий. Полноценная AI-команда разработки в параллельном режиме.                                                                          |
-| 🧩   | **Codex CLI Light Edition**                              | Light    | Портируемые компоненты omo в OpenAI Codex CLI (rules, comment-checker, git-bash, LSP, ultrawork, ulw-loop, ulw-execute continuation, telemetry, teammode и другие). Установка: `npx lazycodex-ai install`.                                                                |
-| 👥   | **Team Mode** (opt-in)                                   | Ultimate | Лид-агент + до 8 параллельных участников, визуализация в tmux в реальном времени, выделенные инструменты `team_*`. Питает `hyperplan` (5 враждебных критиков) и `security-research` (3 охотника + 2 PoC-инженера). [Документация →](docs/guide/team-mode.md) |
+| 👥   | **Team Mode** (opt-in)                                   | Ultimate | Лид-агент + до 8 параллельных участников, визуализация в tmux в реальном времени, выделенные инструменты `team_*`. Питает `hyperplan` (5 враждебных критиков) и `security-research` (3 охотника + 2 PoC-инженера). Документация → |
 | ⚡   | **`ultrawork` / `ulw`**                                  | Both     | Одно слово. Все агенты (Ultimate) или Codex-компонент `ultrawork` (Light) активируются. Не останавливается, пока задача не выполнена.                                                                                            |
 | 🚪   | **[IntentGate](https://factory.ai/news/terminal-bench)** | Ultimate | Распознаёт ключевые слова `ultrawork`/`ulw`, `team` и `hyperplan` (семантической классификации намерения не делает). (Light распознаёт только ключевые слова `ulw` / `ultrawork`.)                                                   |
 | 🔗   | **Инструмент правок на основе хэш-якорей**               | Ultimate | Тегирование чтения/правок Hashline (`LINE#ID`). Включается вручную: `hashline_edit: true` в `~/.omo/omo.jsonc`. Ноль ошибок с устаревшими строками. Вдохновлено [oh-my-pi](https://github.com/can1357/oh-my-pi). [The Harness Problem →](https://blog.can.ac/2026/02/12/the-harness-problem/) (Codex использует собственный `apply_patch`.) |
@@ -186,7 +185,7 @@ Read this and tell me why it's not just another boilerplate: https://raw.githubu
 
 **Ultrawork Planner** (`/ulw-plan`) — стратегический планировщик. Режим интервью: он задаёт вопросы, определяет объём работ и формирует детальный план до того, как написана хотя бы одна строка кода. Затем `/ulw-execute` выполняет этот план в той же сессии.
 
-Каждый пресет промпта настроен под сильные стороны своей модели. Никакого ручного переключения между моделями. [Подробнее →](docs/guide/overview.md)
+Каждый пресет промпта настроен под сильные стороны своей модели. Никакого ручного переключения между моделями. Подробнее →
 
 > Anthropic [заблокировал OpenCode из-за нас.](https://x.com/thdxr/status/2010149530486911014) Именно поэтому главный агент зовётся «Законным Мастером». Ирония намеренная.
 >
@@ -214,7 +213,7 @@ Read this and tell me why it's not just another boilerplate: https://raw.githubu
 - **`hyperplan`** — 5 враждебных агентов разносят ваш план под ортогональными углами ещё до написания первой строчки кода.
 - **`security-research`** — 3 охотника за уязвимостями + 2 PoC-инженера параллельно проводят аудит кодовой базы. Серьёзность калибруется по *фактической эксплуатируемости*.
 
-> **По умолчанию выключено. Включайте, когда нужно.** [Полное руководство по Team Mode →](docs/guide/team-mode.md)
+> **По умолчанию выключено. Включайте, когда нужно.** Полное руководство по Team Mode →
 
 ### Оркестрация агентов
 
@@ -301,11 +300,11 @@ Ultrawork Planner (`/ulw-plan`) **интервьюирует вас как на�
 
 Добавьте свои в `.opencode/skills/*/SKILL.md` или `~/.config/opencode/skills/*/SKILL.md`.
 
-**Хотите полное описание возможностей?** Смотрите **[документацию по функциям](docs/reference/features.md)** — агенты, хуки, инструменты, MCP и всё остальное подробно.
+**Хотите полное описание возможностей?** Смотрите **документацию по функциям** — агенты, хуки, инструменты, MCP и всё остальное подробно.
 
 ------
 
-> **Впервые в oh-my-openagent?** Прочитайте **[Overview](docs/guide/overview.md)**, чтобы понять, что у вас есть, или ознакомьтесь с **[Orchestration Guide](docs/guide/orchestration.md)**, чтобы узнать, как агенты взаимодействуют.
+> **Впервые в oh-my-openagent?** Прочитайте **Overview**, чтобы понять, что у вас есть, или ознакомьтесь с **Orchestration Guide**, чтобы узнать, как агенты взаимодействуют.
 
 ## Удаление
 
@@ -359,7 +358,7 @@ Ultrawork Planner (`/ulw-plan`) **интервьюирует вас как на�
 
 Функции, которые, как вы будете думать, должны были существовать всегда. Попробовав раз, вы не сможете вернуться назад.
 
-Полная [документация по функциям](docs/reference/features.md).
+Полная документация по функциям.
 
 **Краткий обзор:**
 
@@ -369,20 +368,20 @@ Ultrawork Planner (`/ulw-plan`) **интервьюирует вас как на�
 - **Инструмент правок на основе хэш-якорей** (включается через `hashline_edit: true`): Ссылки `LINE#ID` проверяют содержимое перед применением каждого изменения. Хирургические правки, ноль ошибок с устаревшими строками
 - **Инъекция контекста**: Автоматическое добавление AGENTS.md, README.md, условных правил
 - **Совместимость с Claude Code**: Полная система хуков, команды, навыки, агенты, MCP
-- **Встроенные MCP**: websearch (Exa), context7 (документация), grep_app (поиск по GitHub), lsp — внедряются плагином во время выполнения и не показываются в `opencode mcp list` (см. [MCP docs](docs/reference/features.md#native-vs-plugin-injected-mcps))
+- **Встроенные MCP**: websearch (Exa), context7 (документация), grep_app (поиск по GitHub), lsp — внедряются плагином во время выполнения и не показываются в `opencode mcp list` (см. MCP docs)
 - **Инструменты сессий**: Список, чтение, поиск и анализ истории сессий
 - **Инструменты продуктивности**: Goal, Todo Enforcer, Comment Checker, Think Mode и другое
 - **Команда Doctor**: Встроенная диагностика (`bunx oh-my-opencode doctor`) проверяет регистрацию плагина, конфиг, модели и окружение
 - **Фолбэки моделей**: `fallback_models` позволяет смешивать простые строки моделей и объектные настройки per-fallback в одном массиве
 - **Файловые промпты**: Загрузка промптов из файлов через `file://` в конфигурации агентов
 - **Восстановление сессии**: Автоматическое восстановление при ошибках сессии, достижении лимита контекстного окна и сбоях API
-- **Настройка моделей**: Сопоставление агент–модель встроено в [руководство по установке](docs/guide/installation.md#step-5-understand-your-model-setup)
+- **Настройка моделей**: Сопоставление агент–модель встроено в руководство по установке
 
 ## Конфигурация
 
 Продуманные настройки по умолчанию, которые можно изменить при необходимости.
 
-Смотрите [документацию по конфигурации](docs/reference/configuration.md).
+Смотрите документацию по конфигурации.
 
 **Краткий обзор:**
 
@@ -401,7 +400,7 @@ Ultrawork Planner (`/ulw-plan`) **интервьюирует вас как на�
 
 ## Слово автора
 
-**Хотите узнать философию?** Прочитайте [Манифест Ultrawork](docs/manifesto.md).
+**Хотите узнать философию?** Прочитайте Манифест Ultrawork.
 
 ------
 

@@ -40,6 +40,5 @@ Earned its file: score 8, distinct domain. Only code in this package outside `sr
 ## COMMANDS
 
 ```bash
-bun run packages/omo-opencode/scripts/generate-opengateway-models.ts   # network: apis.opengateway.ai + models.dev
 bun test packages/omo-opencode/scripts/generate-opengateway-models.test.ts
 ```

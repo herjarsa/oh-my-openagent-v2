@@ -8,7 +8,6 @@ import type {
 } from "./types"
 import { detectedToInitialValues } from "./install-validators"
 import { ULTIMATE_FALLBACK } from "./model-fallback"
-import { isNativeDevPlatformEnabled } from "./native-dev-platform-flag"
 
 async function selectOrCancel<TValue extends Readonly<string | boolean | number>>(params: {
   message: string
@@ -34,17 +33,7 @@ export async function promptInstallPlatform(
 ): Promise<InstallPlatform | null> {
   const options: Option<InstallPlatform>[] = [
     { value: "opencode", label: "OpenCode", hint: "Install OpenCode plugin only" },
-    { value: "codex", label: "Codex", hint: "Install Codex harness adapter only" },
-    { value: "both", label: "Both", hint: "Install OpenCode plugin and Codex adapter" },
-    { value: "native", label: "OmO Native", hint: "Install the standalone omo command (no host required)" },
   ]
-  if (isNativeDevPlatformEnabled()) {
-    options.push({
-      value: "native-dev",
-      label: "OmO Native (development adapter)",
-      hint: "Register this checkout into a local engine install",
-    })
-  }
 
   return selectOrCancel<InstallPlatform>({
     message: "Which platform do you want to install?",
@@ -58,12 +47,12 @@ export async function promptInstallConfig(
   platform: InstallPlatform,
   codexAutonomousOverride?: boolean,
 ): Promise<InstallConfig | null> {
-  const hasOpenCode = platform === "opencode" || platform === "both"
-  const hasCodex = platform === "codex" || platform === "both"
-  const hasNative = platform === "native"
-  const hasNativeDev = platform === "native-dev"
-  const codexAutonomous = await resolveCodexAutonomous(hasCodex, codexAutonomousOverride)
-  if (codexAutonomous === null) return null
+  const hasOpenCode = true
+  const hasCodex = false
+  const hasNative = false
+  const hasNativeDev = false
+  const codexAutonomous = false
+  void codexAutonomousOverride
 
   if (!hasOpenCode) {
     return {
@@ -235,11 +224,3 @@ export async function promptInstallConfig(
   }
 }
 
-async function resolveCodexAutonomous(
-  hasCodex: boolean,
-  override: boolean | undefined,
-): Promise<boolean | null> {
-  if (!hasCodex) return false
-  if (override !== undefined) return override
-  return true
-}

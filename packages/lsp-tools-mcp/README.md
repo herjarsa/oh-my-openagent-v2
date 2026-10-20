@@ -106,4 +106,4 @@ npm pack --dry-run
 
 ## License
 
-[MIT](LICENSE)
+MIT

@@ -29,13 +29,6 @@ function rootTestJob(): string {
   return workflow.slice(start, end)
 }
 
-function senpiCompatibilityJob(): string {
-  const start = workflow.indexOf("  senpi-compatibility:\n")
-  const end = workflow.indexOf("\n  lazycodex-published-smoke:", start)
-  if (start < 0 || end < 0) throw new Error("Senpi compatibility job not found")
-  return workflow.slice(start, end)
-}
-
 function quotedPatterns(config: string): readonly string[] {
   return [...config.matchAll(/"([^"]+\/\*\*)"/g)].map((match) => match[1] ?? "")
 }
@@ -126,14 +119,6 @@ describe("root test CI partition", () => {
     expect(posixStep.indexOf(serialQuarantineCommand())).toBeLessThan(
       posixStep.indexOf("bun --config=bunfig.win2.parallel.toml test --timeout 20000"),
     )
-  })
-
-  test("#given the dedicated Senpi compatibility job #when root tests run #then omo-senpi is excluded on every OS", () => {
-    expect(quotedPatterns(rootConfig)).toContain("packages/omo-senpi/**")
-    expect(quotedPatterns(readFileSync(win2ParallelConfigPath, "utf8"))).toContain(
-      "packages/omo-senpi/**",
-    )
-    expect(quotedPatterns(readFileSync(win2ConfigPath, "utf8"))).toContain("packages/omo-senpi/**")
   })
 
   test("#given measured package groups #when the matrix command is rendered #then native file sharding is not used", () => {

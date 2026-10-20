@@ -5,7 +5,7 @@
 Queues extracted facts durably, caps payloads, routes them to people cards, and
 recovers from crashes — all with monotonic watermarks and fail-closed parsing.
 Largest memory-core subsystem (33 files, ~5.1k LOC); earned its own file for
-that plus strict wire contracts. Parent: [`packages/memory-core/AGENTS.md`](../../AGENTS.md).
+that plus strict wire contracts. Parent: `packages/memory-core/AGENTS.md`.
 
 ## WHERE TO LOOK
 

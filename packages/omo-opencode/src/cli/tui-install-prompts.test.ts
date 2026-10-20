@@ -50,7 +50,7 @@ describe("promptInstallPlatform", () => {
     mock.restore()
   })
 
-  test("offers OpenCode, Codex, Both and OmO Native choices while the native-dev platform flag is disabled", async () => {
+  test("offers only the OpenCode choice", async () => {
     // given
     delete process.env.OMO_ENABLE_NATIVE_DEV_PLATFORM
     const selectSpy = spyOn(p, "select").mockResolvedValue("opencode")
@@ -63,64 +63,9 @@ describe("promptInstallPlatform", () => {
     expect(selectSpy).toHaveBeenCalledTimes(1)
     expect(selectSpy.mock.calls[0]?.[0]).toMatchObject({
       initialValue: "opencode",
-      options: [
-        { value: "opencode" },
-        { value: "codex" },
-        { value: "both" },
-        { value: "native", label: "OmO Native" },
-      ],
+      options: [{ value: "opencode" }],
     })
   })
-
-  test("offers the native development adapter choice when the native-dev platform flag is enabled", async () => {
-    // given
-    process.env.OMO_ENABLE_NATIVE_DEV_PLATFORM = "1"
-    const selectSpy = spyOn(p, "select").mockResolvedValue("native-dev")
-
-    try {
-      // when
-      const value = await prompts.promptInstallPlatform("opencode")
-
-      // then
-      expect(value).toBe("native-dev")
-      expect(selectSpy).toHaveBeenCalledTimes(1)
-      expect(selectSpy.mock.calls[0]?.[0]).toMatchObject({
-        initialValue: "opencode",
-        options: [
-          { value: "opencode" },
-          { value: "codex" },
-          { value: "both" },
-          { value: "native", label: "OmO Native" },
-          { value: "native-dev" },
-        ],
-      })
-    } finally {
-      delete process.env.OMO_ENABLE_NATIVE_DEV_PLATFORM
-    }
-  })
-
-  test("preserves Codex as the initial platform", async () => {
-    // given
-    delete process.env.OMO_ENABLE_NATIVE_DEV_PLATFORM
-    const selectSpy = spyOn(p, "select").mockResolvedValue("codex")
-
-    // when
-    const value = await prompts.promptInstallPlatform("codex")
-
-    // then
-    expect(value).toBe("codex")
-    expect(selectSpy).toHaveBeenCalledTimes(1)
-    expect(selectSpy.mock.calls[0]?.[0]).toMatchObject({
-      initialValue: "codex",
-      options: [
-        { value: "opencode" },
-        { value: "codex" },
-        { value: "both" },
-        { value: "native", label: "OmO Native" },
-      ],
-    })
-  })
-})
 
 describe("promptInstallConfig platform branching", () => {
   let restoreTty: () => void
@@ -134,57 +79,17 @@ describe("promptInstallConfig platform branching", () => {
     mock.restore()
   })
 
-  test("skips OpenCode questions when the user selects codex", async () => {
+  test("asks OpenCode questions when the user selects opencode", async () => {
     // given
     const selectSpy = spyOn(p, "select").mockResolvedValue("no")
 
     // when
-    const config = await prompts.promptInstallConfig(createDetectedConfig(), "codex")
+    const config = await prompts.promptInstallConfig(createDetectedConfig(), "opencode")
 
     // then
-    expect(config).toMatchObject({
-      platform: "codex",
-      hasOpenCode: false,
-      hasCodex: true,
-      codexAutonomous: true,
-    } satisfies Partial<InstallConfig>)
-    expect(selectSpy).not.toHaveBeenCalled()
+    expect(config).toMatchObject({ platform: "opencode", hasOpenCode: true, hasCodex: false } satisfies Partial<InstallConfig>)
+    expect(selectSpy).toHaveBeenCalledTimes(12)
   })
-
-  test("skips OpenCode questions when the user selects native-dev", async () => {
-    // given
-    const selectSpy = spyOn(p, "select").mockResolvedValue("no")
-
-    // when
-    const config = await prompts.promptInstallConfig(createDetectedConfig(), "native-dev")
-
-    // then
-    expect(config).toMatchObject({
-      platform: "native-dev",
-      hasOpenCode: false,
-      hasCodex: false,
-      hasNativeDev: true,
-    } satisfies Partial<InstallConfig>)
-    expect(selectSpy).not.toHaveBeenCalled()
-  })
-
-  test.each([
-    ["opencode", false],
-    ["both", true],
-  ] satisfies readonly [InstallPlatform, boolean][])(
-    "asks OpenCode questions when the user selects %s",
-    async (platform, hasCodex) => {
-      // given
-      const selectSpy = spyOn(p, "select").mockResolvedValue("no")
-
-      // when
-      const config = await prompts.promptInstallConfig(createDetectedConfig(), platform)
-
-      // then
-      expect(config).toMatchObject({ platform, hasOpenCode: true, hasCodex } satisfies Partial<InstallConfig>)
-      expect(selectSpy).toHaveBeenCalledTimes(12)
-    },
-  )
 
   test("Claude subscription No option hint uses ultimate fallback", async () => {
     // given
@@ -202,31 +107,5 @@ describe("promptInstallConfig platform branching", () => {
     expect(noOption?.hint).not.toContain("big-pickle")
   })
 
-  test("uses explicit Codex autonomous override without asking", async () => {
-    // given
-    const selectSpy = spyOn(p, "select").mockResolvedValue("no")
-
-    // when
-    const config = await prompts.promptInstallConfig(createDetectedConfig(), "codex", false)
-
-    // then
-    expect(config).toMatchObject({
-      platform: "codex",
-      hasCodex: true,
-      codexAutonomous: false,
-    } satisfies Partial<InstallConfig>)
-    expect(selectSpy).not.toHaveBeenCalled()
-  })
-
-  test("does not ask the old Codex adapter question", async () => {
-    // given
-    const selectSpy = spyOn(p, "select").mockResolvedValue("no")
-
-    // when
-    await prompts.promptInstallConfig(createDetectedConfig(), "both")
-
-    // then
-    const messages = selectSpy.mock.calls.map((call) => call[0].message)
-    expect(messages).not.toContain("Install Codex harness adapter into ~/.codex?")
-  })
+)
 })

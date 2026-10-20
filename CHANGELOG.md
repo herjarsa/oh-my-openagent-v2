@@ -781,21 +781,12 @@ The changelog selection fix above lives in the engine and ships with this releas
 
 - 13db09a1a Merge pull request #6676 from code-yeongyu/release/v5.0.0-beta.1-source-state
 - 1e6669c6a Merge pull request #6675 from code-yeongyu/fix/reflection-child-pty-pipe
-- b836400d4 fix(omo-native): report posix artifact paths and normalize windows fixtures
 - 82220eb2e test(memory-core): windows-safe assertions (LF fixtures attr, drive-qualified paths, git-canonical hooks dir, win32 lock fail-close pin)
 - adb0767a0 Merge pull request #6674 from code-yeongyu/feat/memory-letta-parity
-- 938e02319 fix(omo-native): drive the setup consent prompt on a portable pty
-- 55148baec fix(omo-native): restore const declarations in the sqlite-gated suites
-- b5b7574b3 fix(omo-native): keep the setup suites runnable without node:sqlite
 - 79c1ac72d Merge pull request #6671 from code-yeongyu/feat/omo-ai-beta-release
 - da73c5d10 fix(script): align repo audits with the omo-ai payload surfaces
 - 5bd7bfb2f test(qa): isolated install smoke with mock-provider plugin-load proof
-- 16782bad4 feat(omo-native): consent-gated credential inheritance for omo setup
-- da17ab19a feat(omo-native): staged plugin payload build with completeness gate
 - 12e6b1d6b ci(publish): beta-only OIDC omo-ai publish with dist-tag guard and live verification
-- b22c225bc feat(omo-native): omo setup detection for sibling coding-agent stores
-- c2e102151 test(omo-native): pin the published package contract
-- cd969ebc4 fix(script): register omo-native in the package audit taxonomy
 - 9e5702ab3 docs(release): omo-ai beta channel runbook and install docs
 - 46f40b0e3 ci(publish): omo-ai tarball payload whitelist verifier
 - 70e0f5032 Merge pull request #6667 from code-yeongyu/feat/omo-agent-toolkit-rename
@@ -890,7 +881,6 @@ The changelog selection fix above lives in the engine and ships with this releas
 - 3873af48d test(tool-pair-validator): gate repairs on the conversion invariant
 - 5f576e6e9 fix(tool-pair-validator): operate on OpenCode's real Part model
 - a5316f6bf fix(start-work): keep the Codex stop contract out of other harnesses
-- 10098b7cf fix(omo-codex): detect a stale committed installer bundle
 - 19abf74fe Merge pull request #6603 from code-yeongyu/improve/ulw-fanout-categories
 - aa1469c3f Merge pull request #6602 from code-yeongyu/fix/config-migration-model-chains
 - 989636bc5 fix(omo-opencode): accept migrated agent model chains
@@ -925,7 +915,6 @@ The changelog selection fix above lives in the engine and ships with this releas
 - 0da7458f7 test(omo-opencode): record monitor terminal wake QA evidence
 - c7cd882cc fix(omo-opencode): wake parent on monitor terminal output
 - d1fffa14c fix(start-work): teach the initial skill the external-blocker marker, and harden its QA
-- 4ee7c7131 fix(omo-codex): keep uninstall able to find the bins it installed
 - f2e79e578 test(utils): make sg probe-contract assertions Windows-aware
 - 975245983 fix(model-core): infer temperature support from model family when metadata is silent
 - 8f8b0deee Merge pull request #6585 from code-yeongyu/fix/lsp-daemon-stale-node-path
@@ -934,19 +923,13 @@ The changelog selection fix above lives in the engine and ships with this releas
 - 3f8b1ed5a docs(qa): add real OpenCode harness evidence for path-compat fix
 - e1a769fc1 docs(qa): record QA evidence for prompt-async-gate path-compat fix
 - 938d35003 fix(utils): support 'got undefined' error in prompt path compatibility retry
-- 4fca987ee test(omo-codex): drive the installed uninstaller and record why it cannot run
-- f39f1b0c3 fix(omo-codex): remove legacy-marketplace bins on uninstall
 - 9fdb65b6d test(shared-skills): fail the drivers on unexercised probes and unreadable counts
 - b39f1e6e0 test(shared-skills): make the evidence driver fail and add the OpenCode case
-- c024911d4 test(omo-codex): cover a user-owned bin under an installer name
-- d6ea16e31 test(omo-codex): record the Codex compatibility gate on Linux
-- 07a5e5d4b fix(omo-codex): scope uninstall bin removal to installer bin names
 - 7cfe8862e fix(ast-grep-mcp): enforce aggregate payload cap and async test discipline
 - 55ea9490b Merge pull request #6570 from code-yeongyu/fix/ulw-test-proportionality
 - 4ebfcc840 chore(ast-grep-mcp): complete package registration and regenerate packed bundles
 - aaf2a02e7 fix(ultrawork): proportion test mandates to code seams across injected prompts
 - dd5048efe feat(ast-grep-mcp): stdio MCP server on mcp-stdio-core
-- 12be076fd fix(omo-codex): remove installer bin links on uninstall
 - a174404f9 feat(ast-grep-mcp): scan tool with explicit-source YAML rules
 - 680a5471a feat(ast-grep-mcp): search tool with normalized NDJSON results
 - 7ebf6283a feat(ast-grep-mcp): rewrite tool with two-pass apply safety
@@ -1010,7 +993,6 @@ The changelog selection fix above lives in the engine and ships with this releas
 **Thank you to 5 community contributors:**
 - @MoerAI:
   - fix(model-core): infer temperature support from model family when metadata is silent
-  - fix(omo-codex): keep uninstall able to find the bins it installed
   - fix(start-work): teach the initial skill the external-blocker marker, and harden its QA
   - fix(start-work): require a stated blocker before the marker ends the turn
   - fix(evidence): read the same database for both session counts in the #6376 driver
@@ -1023,7 +1005,6 @@ The changelog selection fix above lives in the engine and ships with this releas
   - Merge pull request #6537 from Hungdoan565/fix/6489-bug-report-opencode-version
   - fix(model-core): resolve provider metadata for reasoning-suffixed model ids
   - fix(shared-skills): resolve the skills directory in the Codex marketplace layout
-  - fix(omo-codex): detect a stale committed installer bundle
   - fix(start-work): keep the Codex stop contract out of other harnesses
   - fix(tool-pair-validator): operate on OpenCode's real Part model
   - test(tool-pair-validator): gate repairs on the conversion invariant
@@ -1090,16 +1071,10 @@ The changelog selection fix above lives in the engine and ships with this releas
 - 56593dc78 Merge pull request #6708 from code-yeongyu/fix/npm-ci-stale-node-modules
 - 1b06566ed fix(windows): stage over a removed target and assert the launcher PATH prepend
 - a4d64b14b fix(windows): resolve the hoisted shim bin dir and give git tests a real timeout
-- b91a7f595 test(omo-native): gate POSIX-only contracts on Windows and surface build stderr
 - 82e76554c test(omo-opencode): wait for the clock to advance instead of a fixed sleep
 - 7bd338df6 Merge pull request #6695 from code-yeongyu/feat/omo-brand-unification
-- 65c9fc7fc test(omo-native): expand Windows short paths in the launcher fixture
 - efdd7aa4f chore(script): re-pin the publish-shape audit hit after the comment shift
 - 7ef6a432e fix(script): make the publish-shape test line-ending independent
-- 05604df78 test(omo-native): assert OMO_BIN by target instead of path spelling
-- b2ca09401 test(omo-native): guard against pinning an engine that ignores the brand
-- c3cb6c832 docs(omo-native): document the brand contract, flat home and update channel
-- 4ea82b508 feat(omo-native): hand the omo brand profile and update channel to the engine
 
 ## [5.0.0-beta.6] - 2026-08-11
 
@@ -1182,7 +1157,6 @@ preserves user-owned `omo` files.
 
 - `oh-my-opencode@5.0.0-beta.6`
 - `oh-my-openagent@5.0.0-beta.6`
-- `lazycodex-ai@5.0.0-beta.6`
 - Codex marketplace plugin `omo@sisyphuslabs`
 - platform launcher packages stamped `5.0.0-beta.6`
 
@@ -1199,13 +1173,11 @@ preserves user-owned `omo` files.
 - 0dd0ec220 Merge pull request #6743 from code-yeongyu/fix/lsp-symlink-worktree
 - b542b7c2c fix(lsp-core): preserve resolved read paths
 - b75406420 fix(lsp-core): allow lexical symlink reads
-- b1574d648 Merge pull request #6737 from code-yeongyu/fix/omo-native-geoip-on
 - bceb9cf76 Merge pull request #6736 from code-yeongyu/fix/omo-memory-windows-git-fallback
 - 19e3d3ae3 Merge pull request #6735 from code-yeongyu/fix/coding-agent-sessions-omo
 - f332aaff8 docs(qa): record Windows memory git fallback evidence
 - f4d77d7fc test(omo-memory): allow for Windows Git latency
 - ded9d68bc fix(omo-memory): locate standard Git on Windows
-- ca95292c7 Merge pull request #6733 from code-yeongyu/fix/omo-native-placeholder-key
 - 77210223c docs(qa): record OMO session discovery proof
 - 7ad95a80b fix(telemetry-core): treat the unconfigured OmO Native placeholder key as telemetry disabled
 - 1b91e9771 Merge pull request #6721 from code-yeongyu/fix/memory-footer-evidence-eol
@@ -1220,7 +1192,6 @@ preserves user-owned `omo` files.
 - 911c9ffe0 docs(evidence): pin the preload vs per-file timeout semantics
 - 7dbe42d00 fix(test): raise the CI test-timeout floor in the preload
 - 79bbfe0f8 docs(qa): record isolated Windows status proof
-- e0f90f923 Merge pull request #6718 from code-yeongyu/feat/omo-native-telemetry
 - d2c590f33 docs(evidence): correct the timeout mechanism with the per-file probe
 - 31bc2c286 fix(test): remove the no-op windows timeout floor
 - 0c476edab revert: restore the per-file windows test budgets
@@ -1237,7 +1208,6 @@ preserves user-owned `omo` files.
 - 2837bbbef docs(qa): record stale self-package cleanup proof
 - 57cf761a3 fix(ci): remove stale self-package tests
 - de2d4acdf Merge pull request #6713 from code-yeongyu/fix/windows-ci-root-causes
-- 26db2b775 test(omo-codex): give the git bash hooks install a real windows budget
 - 511a23dd0 docs(qa): correct final memory suite evidence
 - 92fda8980 docs(qa): record final memory lifecycle proof
 - d4f675773 docs(evidence): record the green windows required-check run
@@ -1253,14 +1223,8 @@ preserves user-owned `omo` files.
 - 864c9eb59 merge: sync dev after npm install repair
 - 194175c30 docs(qa): record Windows CI round three evidence
 - 9264e7194 merge: sync dev into Windows CI baseline
-- e2e781bd5 test(omo-codex): allow Windows installer latency
 - 14b19c787 merge: sync dev into Windows CI baseline
-- 9cb2b3763 fix(omo-native): preserve Windows PATH casing
-- 1495ca6e0 test(omo-native): compare canonical Windows bin paths
-- 2826d2754 test(omo-native): respect Windows test contracts
 - abbd63d3b test(memory-core): reuse validation fixtures
-- 3ce89e30f style(omo-native): restore fixture indentation
-- f4aaa82ee test(omo-native): canonicalize Windows fixture paths
 - e638c8de4 fix(ci): pin workflow yaml to LF
 - 95cbd30b7 feat(memory-core): expose HEAD commit timestamps
 
@@ -1289,7 +1253,6 @@ Plus shared memory-engine improvements that ship through the OmO memory runtime:
 
 ade persona seed v2 + identity.md in <self>
 - f35dd0966 docs(memory): record the unconditional full-scope APPROVED verdict
-- e2e781bd5 test(omo-codex): allow Windows installer latency
 - 6cf4e8589 fix(memory): forbid destructive recovery that can discard user memory edits
 - f10944019 fix(memory-core): narrow optional observations in the people card tests
 - 67093ab26 docs(memory): record round 31 verdict, the empirical IC-6 defect, and round 32 bind
@@ -1308,12 +1271,7 @@ ade persona seed v2 + identity.md in <self>
 - 5bca65f69 feat(memory-core): sharpen always-on memory reminder (attention-first rewrite)
 - 14b19c787 merge: sync dev into Windows CI baseline
 - 6a50215b0 docs(memory): add memory v2 active-learning work plan
-- 9cb2b3763 fix(omo-native): preserve Windows PATH casing
-- 1495ca6e0 test(omo-native): compare canonical Windows bin paths
-- 2826d2754 test(omo-native): respect Windows test contracts
 - abbd63d3b test(memory-core): reuse validation fixtures
-- 3ce89e30f style(omo-native): restore fixture indentation
-- f4aaa82ee test(omo-native): canonicalize Windows fixture paths
 - e638c8de4 fix(ci): pin workflow yaml to LF
 - 95cbd30b7 feat(memory-core): expose HEAD commit timestamps
 
@@ -1432,7 +1390,6 @@ Rerunning the installer removes only installer-managed legacy wrappers and prese
 
 - `oh-my-opencode@5.0.0-beta.8`
 - `oh-my-openagent@5.0.0-beta.8`
-- `lazycodex-ai@5.0.0-beta.8`
 - `omo-ai@5.0.0-0.beta.8` (beta channel only: `npm i -g omo-ai@beta`)
 - Codex marketplace plugin `omo@sisyphuslabs`
 - platform launcher packages stamped `5.0.0-beta.8`
@@ -1453,7 +1410,6 @@ Thanks to community contributor @sanguneo for the Windows console flash fix.
 - 001d7ec11 Merge pull request #6947 from code-yeongyu/fix/quick-luna-fast-provider
 - 6c1ff1657 Merge pull request #6946 from code-yeongyu/fix/release-gates
 - 08a10e652 Merge pull request #6941 from code-yeongyu/fix/rpc-parity-local-cli
-- 054340164 Merge pull request #6939 from code-yeongyu/fix/lazycodex-parallel-fixture
 - 010ff3fe9 fix(model-core): use openai-codex provider for quick luna-fast rung
 - 3f260e801 fix(memory-core): retry git init under lock contention
 - bbebf5e1c test(opencode): cover resolved message lookup failures
@@ -1461,7 +1417,6 @@ Thanks to community contributor @sanguneo for the Windows console flash fix.
 - dbf600533 Merge pull request #6933 from code-yeongyu/feat/publish-post-verify
 - e3b6860f2 Merge pull request #6945 from code-yeongyu/fix/windows-dag-happy-timeout
 - 5b02fd4f0 docs(evidence): record release-gate repair verification
-- 469b05847 test(omo-codex): isolate LazyCodex installer source fixtures
 - 0b025ec23 Merge pull request #6942 from code-yeongyu/test/windows-dag-residency-budget
 - 397d5346b Merge pull request #6936 from code-yeongyu/docs/release-resume-path
 - 89a37db40 Merge pull request #6940 from code-yeongyu/fix/publish-rpc-parity-launcher
@@ -1498,7 +1453,6 @@ Thanks to community contributor @sanguneo for the Windows console flash fix.
 - 0947b5055 test(init-deep): build drift history with fast-import
 - 5d097ae93 fix(memory-core): serialize worktree administration
 - ee63da500 docs(evidence): record brutal review repair
-- 8ce91d0d7 test(omo-codex): bound Git Bash installer fixture
 - 26cc99667 Merge pull request #6913 from code-yeongyu/feat/unspecified-low-grok-4.6
 - 9d0536a44 fix: keep grok-4.6 snapshot-backed on unspecified-low
 - 8825a9c36 docs: document unspecified-low grok-4.6 first lane
@@ -1591,12 +1545,10 @@ Thanks to community contributor @sanguneo for the Windows console flash fix.
 - 3bbdf6004 Merge pull request #6860 from code-yeongyu/fix/omo-agent-dir-unification
 - 6de0f2d2c test(memory): cover the session seam and registry scan
 - a047dcb2c test(memory): pin the resolution ladder order
-- 6bd290ba4 fix(omo-native): type the adoption result and categorize the new command strings
 - f612eb661 docs(evidence): record the canonical agent-directory QA
 - 5254268cc docs: state the canonical omo agent directory and its invariant
 - ee71abff3 fix(memory): point category failures at the real fix
 - 46a3ebebc fix(memory): resolve reflection models from the live runtime
-- 0d1505be8 feat(omo-native): add the shared agent-directory resolver
 - 259fd760d Merge pull request #6856 from code-yeongyu/fix/ulw-plan-bounded-review-convergence
 - 13a034b83 fix(ulw-plan): bound high-accuracy review convergence
 - 8e71c1be5 Merge pull request #6851 from code-yeongyu/fix/windows-facts-reservation-timeout
@@ -1608,7 +1560,6 @@ Thanks to community contributor @sanguneo for the Windows console flash fix.
 - 4d951e39c test(omo-opencode): isolate tmux polling timers
 - 9ab4cd9d1 test(utils): make port auto-selection deterministic
 - 30d7ed5af test(memory): bound cache variant coverage
-- 6d3c24f41 test(omo-native): verify provider registry map
 - c26b8febd Merge pull request #6825 from code-yeongyu/fix/memory-core-git-lock-contention
 - 1bc6dd662 Merge remote-tracking branch 'origin/dev' into fix/memory-core-git-lock-contention
 - ca30face6 Merge pull request #6824 from code-yeongyu/fix/memory-journal-stale-lock
@@ -1642,7 +1593,6 @@ Thanks to community contributor @sanguneo for the Windows console flash fix.
 - 4c59f889e Merge remote-tracking branch 'origin/dev' into refactor/memory-module-split-bridge
 - 5295ad32d Merge remote-tracking branch 'origin/dev' into refactor/memory-health-alert-split
 - 4e3c361f3 Merge pull request #6811 from code-yeongyu/fix/memory-sandbox-escape-visibility
-- c2b2375c4 fix(omo-native): honor Windows runtime home for migration
 - e71d0faa8 Merge remote-tracking branch 'origin/dev' into refactor/memory-module-split-bridge
 - e0961dc5f Merge remote-tracking branch 'origin/dev' into refactor/memory-health-alert-split
 - dd4986b23 Merge remote-tracking branch 'origin/dev' into fix/memory-sandbox-escape-visibility
@@ -1650,7 +1600,6 @@ Thanks to community contributor @sanguneo for the Windows console flash fix.
 - b8996a61a Merge remote-tracking branch 'origin/dev' into feat/memory-tui-entry-polish
 - ceb9d4af1 docs(qa): record before/after evidence for the memory entry restyle
 - 03982613e test(memory): pin the rendered shape and semantic colour of memory entries
-- 2619e8c65 fix(omo-native): repair legacy Bun global manifests
 - 073cfdee2 Merge remote-tracking branch 'origin/dev' into fix/memory-sandbox-escape-visibility
 - 25cd1d18d Merge remote-tracking branch 'origin/dev' into refactor/memory-module-split-wiring
 - e65d76148 Merge remote-tracking branch 'origin/dev' into refactor/memory-module-split-bridge
@@ -1802,7 +1751,6 @@ These changes are aimed at reducing Windows-only hangs and false failures while 
 ##### omo codex
 
 - Codex compatibility and platform publication use the same exact-SHA release guarantee;
-- `lazycodex-ai` publication remains behind successful synchronized validation;
 - Windows installer and compatibility checks run with native shell semantics; and
 - Codex consumers inherit the bounded ast-grep installer failure path.
 
@@ -1997,7 +1945,6 @@ The Senpi adapter is now a first-class mandatory-QA surface with a machine-enfor
 
 Bun 1.4 went stable today, and this release train rides it end to end:
 
-- **omo**: every CI, publish, and platform-build workflow moved from Bun 1.3.14 to **1.4.0** (cache keys included), and the committed omo-senpi extension bundles were regenerated under stable 1.4.0 so the CI freshness gate and your installed extension agree byte-for-byte.
 - **senpi 2026.8.20-2** (same-day re-release on top of 2026.8.20): the compiled `senpi` binary is now built with Bun **1.4.0 stable** (was 1.3.14), and npm publishing graduated from the Bun canary channel to stable 1.4.
 - **Safe dependency refresh** riding along — omo: posthog-node 5.49, puppeteer-core 25.8, @clack/prompts 1.7, MCP SDK 1.30, js-yaml 4.3.1, picomatch 4.0.5, bun-types 1.4.0; senpi: Biome 2.5.9, @types/node 26.2.0, vitest + coverage 4.1.11, AWS Bedrock/Smithy patches, protobuf 2.14.0. Deliberately excluded: anything major, the Anthropic SDKs (OAuth-lane sensitivity), @google/genai, @mistralai.
 
@@ -2353,7 +2300,6 @@ What changes at your keyboard:
 - Typing **"mass ulw-loop"** now loads ultrawork + mass-ulw + ulw-loop together instead of nothing.
 - **"ulw plan"** loads ultrawork + ulw-plan, via the new `omo-ulw-plan:skill-pointer` custom type.
 - Existing custom types (`omo-mass-ulw:skill-pointer`, `omo-ulw-loop/-research:skill-pointer`) stay stable.
-- **Flag consolidation:** `omo-senpi-mass-ulw-disabled` and `omo-senpi-ulw-skill-pointers-disabled` are replaced by a single `omo-senpi-skill-pointers-disabled`. Move your flag if you had one set.
 
 Only structural dedup remains: extension-source inputs, raw `/skill:` commands for the same skill, expanded skill blocks, and the `<ultrawork-mode>` tag-pair guard. The e2e was rebuilt as `skill-pointers-e2e.mjs`, proving the overlap case ("mass ulw-loop" carries the directive plus both pointers), the new plan pointer, and that plain "mass ulw" stays loop- and research-free; `mass-ulw-prompts-e2e.mjs` is unchanged and still passes.
 
@@ -2382,7 +2328,6 @@ Full engine changelog: [senpi v2026.8.22](https://github.com/code-yeongyu/senpi/
 ### 🧹 Roundup
 
 - **Dependency pins:** the omo package now depends on **senpi 2026.8.22**, and `bun-types` moved **1.3.14 to 1.4.0** in the Codex plugin shared manifest, finishing the Bun 1.4 graduation started in beta.13.
-- **Bundle freshness:** the committed omo-senpi extension bundles were regenerated on Linux after each ULW component change, so the CI freshness gate and your installed extension agree byte-for-byte.
 
 ---
 
@@ -2398,9 +2343,7 @@ npm i -g omo-ai@beta
 
 - 0902c4a80 Merge pull request #7143 from code-yeongyu/release/v5.0.0-beta.17-source-state
 - 9faba4727 Merge pull request #7142 from code-yeongyu/fix/beta17-bun-path-fixtures
-- dcbe734a6 test(omo-native): make path fixtures platform explicit
 - 2a2323575 Merge pull request #7140 from code-yeongyu/fix/beta17-bun-path-delimiter
-- 74aa8ac58 fix(omo-native): honor target path semantics
 - 63bfdb770 Merge pull request #7134 from code-yeongyu/feature/task-lane-spill
 - 41a957e33 docs(omo-json): name lane saturation as the common spill trigger
 - fd759e564 feat(omo-config-core): add task.global_concurrency schema and default
@@ -2410,8 +2353,6 @@ npm i -g omo-ai@beta
 - a51e454f7 fix(omo-opencode): allow 0 defaultConcurrency as unbounded
 - a208a9444 feat(omo-config-core): accept 0 as unlimited sentinel in task concurrency and residency settings
 - fa0603139 Merge pull request #7129 from code-yeongyu/feat/launcher-bun-auto-runtime
-- 27ba9b56a test(omo-native): keep the bare-omo-binary audit green for the new module
-- 0a6a1b1e1 feat(omo-native): re-exec the launcher under bun for bun-installed users
 
 **Thank you to 1 community contributor:**
 - @sisyphus-dev-ai:
@@ -2446,7 +2387,6 @@ debug-log filename casings during Senpi cleanup.
 - 5c35a1a0a Merge branch 'dev' into release/v5.0.0-beta.18-source-state
 - 83f8efa56 Merge pull request #7155 from code-yeongyu/fix/worktree-sweep-path-normalize
 - 550fd5e1d fix(cli): normalize worktree-sweep porcelain paths at the parse boundary
-- 306a90633 test(omo-native): move SENPI_PIN contract to 2026.8.23
 - de5a42282 Merge pull request #7151 from code-yeongyu/feat/worktree-sweep
 - 5a21af66c fix(review-work): tear down the review worktree only after lanes finish
 - 5685d3b62 fix(review-work): lock and tear down review worktrees
@@ -2454,7 +2394,6 @@ debug-log filename casings during Senpi cleanup.
 - 70b959499 Merge pull request #7149 from code-yeongyu/fix/omo-brand-casing
 - 9d10bab17 Merge pull request #7148 from code-yeongyu/fix/omo-brand-casing
 - dcb02c95a fix(schema): use canonical OmO title
-- 04c92a514 fix(omo-native): preserve OmO display casing
 - e7c8186d8 Merge pull request #7147 from code-yeongyu/fix/telemetry-model-id-vocabulary-disclosure
 - 703431e6e docs(telemetry): align the privacy disclosure with provider-independent model ids
 - bc0f7ec9a feat(telemetry): export known model ids regardless of routing provider
@@ -2479,12 +2418,9 @@ debug-log filename casings during Senpi cleanup.
 - a2eeacabb Merge pull request #7174 from code-yeongyu/initdeep-refresh-20260824
 - f7cdde8b5 docs(agents): refresh knowledge base for 2026-08-24 HEAD
 - 2a28ea8cd Merge pull request #7173 from code-yeongyu/fix/ulw-loop-component-check-20260824
-- 66de4fc15 chore(omo-codex): clean every plugin component check
-- 46aacea73 chore(omo-codex): clean ulw-loop component checks
 - f8ad86e0b Merge pull request #7171 from code-yeongyu/fix/ulw-checkpoint-snapshot-20260824
 - 680fa0dd8 Merge pull request #7170 from code-yeongyu/docs/main-profile-safety
 - a90944990 Merge pull request #7168 from code-yeongyu/docs/main-profile-safety
-- 7222b21aa fix(omo-codex): accept title-based goal snapshots
 - 302f3dd0d chore(ulw-loop): resync bundled ultrawork directive
 - da0d7bd54 chore(ultrawork): resync codex directive copies
 - 5eb9e6f4a docs(skills): require cloned profiles for agent-driven browser clears
@@ -2569,7 +2505,6 @@ modes.
 |---|---|---|
 | `/start-work` and `start-work` | `/ulw-execute` and `ulw-execute` | Hard cutover; no old-name alias. |
 | `start-work-continuation` | `ulw-execute-continuation` | Update component paths and hooks. |
-| `omo-senpi-start-work-continuation-disabled` | `omo-senpi-ulw-execute-continuation-disabled` | Rename the flag. |
 | `skill_loaded: start-work` | `skill_loaded: ulw-execute` | Update telemetry queries. |
 | `start_work` | `ulw_execute` | Old key reads for one release with a warning; new key wins. |
 | `omo` executable | `omo-agent-toolkit` | Update direct invocations. |
@@ -2633,7 +2568,6 @@ The release chain was verified in order:
 ### Evidence sources
 
 - Senpi: `v2026.8.24..v2026.8.25`, `af5f53b0d`, `a79b37334`, `99c711255`.
-- OmO: `package.json`, `packages/omo-native/package.json`,
   `CHANGELOG.md`, `.github/workflows/publish.yml`, and the
   `get-unpublished-changes` procedure.
 - Skill migration: `e3cb1486d`, `cc57d3908`, `2aece77f4`.
@@ -2759,16 +2693,8 @@ The beta channel contract is unchanged: every version is a prerelease published 
 
 - 43d9c058e Merge pull request #7448 from code-yeongyu/fix/release-arm64-musl-smoke
 - 8307b47c9 fix(release): install musl runtime for arm64 smoke
-- f056bdcfb Merge pull request #7447 from code-yeongyu/fix/omo-native-windows-inprocess
-- f9f483753 fix(omo-native): avoid Windows self-reexec
-- 5e53d2733 Merge pull request #7445 from code-yeongyu/fix/omo-native-windows-argv-identity
-- 650aee784 fix(omo-native): stop Windows self-provisioning loop
-- 09fe012d6 Merge pull request #7443 from code-yeongyu/fix/omo-native-windows-copy
-- 24c3c1611 fix(omo-native): copy Windows runtime without rename
 - 1679b0fcd Merge pull request #7442 from code-yeongyu/fix/windows-ci-time-budgets
 - 8897ead88 test(windows): widen integration time budgets
-- 73a023c02 Merge pull request #7440 from code-yeongyu/fix/omo-native-windows-provisioning
-- cf15df923 fix(omo-native): avoid locked Windows self-provisioning target
 - 61f9583d3 Merge pull request #7439 from code-yeongyu/fix/release-platform-smoke-runtime
 - db060f555 fix(release): align platform smoke runtime contracts
 - 7eef11790 Merge pull request #7436 from code-yeongyu/fix/windows-lsp-daemon-build-shell
@@ -2796,7 +2722,6 @@ The beta channel contract is unchanged: every version is a prerelease published 
 - edf1fa369 fix(windows): harden dap and atomic persistence
 - 9f420d5db fix(config): preserve absent format settings
 - a5bb28c60 Merge pull request #7429 from code-yeongyu/fix/codex-650k-context-window
-- d9d83ee03 fix(omo-codex): raise GPT-5.6 context window to 650k
 - 8776e8025 Merge pull request #7420 from bokjk/fix/config-watch-duplicate-extension-standdown
 - f356d1781 Merge pull request #7428 from code-yeongyu/feature/lsp-format-capability
 - 8c4981fef test(lsp-core): prove a stale format edit cannot corrupt the file
@@ -2916,16 +2841,8 @@ npm i -g omo-ai@beta   # resolves to 5.0.0-0.beta.25
 - 555c81b75 fix(team-mode): wake idle members after delivery fallback (fixes #5317)
 - 43d9c058e Merge pull request #7448 from code-yeongyu/fix/release-arm64-musl-smoke
 - 8307b47c9 fix(release): install musl runtime for arm64 smoke
-- f056bdcfb Merge pull request #7447 from code-yeongyu/fix/omo-native-windows-inprocess
-- f9f483753 fix(omo-native): avoid Windows self-reexec
-- 5e53d2733 Merge pull request #7445 from code-yeongyu/fix/omo-native-windows-argv-identity
-- 650aee784 fix(omo-native): stop Windows self-provisioning loop
-- 09fe012d6 Merge pull request #7443 from code-yeongyu/fix/omo-native-windows-copy
-- 24c3c1611 fix(omo-native): copy Windows runtime without rename
 - 1679b0fcd Merge pull request #7442 from code-yeongyu/fix/windows-ci-time-budgets
 - 8897ead88 test(windows): widen integration time budgets
-- 73a023c02 Merge pull request #7440 from code-yeongyu/fix/omo-native-windows-provisioning
-- cf15df923 fix(omo-native): avoid locked Windows self-provisioning target
 - 61f9583d3 Merge pull request #7439 from code-yeongyu/fix/release-platform-smoke-runtime
 - db060f555 fix(release): align platform smoke runtime contracts
 - 7eef11790 Merge pull request #7436 from code-yeongyu/fix/windows-lsp-daemon-build-shell
@@ -2953,7 +2870,6 @@ npm i -g omo-ai@beta   # resolves to 5.0.0-0.beta.25
 - edf1fa369 fix(windows): harden dap and atomic persistence
 - 9f420d5db fix(config): preserve absent format settings
 - a5bb28c60 Merge pull request #7429 from code-yeongyu/fix/codex-650k-context-window
-- d9d83ee03 fix(omo-codex): raise GPT-5.6 context window to 650k
 - 8776e8025 Merge pull request #7420 from bokjk/fix/config-watch-duplicate-extension-standdown
 - f356d1781 Merge pull request #7428 from code-yeongyu/feature/lsp-format-capability
 - 8c4981fef test(lsp-core): prove a stale format edit cannot corrupt the file
@@ -3047,15 +2963,11 @@ npm i -g omo-ai@beta   # resolves to 5.0.0-0.beta.25
 - d1c78941f test(script): pin the test-fast group partition against the bunfig tiling
 - 89c5daf45 fix(test): kill test-fast group children when the parent is signalled
 - e1adc57b8 fix(test): block test-fast re-entry with an env marker guard
-- 6c5ace409 fix(omo-native): materialize runtime before the version fast-path
 - e40b92191 Merge pull request #7503 from code-yeongyu/fix/bunfs-cursor-oauth-registration
-- 59f56836a fix(omo-native): register bundled cursor OAuth flows
 - 354a66883 Merge pull request #7501 from code-yeongyu/release/v5.0.0-beta.27-source-state
 - ffd1519a0 merge: dev into rel/audit2-pin-bump; port launch guard and restore package-dir pin
 - 59d0a674c Merge pull request #7499 from code-yeongyu/perf/compile-entry-fastpath
 - 9261a81af Merge pull request #7498 from code-yeongyu/fix/dev-push-ci
-- c5dca00b0 perf(omo-native): answer fast paths before provisioning and banner interactive boots
-- 40f945fd0 refactor(omo-native): split embedded runtime provisioning out of compile-entry
 - 6c34a9332 merge: fix/binary-startup into rel/audit2-pin-bump
 - b4e0094c0 Merge pull request #7484 from code-yeongyu/fix/memory-lock-fixtures-win32
 - 619c241be Merge pull request #7478 from code-yeongyu/fix/ulw-loop-cli-sb
@@ -3070,8 +2982,6 @@ npm i -g omo-ai@beta   # resolves to 5.0.0-0.beta.25
 - bc513358f fix(shared-skills): tighten data-scientist failure wording per review
 - 082c54789 feat(shared-skills): rewrite data-scientist around resident kernels and placement
 - 999c57113 fix(lsp): plumb session directory into request context
-- 1e22cf258 fix(omo-native): skip the redundant 114MB self-copy on every launch
-- 134b61b38 fix(omo-native): start the compiled binary without re-exec or a self-copy
 - 7d874efc4 Merge pull request #7475 from code-yeongyu/feat/workflow-tool-rename
 - 19d571cce merge: origin/dev into feat/workflow-tool-rename
 - c034b5313 Merge pull request #7474 from code-yeongyu/feat/mass-ulw-research
@@ -3183,7 +3093,6 @@ No omo-side commits land in this release. It picks up the engine hotfix above, s
 - 6ec04f9e9 Merge pull request #7553 from code-yeongyu/fix/recall-mode-assertions-win32
 - 6e3b1ed72 test(memory-core): gate recall file-mode pins to POSIX platforms
 - 24cc17ad5 revert: drop out-of-scope W1 changes flagged by strict merge review
-- a7e33a667 build(omo-codex): regenerate install-dist bundle for W1 source changes
 - 3307fb251 docs: refresh re-export shim inventory for W1 deletions (316 -> 315)
 - 6974bbdb1 fix(omo-opencode): restore model-fallback chain accessor refuted by hook tests
 - b0fe2f334 fix(omo-opencode): restore concurrency manager + stream-activity exports refuted by build
@@ -3194,7 +3103,6 @@ No omo-side commits land in this release. It picks up the engine hotfix above, s
 - c1e4c1399 chore(ast-grep-mcp): remove redundant comments
 - a055e6c3d chore(lsp-tools-mcp): remove unused re-export modules
 - fe6c85dc0 chore(omo-opencode): remove dead code and redundant comments
-- 8e8d06c90 test(omo-native): give the packed consumer install room on slow runners
 - ea2918f12 Merge pull request #7543 from code-yeongyu/fix/7537-ulw-gate-reviewer-surface
 - 2ef02d905 fix(qa): ignore volatile settings stamps
 - e49207369 style(codex-ulw-loop): apply biome formatting to the surface tests
@@ -3225,11 +3133,9 @@ No omo-side commits land in this release. It picks up the engine hotfix above, s
 - 7603a66eb Merge pull request #7525 from code-yeongyu/fix/mem-mcp-idle-teardown
 - 51ddd6eca Merge pull request #7530 from code-yeongyu/ci/bot-merge-summary
 - ffbee1a97 Merge remote-tracking branch 'origin/dev' into fix/local-fomo-oauth-delivery
-- d682f34aa test(omo-native): record round-two isolated QA
 - 5cda20141 test(hooks): bound synchronized subprocess contracts
 - a16929084 ci(bot-merge): write the mandatory job summary and register the workflow expectation
 - 7c3cb8366 docs(evidence): record the unavailable-stub idle regression fix and dist regen
-- 60cd9e1d3 fix(omo-codex): keep the unavailable codegraph stub alive on the codex host
 - 8da24e3c1 fix(omo-opencode): restore continuation cleanup on every exit
 - 11f1274cd Merge pull request #7527 from code-yeongyu/fix/mem-hook-cache-evictions
 - 23afd7661 Merge pull request #7523 from code-yeongyu/fix/mem-signal-test-orphans
@@ -3255,36 +3161,25 @@ No omo-side commits land in this release. It picks up the engine hotfix above, s
 - 4b642597d fix(hooks): drain unbounded session-id hook sets
 - 88c72a4d0 fix(hooks): clear anthropic recovery maps on dispose
 - 284d6f9ba fix(hooks): prune idle transcript cache snapshots
-- 5409c6f87 test(omo-native): record isolated OAuth QA
 - 0bf2bbe29 test(hooks): fail until idle hook caches evict
 - 78cda27bc docs(evidence): record RED/GREEN and per-site respawn verdicts for MCP idle teardown
 - b9374cd46 docs(mcp): record why idle timeouts stay disabled on no-respawn hosts
-- 5d7bad4b1 test(omo-native): document signal fixture cleanup evidence
-- 6f2a1673e test(omo-native): track re-exec fixture pid
 - 17ba153b7 fix(omo-opencode): wire tui mirror into plugin disposal
 - 6de61a709 test(omo-opencode): cover tui mirror disposal assembly wiring
-- 4e08c44c5 test(omo-native): await fixture process reaping
-- b45acd6c5 test(omo-native): make fixture reaping verification reliable
 - 0774fb780 fix(omo-opencode): release delegated subagent lifecycle resources
-- 4905b4b5d test(omo-native): reap signal fixture children in teardown
 - dafd8ca0a fix(omo-opencode): unref tui mirror heartbeat and stop it on dispose
-- b607d24b5 test(omo-native): record signal fixture child pids
 - 42740d0dd fix(mcp-stdio-core): drop unused handler param and share child-spawn setup
 - 278d92faa fix(mcp-stdio-core): destroy stdin on idle timeout so abandoned servers exit
 - 9597bb72d test(omo-opencode): cover tui mirror heartbeat disposal lifecycle
 - 4f71cd7d9 test(hooks): isolate publication failure injection
 - 0e5293b51 Merge commit '3abc23c23bae150f0276f8596dbda50edb310844' into fix/local-fomo-oauth-delivery
-- f98128cfe fix(omo-native): bundle OAuth and harden hook state
 
 **Thank you to 3 community contributors:**
 - @minpeter:
-  - fix(omo-native): bundle OAuth and harden hook state
   - Merge commit '3abc23c23bae150f0276f8596dbda50edb310844' into fix/local-fomo-oauth-delivery
   - test(hooks): isolate publication failure injection
-  - test(omo-native): record isolated OAuth QA
   - fix(hooks): bridge legacy state writers safely
   - test(hooks): bound synchronized subprocess contracts
-  - test(omo-native): record round-two isolated QA
   - Merge remote-tracking branch 'origin/dev' into fix/local-fomo-oauth-delivery
   - Merge pull request #7500 from minpeter/fix/local-fomo-oauth
 - @lifrary:
@@ -3302,7 +3197,6 @@ No omo-side commits land in this release. It picks up the engine hotfix above, s
 
 - d85fa7ba7 Merge pull request #7629 from code-yeongyu/release/v5.0.0-beta.32-source-state
 - 716adb407 Merge pull request #7628 from code-yeongyu/fix/publish-platform-prebuilt-inputs
-- daa6a0e5f fix(release): build missing prebuilt inputs in omo-native staging
 - 9af5b8b52 Merge pull request #7627 from code-yeongyu/fix/windows-io-test-budgets
 - 8887260e9 test(windows): widen legacy daemon fixture readiness budget
 - 60c8577fc Merge pull request #7624 from MoerAI/fix/7541-grok-output-reserve
@@ -3382,13 +3276,10 @@ No omo-side commits land in this release. It picks up the engine hotfix above, s
 - 26d76dec7 Merge branch 'dev' into docs/3729-agent-temperature-docs
 - 555beab21 Merge branch 'dev' into fix/boulder-null-active-plan
 - 75107fba3 Merge pull request #7603 from code-yeongyu/fix/staging-windows-red
-- 4ef2e5983 test(omo-native): isolate credential import roots
 - 4bf82a3ef Merge pull request #7604 from code-yeongyu/fix/flake-setup-sibling
-- a4fc3e07b fix(omo-native): isolate concurrent staging builds
 - 185a90b30 Merge pull request #7602 from code-yeongyu/fix/facts-store-windows-red
 - 4b8a9304b fix(memory-core): remove unsafe lock fallback
 - b0658ba82 Merge pull request #7599 from code-yeongyu/fix/flake-team-send
-- 1061501da fix(omo-native): avoid needless sqlite setup fixtures
 - 0758fe2b6 Merge pull request #7601 from code-yeongyu/fix/flake-dag-abort
 - 0c6f70c0d fix(memory-core): bound shared candidate leaks
 - 987a44fe3 fix(memory-core): reclaim shared lock candidates
@@ -3405,7 +3296,6 @@ No omo-side commits land in this release. It picks up the engine hotfix above, s
 - 6b73ce3b1 fix: hermetically test MCP loader defaults
 - da6fa68f5 fix(team-mode): make ambiguous delivery test deterministic
 - 3546a1f4b test(background-agent): make queue integration deterministic
-- 55c642e66 build(omo-codex): refresh the committed codegraph dist and local installer
 - 124d24ddc Merge pull request #7589 from code-yeongyu/fix/lsp-freshness-test-determinism
 - a1d6e1c29 Merge pull request #7590 from code-yeongyu/fix/supervisor-outcome-flake
 - b680e29bc test(lsp-core): drive diagnostics freshness through a controlled clock
@@ -3482,7 +3372,6 @@ No omo-side commits land in this release. It picks up the engine hotfix above, s
 - 1876d9e3c Merge remote-tracking branch 'upstream/dev' into fix/codex-ulw-review-no-progress
 - 12697e3ae Merge pull request #7558 from code-yeongyu/deslop-w2-skills
 - 80e8fb732 test(skills-loader-core): mirror the template's four-group team-tool taxonomy
-- b772c06f2 refactor(omo-codex): single-source ultrawork directive via prompts-core with bundled runtime export
 - 558bbeb79 test(skills-loader-core): restore full team-tool gating coverage in team-mode test
 - 948335934 fix(ulw-loop): scope generic gate quota by surface
 - 520c1379c docs(qa): record article-role current-dev gates
@@ -3598,8 +3487,6 @@ Each one was killed by a different release-pipeline defect, not by the product. 
 
 ### 🔧 Codex / LazyCodex: the installer works again
 
-- `npx -y lazycodex-ai@5.0.0-beta.34 install` completes. The installer now materializes the prompts-core ultrawork directive inside the cached plugin root, and `sync:skills` resolves it checkout-first, plugin-internal second.
-- The ultrawork directive is single-sourced from prompts-core with a bundled runtime export, so Codex and omo-senpi ship the same text.
 - The unavailable codegraph stub stays alive on the Codex host instead of idling out and dropping the tool.
 
 ### 🧠 Memory: the memorian gate and recall
@@ -3615,8 +3502,6 @@ Each one was killed by a different release-pipeline defect, not by the product. 
 
 - `checkpoint --print-template` emits a surface-aware quality-gate skeleton and works without `--goal-id`. Gate validation errors are aggregated into one report, and snapshot, plan, and session-id errors come with guided recovery messages.
 - Repeated review spawns are bounded: each quality-review agent gets three spawns per goal attempt, reset on explicit restart, and only allowed spawns count toward fan-out (fixes #7392). Fan-out eligibility is checked before reviewer quota is charged, and counter writes are atomic.
-- The ulw reviewer agents (`omo-senpi-code-reviewer`, `omo-senpi-qa-executor`, `omo-senpi-gate-reviewer`) no longer carry hardcoded model chains: they resolve their model through the category router (code review -> `unspecified-high`, QA -> `deep` then `unspecified-low`, gate review -> `deep` then `unspecified-high`), so whatever you configure for those categories is what the reviewers run on.
-- omo-senpi ships its own ulw reviewer builtin agents, reviewer identities resolve per toolkit surface, article-bearing reviewer roles ("the V2 reviewer") parse, and explicit V2 assignments are honored.
 - The senpi surface gate is gate-review-only with a category chain: `codeReview` is dropped and `manualQa` is pinned to the main session. omo-opencode gets a category-chain fallback verifier for ultrawork verification.
 
 ### 🧩 Models, LSP, and MCP
@@ -3692,11 +3577,7 @@ npx -y lazycodex-ai@5.0.0-beta.34 install   # Codex plugin (fixed installer)
 - 1291b02c1 Merge pull request #7647 from code-yeongyu/fix/windows-dag-runtime-overflow-sync
 - 83c1fab9d docs(evidence): record memorian nudged visibility QA
 - 25e3cf613 docs(evidence): clarify DAG timeout proof
-- bd702cb8c Merge pull request #7646 from code-yeongyu/fix/omo-native-linux-deleted-execpath
 - 280c57395 Merge pull request #7644 from code-yeongyu/refactor/remove-codegraph
-- a9766e30d fix(omo-native): forward signals during native re-exec
-- 547ef2420 fix(omo-native): handle deleted Linux executable paths
-- b941e9f34 build(omo-codex): regenerate the plugin lockfile without the codegraph workspace
 - c95e713f7 docs(evidence): record CodeGraph removal QA
 - 8512ef8f6 docs: drop CodeGraph from prompts, skills, and docs
 - e5ab78a2d refactor: remove the CodeGraph integration
@@ -3813,11 +3694,7 @@ npx -y lazycodex-ai@5.0.0-beta.36 install   # Codex plugin
 - 12637f1b3 Merge pull request #7682 from code-yeongyu/fix/hooks-state-writer-cleanup
 - 090bd9fcd docs(evidence): record hooks-state writer cleanup QA
 - e54c7c18c Merge pull request #7681 from code-yeongyu/fix/setup-import-sqlite-handle-leak
-- 4103bea93 Merge pull request #7680 from code-yeongyu/feat/omo-native-bun-reexec-any-bun
-- e64b424a8 fix(omo-native): close setup-import database handles deterministically
 - 16f213443 test(script): follow the bun-runtime test split in the command-string allowlist
-- 7c240ca65 docs(omo-native): document the any-bun runtime policy
-- 32bca4739 feat(omo-native): run on bun wherever a bun >= 1.4 exists
 - d2e807dfa Merge pull request #7674 from code-yeongyu/feat/ultrawork-ideal-state-owner-doctrine
 - e46e3a29f Merge pull request #7675 from code-yeongyu/docs/ulw-execute-phase-worktree
 - 2c6aee570 Merge pull request #7673 from code-yeongyu/docs/ulw-loop-mass-ulw-composition
@@ -3839,7 +3716,6 @@ npx -y lazycodex-ai@5.0.0-beta.36 install   # Codex plugin
   - Merge pull request #7668 from code-yeongyu/fix/worktree-sweep-windows-budget
   - Merge pull request #7665 from code-yeongyu/fix/windows-ci-telemetry
   - Merge pull request #7672 from code-yeongyu/ci/windows-flake-soak
-  - fix(omo-native): close setup-import database handles deterministically
   - Merge pull request #7681 from code-yeongyu/fix/setup-import-sqlite-handle-leak
   - docs(evidence): record hooks-state writer cleanup QA
   - Merge pull request #7682 from code-yeongyu/fix/hooks-state-writer-cleanup
@@ -3878,11 +3754,9 @@ npx -y lazycodex-ai@5.0.0-beta.36 install   # Codex plugin
 - 636b8f9d4 Merge pull request #7705 from code-yeongyu/fix/ulw-loop-quality-gate-enum-messages
 - 2179edcd2 test(omo-opencode): pin the sync poller's active-status contract
 - 11cbb5705 refactor(ulw-loop): derive gate enum messages from one supported-value table
-- cbdffca4a build(omo-codex): drop the legacy network_access key from the bundle, parity tests, and docs
 - 049f09fef docs(ulw-loop): document quality gate enums
 - 653154717 fix(ulw-loop): explain quality gate enum defects
 - 31efd7e56 fix(omo-opencode): stop treating an active status as sync task progress
-- 742fefafd fix(omo-codex): stop writing the removed top-level network_access key
 
 **Thank you to 1 community contributor:**
 - @sisyphus-dev-ai:
@@ -3892,7 +3766,6 @@ npx -y lazycodex-ai@5.0.0-beta.36 install   # Codex plugin
 
 - c21fceb6f Merge pull request #7716 from code-yeongyu/release/v5.0.0-beta.39-source-state
 - 1b3f610eb Merge pull request #7715 from code-yeongyu/fix/win-launcher-bun-cmd-einval
-- cc966e556 fix(omo-native): stop the launcher dying with spawn EINVAL on Windows npm bun shims
 - 80ac895ff Merge pull request #7713 from code-yeongyu/fix/task-batch-progress-polish
 - 7d46cc2cb Merge pull request #7714 from code-yeongyu/fix/windows-flake-quarantine
 - e336e4372 test(git-bash-mcp): retry temp-dir removal on Windows EBUSY
@@ -3905,7 +3778,6 @@ npx -y lazycodex-ai@5.0.0-beta.36 install   # Codex plugin
 
 - f8aba1b94 Merge pull request #7735 from code-yeongyu/release/v5.0.0-beta.40-source-state
 - 20ac67e6d Merge pull request #7734 from code-yeongyu/fix/anthropic-tool-search-compat-20260904
-- 3106eb5bd test(omo-native): guard the engine-owned Anthropic tool-search contract
 - c6e7dd7fb Merge pull request #7729 from code-yeongyu/feat/ultrawork-js-eval-maxxing
 - 27ddc4d0d test(ci): register npm-dist-tag-rollback.yml in the job-summary coverage gate
 - eabe9d111 Merge pull request #7724 from code-yeongyu/ci/npm-dist-tag-rollback-20260904
@@ -3940,10 +3812,7 @@ stall for tens of seconds. Every `prepare()` in the credential readers and their
 
 ### Fixed
 
-- `omo-senpi`: the conditional x-search skill ships and no longer logs at startup (#7745); Bun skill guidance in the ultrawork directive is gated instead of unconditional (#7754); the senpi hooks-state lock is granted to every memory sandbox (#7756); unsupported isolation traversal fails closed instead of looking complete (#7769)
 - `lsp-core`: a diagnostic pull that times out now awaits its cancellation write, so `$/cancelRequest` is not lost on Windows (#7773)
-- `senpi-task`: PATH senpi executables that do not match the running engine are rejected (#7758); lead tasklist tools are deferred to tool_search (#7737)
-- `omo-native`/`omob`: hoisted bin dir resolution for scoped engine packages (#7755), architect blockers closed in the omob pipeline (#7747), skill-source filter + cache locking + provenance mirrors root-fixed (#7763), dev binary built from the latest commits with build provenance (#7740)
 - `shared-skills`: page work routes to a real browser before the CLI (#7751), browser QA and research browsing go through the eval kernel (#7750), CloakBrowser's venv interpreter is used in the launch step too (#7757)
 - Dependencies: `@code-yeongyu/senpi` pin moved to 2026.9.4-2 then 2026.9.4-3 (#7749, #7772)
 - Isolation QA snapshots assert the real per-platform contract instead of POSIX-only outcomes, so Windows reports capability failures explicitly (#7770, #7775)
@@ -4062,7 +3931,6 @@ beta.43 could not install its Codex plugin from npm. This release fixes both pub
 
 #### The install failure, fixed
 - **`oh-my-openagent@5.0.0-beta.43` died at `npm run sync:skills`** because the published tarball did not carry `packages/prompts-core/prompts/ultrawork/codex.md`, the canonical ultrawork directive the Codex cache install reads. The root `files` allowlist now ships it (#7835, thanks @LilMGenius) and the pre-publish payload verifier refuses a payload without it (#7836).
-- **`lazycodex-ai@5.0.0-beta.43` died at the same step** because the curated lazycodex `files` list lacked `packages/shared-skills/skill-source-filter.mjs`. The list is fixed and the verifier now requires every shared-skills runtime export target (#7813).
 - **Both packages would have failed again on dev** — the shared-skills imports in `sync-skills.mjs` had been changed (#7814) to checkout-relative paths that do not exist once the installer flattens `plugin/` into `<CODEX_HOME>/plugins/cache/<marketplace>/omo/<version>`. Restored to the package specifier the installer's `file:` link resolves, with a regression test that runs sync-skills inside a reproduction of that cache layout (#7848).
 - **The `skipped OMO SOT seed/migration` warning is gone**: the installer no longer spawns a migration script that was removed from the payload (#7837).
 - **A failed Codex half now tells you how to retry it** (`bunx oh-my-openagent install --platform=codex`) instead of ending on a success banner (#7845).
@@ -4128,10 +3996,7 @@ The engine moves from senpi 2026.9.6 to **2026.9.7** (#7886). This one carries t
 
 #### Also since beta.45 (omo)
 - test(background-agent): stop the unreachable-server stale sweep from expiring on the wall clock (#7891, @LilMGenius)
-- fix(omo-senpi): make DAG owner-scope snapshot keys posix on Windows (#7893)
-- #7869 fix(senpi-task): scope DAG recovery to the session and immediate fork source
 - #7882 fix(postinstall): bound the opencode version probe
-- #7881 fix(omo-senpi): keep one omo-senpi package entry and isolate the local launcher
 - #7877 ci: fail the build job when committed schema artifacts are stale
 - #7873 fix(schema): regenerate omo.schema.json after memory.tool_exposure was removed
 - #7854 test(background-agent): pin the stale sweep against an unreachable server end to end
@@ -4184,7 +4049,6 @@ a DAG run paused for its host's shutdown stayed `paused` forever if the successo
 #### 🔒 `ulw-loop` toolkit: no lost updates, no silent shared scope (#7908, #7913)
 
 - **cross-process state lock.** every mutating CLI command (`create-goals`, `record-evidence`, `checkpoint`, ...) takes an `O_EXCL` lock file carrying pid + a per-acquisition token. stale locks are reclaimed only when the owner pid is dead, `release` unlinks only its own token, and a waiter that cannot acquire fails closed with `ULW_LOOP_LOCK_TIMEOUT` instead of proceeding unlocked. before this, three parallel `record-evidence` calls landed 1 of 3 criteria in 4 of 4 rounds while every process exited 0 with `ok: true`.
-- **fail-closed session scope.** without `--session-id` and without a session env key the CLI fell back to the cwd-global `.omo/ulw-loop/` root. from an eval kernel, which does not carry `PI_SESSION_ID`, the same session could read a stranger's plan. it refuses now, and the `ulw-loop` pointer omo-senpi injects carries `--session-id` so eval calls land in the right scope.
 - **locked legacy-plan migration.** the aggregate-objective migration no longer runs from inside a read. an unlocked read of a legacy plan fails with `ULW_LOOP_MIGRATION_REQUIRED` and names the recovery (run any mutating command once).
 
 #### 🎯 workflow pointers stop putting words in your mouth (#7910, for #7890)
@@ -4296,27 +4160,16 @@ try it and tell me what breaks. i will be here.
 - 771b83c29 Merge pull request #7978 from code-yeongyu/fix/persist-child-session-id
 - a3691b5a9 Merge pull request #7976 from code-yeongyu/lcx/gate-softening
 - 681950567 fix(ulw-loop): satisfy strict index-signature access in quality-gate test; repair evidence link
-- 9f4d59676 style(omo-codex): format ulw-execute-continuation cli test for biome
-- 097be4c09 docs(omo-codex): PR B ship evidence (codex-qa install/app-server proofs)
-- 8dde4e843 docs(omo-codex): close out PR B QA evidence (breaker RED/GREEN, remote cleanup receipts, installer probe)
-- 3451c0a8b test(omo-codex): update Codex overlay inverse for the shared-skill drift check
 - 95f7e934f fix(ulw-loop): bundle the component CLI so dist/cli.js stays self-contained
-- eeeb3287e test(ulw-loop): expect lazycodex to accept codeReview-free final gates
 - 8bd0c35b3 Merge pull request #7969 from code-yeongyu/feat/team-member-task-linkage
-- adb92840f chore(omo-codex): regenerate tracked plugin skill after codex overlay change
 - 20c73b8a4 fix(ulw-loop): wrap spawn-admission hook manifest, evaluate breaker first, align legacy artifacts
 - ca92f1741 test(ulw-loop): cover accepted quality-gate input forms in error text
-- 3f6d44739 fix(ulw-loop): validate codeReview acceptors via surface table on lazycodex
 - 40a5364ca Merge remote-tracking branch 'origin/dev' into feat/team-member-task-linkage
 - 602f72192 Merge pull request #7970 from code-yeongyu/feat/web-redesign-phosphor-20260908
 - 64623f77e fix(web): give the DAG camera toolbar 44px hit targets
 - 249a6308d refactor(web): describe agents by role instead of internal names on the public site
-- 7f8071678 feat(ulw-loop): add subagent admission circuit breaker and align lazycodex gate artifacts
-- 61acee06e fix(omo-codex): make Codex final verification self-review by default and warn on empty spawn fields
-- b08bcbe51 fix(omo-codex): relax ulw-execute final gate and stop injecting root plans into subagents
 - 0889c2467 feat(prompts-core): trigger ultrawork verification gate only on explicit review demands
 - 1999be1f6 fix(ulw-loop): explain accepted quality-gate input forms in errors and help
-- a94df2085 feat(ulw-loop): soften lazycodex quality gate to optional codeReview and self-review acceptors
 - dfe5289d1 Merge pull request #7968 from code-yeongyu/feat/web-redesign-phosphor-20260908
 - ebccbc373 fix(web): ship the DAG stylesheet and make the desktop workflow view legible
 - 988f02d38 Merge pull request #7967 from code-yeongyu/feat/web-redesign-phosphor-20260908
@@ -4445,25 +4298,14 @@ try it and tell me what breaks. i will be here.
   - fix(web): enlarge star count on social image
   - style(web): format social image component
   - fix(web): ship the DAG stylesheet and make the desktop workflow view legible
-  - feat(ulw-loop): soften lazycodex quality gate to optional codeReview and self-review acceptors
   - fix(ulw-loop): explain accepted quality-gate input forms in errors and help
   - feat(prompts-core): trigger ultrawork verification gate only on explicit review demands
-  - fix(omo-codex): relax ulw-execute final gate and stop injecting root plans into subagents
-  - fix(omo-codex): make Codex final verification self-review by default and warn on empty spawn fields
-  - feat(ulw-loop): add subagent admission circuit breaker and align lazycodex gate artifacts
   - refactor(web): describe agents by role instead of internal names on the public site
   - fix(web): give the DAG camera toolbar 44px hit targets
   - Merge remote-tracking branch 'origin/dev' into feat/team-member-task-linkage
-  - fix(ulw-loop): validate codeReview acceptors via surface table on lazycodex
   - test(ulw-loop): cover accepted quality-gate input forms in error text
   - fix(ulw-loop): wrap spawn-admission hook manifest, evaluate breaker first, align legacy artifacts
-  - chore(omo-codex): regenerate tracked plugin skill after codex overlay change
-  - test(ulw-loop): expect lazycodex to accept codeReview-free final gates
   - fix(ulw-loop): bundle the component CLI so dist/cli.js stays self-contained
-  - test(omo-codex): update Codex overlay inverse for the shared-skill drift check
-  - docs(omo-codex): close out PR B QA evidence (breaker RED/GREEN, remote cleanup receipts, installer probe)
-  - docs(omo-codex): PR B ship evidence (codex-qa install/app-server proofs)
-  - style(omo-codex): format ulw-execute-continuation cli test for biome
   - fix(ulw-loop): satisfy strict index-signature access in quality-gate test; repair evidence link
   - Merge pull request #7985 from code-yeongyu/release/v5.0.0-beta.49-source-state
 - @stevenahhh:
@@ -4494,8 +4336,6 @@ try it and tell me what breaks. i will be here.
 - 34627922f fix(omob): preserve Windows executable suffixes
 - 2e530b2ce Merge pull request #8000 from code-yeongyu/lcx/evidence-doctor-hardening
 - e3e256980 Merge pull request #7996 from code-yeongyu/fix/omob-windows-tests
-- 944e3d77c docs(omo-codex): PR C ship evidence (executor-verify raw-pipe proofs, doctor QA-by-read)
-- 6fa91b2e7 chore(omo-codex): regenerate installer bundle for 5.0.0-beta.49
 - 2ab0db1b9 test(omob): use native executable and path fixtures on Windows
 - bc1fb4a36 test(openclaw): publish restart readiness at spawn handoff
 - 97e7d1571 test(script): record remote omob POSIX regression evidence
@@ -4503,73 +4343,29 @@ try it and tell me what breaks. i will be here.
 - 73f0ddd14 Merge pull request #7994 from code-yeongyu/fix/omob-prune-skip-in-use
 - 5f12a02c2 fix(omob): never prune a dev runtime a live process still executes
 - 3df6edc5c Merge bun 1.4.2 updates
-- 097ba78c9 docs(omo-codex): key lcx-doctor Astra readiness to the catalog default
-- 9b4bf222c fix(omo-codex): reject placeholder and stale executor evidence receipts
-- 8cc044737 docs(omo-codex): add Astra readiness check to lcx-doctor
 - 1cdd5895a Merge pull request #7991 from code-yeongyu/fix/omob-mainline-st-01a083d8
 - 6cd4f6c54 Merge pull request #7990 from code-yeongyu/lcx/astra-default-models
 - 4730ee8e0 Merge origin/dev and refresh Bun 1.4.2 artifacts
 - 7e429a8e6 docs(omob): describe managed startup and isolated feature builds
 - 159cbe919 test(omob): cover real git refresh and repeated installation
 - c5cacd97e fix(omob): refresh managed mainline launcher before startup
-- 7f93ad5f7 docs(omo-codex): PR A ship evidence (codex-qa install/app-server proofs)
-- 88089721c docs(omo-codex): installer test A/B timing and test:codex rerun evidence
 - 1ee26636f Merge pull request #7987 from code-yeongyu/fix/windows-compiled-worker-st01a08276
 - adecbcf31 Merge pull request #7983 from code-yeongyu/fix/compiled-session-worker-st_01a08205
 - 1698c8aa0 fix(build): name embedded workers by their physical package layout
 - cd235e6f3 fix(build): support Bun 1.4.0 compiled workers within the binary budget
-- b8485e334 docs(omo-codex): record CI-parity gate results and installer timeout
-- e87691a6a docs(omo-codex): PostCompact budget raw-pipe evidence with injected guide lengths
-- 3bc7a3737 test(omo-codex): drop non-null assertion in Hephaestus variant test
-- a57c31953 style(omo-codex): biome format
-- fd6654639 docs(omo-codex): capture PostCompact budget raw-pipe evidence
-- 57531c3c3 docs(omo-codex): state the exact thread-cap preservation rule
-- 2dc7551d6 fix(omo-codex): remove quoted agents.max_threads under multi_agent_v2
-- 38718c52a docs(omo-codex): executed failing-first evidence for Astra catalog, budget, caps, agents
-- b97e0acdf test(omo-codex): expect gpt-6-astra defaults in auto-update migration checks
-- d4f41f081 fix(omo-codex): upgrade legacy bundled agent efforts to gpt-6-astra defaults
-- 10e7b1112 test(omo-codex): record genuine catalog RED/GREEN evidence
 - 82b86e4a0 Merge origin/dev into bun-1.4.2 and regenerate bundles
-- 793bc293a fix(omo-codex): reconcile Hephaestus gpt-6 variant with the Astra preset
-- e1a70cb52 fix(omo-codex): stop forcing subagent thread caps and detect gpt-6 as multi-agent v2
-- 0086eb445 docs(omo-codex): document gpt-6-astra default catalog and cap removal
-- a1ae4ded1 feat(omo-codex): move bundled agents to gpt-6-astra with reasoning upgrade steps
-- bba5ca308 fix(omo-codex): add gpt-6-astra post-compact context budget
-- ca18cac09 feat(omo-codex): default model catalog to gpt-6-astra with sol legacy profile
 - 9968ed57d feat(rules-engine): select Hephaestus gpt-6 variant for GPT-6 models
 
 **Thank you to 1 community contributor:**
 - @sisyphus-dev-ai:
   - feat(rules-engine): select Hephaestus gpt-6 variant for GPT-6 models
-  - feat(omo-codex): default model catalog to gpt-6-astra with sol legacy profile
-  - fix(omo-codex): add gpt-6-astra post-compact context budget
-  - feat(omo-codex): move bundled agents to gpt-6-astra with reasoning upgrade steps
-  - docs(omo-codex): document gpt-6-astra default catalog and cap removal
-  - fix(omo-codex): stop forcing subagent thread caps and detect gpt-6 as multi-agent v2
-  - fix(omo-codex): reconcile Hephaestus gpt-6 variant with the Astra preset
   - Merge origin/dev into bun-1.4.2 and regenerate bundles
-  - test(omo-codex): record genuine catalog RED/GREEN evidence
-  - fix(omo-codex): upgrade legacy bundled agent efforts to gpt-6-astra defaults
-  - test(omo-codex): expect gpt-6-astra defaults in auto-update migration checks
-  - docs(omo-codex): executed failing-first evidence for Astra catalog, budget, caps, agents
-  - fix(omo-codex): remove quoted agents.max_threads under multi_agent_v2
-  - docs(omo-codex): state the exact thread-cap preservation rule
-  - docs(omo-codex): capture PostCompact budget raw-pipe evidence
-  - style(omo-codex): biome format
-  - test(omo-codex): drop non-null assertion in Hephaestus variant test
-  - docs(omo-codex): PostCompact budget raw-pipe evidence with injected guide lengths
-  - docs(omo-codex): record CI-parity gate results and installer timeout
   - fix(build): support Bun 1.4.0 compiled workers within the binary budget
   - fix(build): name embedded workers by their physical package layout
-  - docs(omo-codex): installer test A/B timing and test:codex rerun evidence
-  - docs(omo-codex): PR A ship evidence (codex-qa install/app-server proofs)
   - fix(omob): refresh managed mainline launcher before startup
   - test(omob): cover real git refresh and repeated installation
   - docs(omob): describe managed startup and isolated feature builds
   - Merge origin/dev and refresh Bun 1.4.2 artifacts
-  - docs(omo-codex): add Astra readiness check to lcx-doctor
-  - fix(omo-codex): reject placeholder and stale executor evidence receipts
-  - docs(omo-codex): key lcx-doctor Astra readiness to the catalog default
   - Merge pull request #7998 from code-yeongyu/release/v5.0.0-beta.50-source-state
 
 ## [5.0.0-beta.51] - 2026-09-09
@@ -4740,118 +4536,47 @@ npm i -g omo-ai@beta
 - 4212d35ad Merge pull request #8088 from code-yeongyu/docs/omo-model-profiles
 - ca8db374d Merge remote-tracking branch 'origin/dev' into docs/omo-model-profiles
 - cc1007af2 Merge pull request #8084 from code-yeongyu/feat/omo-model-profiles
-- 9efd54a73 build(omo-senpi): regenerate the plugin bundle on the dev-merged tree
 - 90df26987 Merge remote-tracking branch 'origin/dev' into feat/omo-model-profiles
-- e1ef0a019 test(omo-senpi): budget the model-profile component's first-party bundle growth
-- af6ab2336 Merge pull request #8076 from code-yeongyu/docs/omo-senpi-role-names
 - 2aa3c4bec Merge pull request #8028 from rlaope/fix/session-dag-suspend-resume
 - c5c1f0acc Merge pull request #8099 from code-yeongyu/chore/senpi-pin-2026.9.10-2
-- bda423127 build(omo-senpi): regenerate extension bundles on Linux after rebase
-- 2518df235 fix(omo-senpi): actually await scheduler quiescence on committed shutdown
-- 0c04724be fix(omo-senpi): suspend native workflows across session switches
 - 234127bdf chore(deps): adopt senpi 2026.9.10-2
-- b850afc96 build(omo-senpi): regenerate the plugin bundle on the dev-merged tree
-- b8d5f0b05 Merge remote-tracking branch 'origin/dev' into docs/omo-senpi-role-names
 - 1bbfdc5e3 Merge remote-tracking branch 'origin/dev' into feat/omo-model-profiles
-- b03c5796b Merge pull request #8085 from code-yeongyu/refactor/omo-senpi-role-names
-- 3f3c97c99 build(omo-senpi): regenerate the plugin bundle on the dev-merged tree
-- 9649fa05e Merge remote-tracking branch 'origin/dev' into refactor/omo-senpi-role-names
 - 6c15fa87a Merge pull request #8027 from rlaope/fix/policy-continuation-hooks
-- 780108592 fix(omo-senpi): match the canceller-returning FlushScheduler in the terminal-outcome fixture
-- d9c511315 build(omo-senpi): regenerate the plugin bundle on the dev-merged tree
-- aead84d75 build(omo-senpi): regenerate extension bundles on Linux after rebase
-- 6ba04976c fix(omo-senpi): decide plan continuation on agent_settled
-- dedf45b1e fix(omo-senpi): gate plan continuation on successful turns
-- 7f66132a0 Merge remote-tracking branch 'origin/dev' into refactor/omo-senpi-role-names
 - 594e76984 docs(changes): drop a stray merge-marker line from the changelogs
-- 715212e23 build(omo-senpi): regenerate the plugin bundle on the dev-merged tree
-- f63126c59 Merge remote-tracking branch 'origin/dev' into refactor/omo-senpi-role-names
 - 73dd51c53 Merge pull request #8062 from code-yeongyu/fix/8052-kibitzer-fire-hardening
-- 0ab14a696 build(omo-senpi): regenerate extension bundles on Linux after rebase
-- 6c4fc1376 docs(omo-senpi): QA evidence for the Kibitzer fire hardening
-- 53ff13aa1 docs(omo-senpi): record the Kibitzer fire hardening
-- 61ab84b61 fix(omo-senpi): prime the Kibitzer task runtime at memory registration
-- eaa062da1 fix(omo-senpi): report a missing Kibitzer persona as persona_unavailable
-- 0894ac00c fix(omo-senpi): keep Kibitzer run-dir artifacts best-effort
-- 12603e82c fix(omo-senpi): complete a silent Kibitzer judge instead of failing it
 - 87f52078f Merge pull request #7933 from code-yeongyu/fix/idle-injection-dispose-7932
-- 32f9d4fbd chore(omo-senpi): rebuild senpi plugin bundles on linux
-- 124b193c7 fix(omo-senpi): hand back dropped idle injections instead of losing completions
 - 75c45a800 Merge pull request #8097 from code-yeongyu/fix/8096-spawn-free-process-identity
-- feb54dad3 chore(omo-senpi): rebuild the plugin bundle with the CI-pinned bun 1.4.2
-- 19238cb5e chore(omo-senpi): refresh the committed Senpi plugin bundle
 - 80dbb6c4b test(memory-core): pin pid-reuse recovery to a same-scheme start identity
 - 35dc9c394 fix(memory-core): make the start identity timezone-independent
 - 5c6c260d4 fix(memory-core): read darwin process start time in-process instead of forking /bin/ps
 - 446b0e3a6 Merge pull request #8059 from code-yeongyu/fix/8051-claude-sdk-oauth-lane-first
-- 985e50dad build(omo-senpi): regenerate the plugin bundle on the dev-merged tree
-- 3699fa7aa Merge remote-tracking branch 'origin/dev' into refactor/omo-senpi-role-names
-- a2328edbc build(omo-senpi): regenerate extension bundles on Linux after rebase
-- ab2ceb224 build(omo-senpi): regenerate extension bundles on Linux after rebase
 - 83a9c7965 fix(model-core): never let provider name length decide a fuzzy model tie
-- 6ba87ec9c fix(senpi-task): head builtin Claude rungs with the claude-sdk-oauth lane
-- 8a3751a73 fix(omo-senpi): export claude-sdk-oauth as a known telemetry provider
 - 77d800379 Merge pull request #8094
-- 68b67ec1e build(omo-senpi): regenerate the plugin bundle on the dev-merged tree
-- 84f580ac2 Merge remote-tracking branch 'origin/dev' into refactor/omo-senpi-role-names
-- d60249eb5 build(omo-senpi): refresh health attribution bundles on current dev
 - 2d5926c11 test(memory): cover launcher attribution rendering
 - 12809bec2 fix(memory): attribute reflection health to its launcher
 - c9d90b563 fix(memory): scope health alerts and record launcher provenance
 - 1e5ddba2e test(memory): specify reflection launcher provenance
 - 6a35ad579 Merge pull request #8093 from code-yeongyu/fix/6976-rpc-e2e-child-diagnostics
-- 1da8b4308 build(omo-senpi): regenerate extension bundles on Linux for the start-failure facts
-- 7b87476a1 fix(senpi-task): record why a child failed to start, without leaking its stderr
-- 23b99a4a3 build(omo-senpi): regenerate the plugin bundle on the dev-merged tree
-- 9e3af023f Merge remote-tracking branch 'origin/dev' into refactor/omo-senpi-role-names
 - b343e2cec Merge pull request #8091 from code-yeongyu/fix/windows-senpi-launcher-flake
-- 6855e9cf4 build(omo-senpi): regenerate extension bundle on Linux after rebase
-- 10f7a90d2 build(omo-senpi): regenerate extension bundles on Linux for the launcher fix
-- ac70d98ec fix(senpi-task): keep the compiled engine when its binary has no .exe suffix
 - cb3d88e9c Merge pull request #8070 from code-yeongyu/fix/memory-child-foreign-package-dir-env
-- 0bed01a4a build(omo-senpi): refresh memory env bundle on current dev
 - 3f1c86f84 fix(memory): use resilient fs for package-root canonicalization
 - 5782f32ac fix(memory): stop memory children from inheriting a foreign package root
-- 6147d0e2c test(omo-senpi): compare synced-skill exemption paths with forward slashes on every platform
-- daa9fcdad build(omo-senpi): regenerate the plugin bundle on the dev-merged tree
-- 689071c09 Merge remote-tracking branch 'origin/dev' into refactor/omo-senpi-role-names
-- d5e321fb1 build(omo-senpi): regenerate the plugin bundle for the renamed curated agents
 - 3135114ba docs(reference): regenerate the telemetry schema block for the renamed curated agents
 - 46b786073 test(web): landing e2e covers the Profiles section
-- c9605595a test(omo-senpi): QA drivers exercise plan-consultant/plan-reviewer and the legacy aliases
 - 12bf5e21b feat(web): tell the model story through profiles in four locales
 - b9c522325 docs: document model profiles and how they pick the session model
 - d3d2f8714 test(script): keep overlay-rerouted OpenCode literals legal in shared-skill sources
 - 24a4b89b0 docs(guide): keep the Codex agent-role install path in the installation guide
 - 638f6e8de test(script): gate retired myth agent names out of user-facing surfaces
 - ab27ab5d0 refactor: drop the retired curated ids from code comments and mark the Codex role list
-- 2d86c998b refactor(omo-senpi): ultrawork directive names the plan-consultant and plan-reviewer
 - 5dfb50a4a docs(changelog): record the role-based agent rename and the one-release alias window
-- b49efe2c3 build(omo-senpi): regenerate the plugin bundle for model profiles
-- 910576d2a fix(omo-senpi): keep an explicit --model when senpi omits the session provenance
-- de028bc36 feat(omo-senpi): model-profile QA driver and changelog entries
-- e378ad251 test(senpi-task): retire myth agent names from fixtures and package docs
-- 7d4c9cb44 feat(omo-senpi): honor legacy agents.momus/metis config keys with a deprecation notice
-- 05afdec7b refactor(senpi-task): describe category routing and the plan reviewer by role
-- 964915278 feat(omo-senpi): apply the active model profile to the main session
-- 3a11406db refactor(omo-senpi): retire persona names from shared-skill prose and the senpi sync scripts
-- 00afeac47 refactor(senpi-task): key the plan gate and reviewer policy on plan-consultant/plan-reviewer
-- 17a179a0b feat(senpi-task): surface a deprecation notice for legacy curated agent ids
 - 8b301e45b style(web): format the cognitive-load manifesto section
-- d8ab818ee refactor(omo-senpi): ulw-plan speaks as the Ultrawork Planner with plan-consultant/plan-reviewer
-- 9dc58a06c feat(omo-senpi): builtin model profiles and chain resolution
-- 6de3d526a refactor(senpi-task): rename curated agents to plan-consultant and plan-reviewer
 - c93cb11a6 test(web): showcase and landing e2e follow the role-based roster
-- aabc23393 refactor(senpi-task): add legacy agent-name aliases for the curated tier
 - bbcb58181 feat(omo-config-core): add model_profiles and the active model_profile key
 - 706124b87 feat(web): role-based roster, orchestration and core-loop copy in four locales
-- 0dc3bbeb9 docs(reference): configuration and features describe the omo-senpi agent surface
-- ded517fc4 docs(guide): installation, team mode and senpi-task pages use role-based agent names
 - f6db19edf docs(guide): reframe model matching and overview around the main agent and curated roles
 - 00775dcd2 docs(reference): known issues, CLI, telemetry, manifesto, templates and examples use role names
-- a40fde3db docs(guide): rewrite orchestration around the omo-senpi delegation model
 - 525882365 refactor(web): re-key the agent roster and graph to role-based nodes
-- 8a711ddd9 refactor(omo-senpi): describe ulw-execute continuation without the planner persona name
 - 470dd6087 docs(readme): describe the main agent, planner and executor by role in all locales
 
 </details>
@@ -5015,11 +4740,8 @@ npm i -g omo-ai@beta
 - Per-agent `displayName` for i18n. (PR #4081)
 - Grok family models with `reasoningEffort` support. (PR #4186)
 - CLI `setup` alias for `install`. (PR #4174)
-- Codex CLI Light edition (`omo-codex`) with one-command install via `bunx oh-my-openagent install --platform=codex` or `lazycodex` bin entry. (PR #5354)
 - New `--platform <opencode|codex|both>` install flag.
-- New bin entries: `omo` (short alias) and `lazycodex` (auto-defaults `--platform=codex`).
 - PostHog telemetry stream `omo_codex_daily_active` for Codex edition.
-- Triple-publish to npm: `oh-my-opencode`, `oh-my-openagent`, and `lazycodex`.
 
 #### Changed
 
@@ -5068,7 +4790,7 @@ npm i -g omo-ai@beta
 
 #### Changed
 
-- `prompt-async-gate`: `DEFAULT_PROMPT_ASYNC_POST_DISPATCH_HOLD_MS` default raised from 250 ms to 2_000 ms (8x) to absorb slower-provider `session.error` arrivals before reservation release. The constant remains a public export; callers can still override via `postDispatchHoldMs` per dispatch. [`docs/reference/prompt-async-gate-rfc.md`](docs/reference/prompt-async-gate-rfc.md) updated accordingly.
+- `prompt-async-gate`: `DEFAULT_PROMPT_ASYNC_POST_DISPATCH_HOLD_MS` default raised from 250 ms to 2_000 ms (8x) to absorb slower-provider `session.error` arrivals before reservation release. The constant remains a public export; callers can still override via `postDispatchHoldMs` per dispatch. `docs/reference/prompt-async-gate-rfc.md` updated accordingly.
 - `team-mode`: `team_send_message` ambiguous-failure path now releases the reservation, commits on success-path mark failures, preserves live delivery holds, and decouples resume history from session routing (BUG-A / BUG-B).
 - `runtime-fallback`: recognises every OpenCode progress event shape (`message.part.updated`, `message.part.delta`, `message.updated`) and boolean/completed finish markers, preserves accepted pending retries, and detects finish-only tool waits (BUG-C / BUG-D).
 - `background-agent`: parent-wake on same-source reservation now re-enqueues instead of dropping the wake (BUG-E).
@@ -5077,7 +4799,7 @@ npm i -g omo-ai@beta
 
 #### Fixed
 
-- `rules-core` **security**: project rule files and directories can no longer escape the workspace via symlinks. `findRuleFilesRecursive` and the project-single-file path now require every realpath to remain within the scan boundary, blocking attacks where a hostile repo points `.github/copilot-instructions.md` (or any `.omo/rules` entry) at host secrets such as `~/.ssh/id_rsa`. Tests track the boundary contract in [`packages/rules-engine/src/index.test.ts`](packages/rules-engine/src/index.test.ts).
+- `rules-core` **security**: project rule files and directories can no longer escape the workspace via symlinks. `findRuleFilesRecursive` and the project-single-file path now require every realpath to remain within the scan boundary, blocking attacks where a hostile repo points `.github/copilot-instructions.md` (or any `.omo/rules` entry) at host secrets such as `~/.ssh/id_rsa`. Tests track the boundary contract in `packages/rules-engine/src/index.test.ts`.
 - `test-isolation`: rules-injector storage and fixture home isolated per-test; cross-suite leak diagnostic regression test added.
 - `ast-grep-mcp`: absolute paths whose `realpath` stays inside the workspace are now accepted (covered by red test); `path` entries are normalized via `resolve` + `realpath` and rejected for null bytes, leading `-`, and out-of-workspace traversal.
 - `runtime-fallback`: completion progress events (`message.part.updated`, deltas, finished markers) now correctly recognized, preventing false-negative retry triggers on sessions that are actually making progress.
@@ -5114,8 +4836,8 @@ npm i -g omo-ai@beta
 
 #### Documentation
 
-- Added [`ROADMAP.md`](ROADMAP.md) describing the package layering refactor and multi-harness direction.
-- Added OmO logo to [`README.ru.md`](README.ru.md) for parity with the other localized READMEs.
+- Added `ROADMAP.md` describing the package layering refactor and multi-harness direction.
+- Added OmO logo to `README.ru.md` for parity with the other localized READMEs.
 - PR merge policy documented: merge commits required, squash/rebase forbidden.
 - `prompt-async-gate-rfc.md` updated with `DEFAULT_PROMPT_ASYNC_POST_DISPATCH_HOLD_MS` 250 -> 2000 rationale.
 
@@ -5167,7 +4889,6 @@ Kept verbatim; it was never attributed to a single release and is not release no
 
 ### Added
 
-- New npm package `omo-ai` (beta channel only): the senpi-native edition. `npm i -g omo-ai@beta` installs the `omo` command, which launches the pinned senpi release with the full OMO extension loaded, and `omo setup` imports API credentials from sibling harnesses with consent. Channel contract: every version is a prerelease published with `--tag beta`, so a bare `npm i -g omo-ai` fails with ETARGET by design and `latest` never advances past the deprecated placeholder. Upgrade order: machines with oh-my-openagent/oh-my-opencode 4.19.4 or earlier must upgrade or uninstall that package first (it owns the old global `omo` bin), then install `omo-ai@beta`. See docs/reference/omo-ai-publishing.md.
 
 - Unified `omo.jsonc` configuration surface across all three harnesses: `~/.omo/omo.jsonc` plus walked project `.omo/omo.jsonc` layers, VSCode-style `[opencode]` / `[senpi]` / `[codex]` harness blocks, opt-in `profiles` activated by `OMO_PROFILE` > `OCX_PROFILE` > `OPENCODE_CONFIG_DIR` tail, and a shared `models` catalog whose entries fill unset tuning while site tuning wins.
 - Runtime legacy-config migration: a lock+journal engine imports `oh-my-openagent.json[c]` / `oh-my-opencode.json[c]` and `~/.omo/config.jsonc` into the unified file with no-clobber conflict diagnostics, `_migrations` markers, and resumable backups under `~/.omo/migration-backup-<UTC timestamp>-opencode-config/`; runs at plugin startup (OpenCode + Senpi), Codex startup (config.jsonc group only), install, and `oh-my-openagent config migrate` (`--dry-run` / `--json`).
@@ -5182,7 +4903,6 @@ Kept verbatim; it was never attributed to a single release and is not release no
 ### Changed
 
 - The ultrawork directive's `# Parallel execution` section routes eval work by dependency instead of call count: independent reads, searches, symbol lookups, and spawns batch into one js cell, while edits, side-effecting commands, deploys, approvals, and result-dependent calls run one action at a time and are observed; every cell is named by the state it should produce and compared with it, failures stay verbatim in aggregates, truncated output is re-read, and visual results (pages, components, images, 3D scenes) get a change-render-look loop with several angles for 3D and desktop/mobile widths for pages. The "JS EVAL MAXXING" / "MONITOR MAXXING" wording and its profanity are gone; the Manual-QA browser and computer-use channels name per-change observation. The `visual-engineering` category append (both editions) adds an `<OBSERVE_EACH_CHANGE>` block with the same loop.
-- **OmO Native runs on bun wherever bun exists, no config needed.** The `omo` launcher used to hand itself to bun only for `bun add -g` installs; every other install stayed on node even on a machine with bun, so the JS eval kernel ran under node and the bundled `bun-1-4` skill never surfaced. Now any install (npm, project-local, `bunx`) probes the bun it finds (`$BUN_INSTALL/bin`, `~/.bun/bin`, PATH) once per node boot and re-execs under it when it is >= 1.4.0; bun-global installs keep trusting the bun that installed them without a probe. `OMO_RUNTIME=node` is still the way to stay on node, and `OMO_RUNTIME=bun` still forces bun without the version floor. See docs/reference/omo-ai-publishing.md, "Runtime selection".
 - OmO Native beta.23 adopts Senpi 2026.8.27 and documents the JavaScript-first eval workflow: persistent state, `Promise.all` fan-out, bounded `parallel()`/`pipeline()` composition, idle-kernel continuation for detached work, literal-safe top-level persistence transforms, explicit detached-cell diagnostics, bounded eval telemetry, worker-crash recovery, and Node 24/Bun 1.4 compatibility. It intentionally describes telemetry and mechanisms without inventing an uncommitted percentage speedup.
 - **Detailed eval runtime notes:** The first eval examples now use JavaScript to establish reusable state, then use `await Promise.all(...)` for independent tool calls, and finally demonstrate continuing in Python when JavaScript is busy with detached work. This is the documented fast path because eval kernels are persistent per session and per language; a value created in one JavaScript cell remains available to the next cell, while resetting Python does not reset JavaScript.
 - **Safer persistence transforms:** JavaScript state capture now rewrites only top-level declarations, including destructuring and uninitialized bindings. Declaration-shaped text inside strings, comments, and nested function bodies is left unchanged. The result is safer reuse for templates, examples, regular expressions, and embedded snippets without weakening the state-carrying behavior.
@@ -5194,11 +4914,9 @@ Kept verbatim; it was never attributed to a single release and is not release no
 - **Failure recovery:** A JavaScript worker crash settles the active cell, retires the failed worker, and prepares a fresh worker for the next cell. Session-generation fencing prevents retired callbacks from emitting into a newer session. Subprocess-backed interpreters wait for readiness before their cell timeout begins, so startup under load is not mistaken for user-code failure.
 - **Runtime compatibility:** JavaScript is available on supported Node runtimes without an optional interpreter. Python, Ruby, and Julia remain separately detected capability surfaces. The supported boundary remains Node `>=24`; the build and release toolchain is Bun 1.4, while the codemode package keeps a Node-compatible boundary and avoids depending on Bun-only APIs. Explicit `OMO_RUNTIME=node` and `OMO_RUNTIME=bun` selection remains supported by the launcher, with re-execution loop guards.
 - **Migration and measurement:** This update replaces package files and does not reset settings, credentials, sessions, permissions, or extension enablement. The eval telemetry separates eval-only and non-eval waves, correlates cells to their owning sessions, rejects malformed or duplicate ownership, and reports modeled savings and round trips. No cross-version latency percentage is claimed because the repository contains no committed before/after benchmark.
-- **Breaking**: the `/start-work` command and skill are renamed to `/ulw-execute` (hard cutover, no alias). Update scripts, prompts, and CI that reference the old name. The `start_work` config key is deprecated in favor of `ulw_execute`: the old key still loads for one release and emits a deprecation warning, and it will be removed next release; if both keys are set, `ulw_execute` wins. The `omo-senpi-start-work-continuation-disabled` flag is renamed to `omo-senpi-ulw-execute-continuation-disabled` following the component rename to `ulw-execute-continuation`. The telemetry `skill_loaded` known-skill value `start-work` is renamed to `ulw-execute`; update dashboards and queries that filter on the old value.
 - **Breaking**: the `omo` command is renamed to `omo-agent-toolkit` on every edition, and the old name is removed in the same release. The `omo` npm bin entry and the Codex `~/.local/bin/omo` runtime wrapper are both gone; `omo-agent-toolkit` replaces them with identical behaviour. This is a major release because a published bin entry is removed. Migration: replace `omo ` with `omo-agent-toolkit ` in scripts, prompts, and CI. Migration is automatic for existing installs — an npm upgrade prunes the old `omo` bin link, and Codex installs delete the generated wrapper at the next session start or installer run (a user-owned `omo` file that the installer did not generate is left untouched). One-time caveat: an agent running at the moment of the Codex relink can see a single failed `omo ulw-loop` call and must re-issue it as `omo-agent-toolkit ulw-loop`. The `omo` name is reserved for the future native edition (npm `omo-ai`), which is not shipped in this release.
 - **Breaking**: the OpenCode plugin, Senpi adapter, and Codex codegraph loader no longer read `oh-my-openagent.json[c]` / `oh-my-opencode.json[c]` or `~/.omo/config.jsonc` at runtime; the first startup migrates them into `~/.omo/omo.jsonc` (existing values win, skipped values become diagnostics) and moves the sources into the migration backup directory. Older strict config cores reject a newer `omo.jsonc` containing `models` / `profiles` / harness blocks; restore the legacy files from `~/.omo/migration-backup-*` when downgrading.
 - **Breaking**: `shared/<name>` skill invocations and `disabled_skills: ["shared/<name>"]` entries no longer resolve. Skills from the shared catalog now register under their bare name (e.g. `ulw-plan`, `frontend`). Update configs and prompts to use bare names. (PR #6180)
-- omo-senpi curated agents renamed: `metis` -> `plan-consultant`, `momus` -> `plan-reviewer`; the ulw-plan persona is the Ultrawork Planner; docs and omo.dev describe agents by role. The draft/plan frontmatter key `review.momus` is now `review.plan_reviewer`.
 - **Breaking**: telemetry `delegation_started.name` and `delegation_completed.agent_type` now report `plan-consultant`/`plan-reviewer` instead of `metis`/`momus`; dashboards filtering the old values must be updated.
 
 ### Deprecated
@@ -5231,7 +4949,6 @@ history:
 
 ### Fixed
 
-- omo-senpi ulw-loop: the bundled agent toolkit is spawned with `BUN_BE_BUN=1` when the runtime is the packaged omo binary (omo-desktop, omob). Without it `process.execPath` ran the omo entrypoint instead of the toolkit, `ulw-loop status` exited 1, and every session with a plan read as inactive (no continuation).
 - Senpi engine pin `2026.8.28`: repairs the beta.23 shared interactive host regressions — Shift+Tab no longer prints `Thinking level: [object Promise]` and `/settings` thinking options render, user messages no longer render twice, resuming a session held by a live shared host attaches instead of failing with `session_path_in_use`, and the compiled JavaScript/Python eval kernels resolve their runtime assets again.
 
 - Windows DAP script paths with drive letters are no longer misclassified as `host:port` endpoints, and thread mailbox/receipt persistence now tolerates the Windows `fsync` behavior while retaining atomic writes.

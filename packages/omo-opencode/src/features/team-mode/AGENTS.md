@@ -4,13 +4,13 @@
 
 ## OVERVIEW
 
-Spawns coordinated agent teams with shared mailbox, task list, optional tmux layout, and graceful lifecycle. Modeled after Claude Code Agent Teams. **OFF by default.** Enable via `team_mode.enabled` in `.omo/omo.jsonc`; restart OpenCode after enabling. Harness-neutral registry/mailbox/tasklist/state/worktree/tmux-layout primitives are extracted to [`packages/team-core/`](../../../../../packages/team-core); this directory remains the OpenCode adapter for session spawning, hooks, tools, and config integration.
+Spawns coordinated agent teams with shared mailbox, task list, optional tmux layout, and graceful lifecycle. Modeled after Claude Code Agent Teams. **OFF by default.** Enable via `team_mode.enabled` in `.omo/omo.jsonc`; restart OpenCode after enabling. Harness-neutral registry/mailbox/tasklist/state/worktree/tmux-layout primitives are extracted to `packages/team-core/`; this directory remains the OpenCode adapter for session spawning, hooks, tools, and config integration.
 
-User docs: [`docs/guide/team-mode.md`](../../../../../docs/guide/team-mode.md).
+User docs: `docs/guide/team-mode.md`.
 
 ## CONFIG
 
-Full schema: [`src/config/schema/team-mode.ts`](../../config/schema/team-mode.ts).
+Full schema: `src/config/schema/team-mode.ts`.
 
 ```jsonc
 {
@@ -32,7 +32,7 @@ Full schema: [`src/config/schema/team-mode.ts`](../../config/schema/team-mode.ts
 
 ## 12 TEAM_* TOOLS
 
-Registered via [`src/plugin/tool-registry.ts`](../../plugin/tool-registry.ts) `teamModeToolsRecord` only when enabled.
+Registered via `src/plugin/tool-registry.ts` `teamModeToolsRecord` only when enabled.
 
 | Tool | Source File | Purpose |
 |------|-------------|---------|
@@ -51,7 +51,7 @@ Registered via [`src/plugin/tool-registry.ts`](../../plugin/tool-registry.ts) `t
 
 ## ELIGIBLE AGENTS
 
-[`AGENT_ELIGIBILITY_REGISTRY`](types.ts) in `types.ts` — three verdict tiers, each with its own rejection message:
+`AGENT_ELIGIBILITY_REGISTRY` in `types.ts` — three verdict tiers, each with its own rejection message:
 
 | Verdict | Agents | Notes |
 |---------|--------|-------|
@@ -138,19 +138,19 @@ team-mode/
 
 | Where | What |
 |-------|------|
-| [`src/index.ts`](../../index.ts) (entry) | `checkTeamModeDependencies()` + `ensureBaseDirs()` if `team_mode.enabled` |
-| [`src/plugin/tool-registry.ts`](../../plugin/tool-registry.ts) `teamModeToolsRecord` | Registers 12 `team_*` tools |
-| [`create-transform-hooks.ts`](../../plugin/hooks/create-transform-hooks.ts) | Conditionally builds `teamModeStatusInjector` (`team-mode-status-injector` hook) and `teamMailboxInjector` (`team-mailbox-injector` hook) — both Transform tier |
-| [`create-tool-guard-hooks.ts`](../../plugin/hooks/create-tool-guard-hooks.ts) | Conditionally builds `teamToolGating` (`team-tool-gating` hook) — Tool Guard tier |
-| [`src/plugin/event.ts`](../../plugin/event.ts) | Registers 4 team-session-event handlers from `src/hooks/team-session-events/`: `team-idle-wake-hint`, `team-lead-orphan-handler`, `team-member-error-handler`, `team-member-status-handler` |
-| [`src/cli/doctor/checks/team-mode.ts`](../../cli/doctor/checks/team-mode.ts) | Doctor check for team-mode prerequisites |
-| [`skills-loader-core/src/features/builtin-skills/skills/team-mode.ts`](../../../../skills-loader-core/src/features/builtin-skills/skills/team-mode.ts) | Built-in skill documenting the 12 tools — gated on `team_mode.enabled` |
+| `src/index.ts` (entry) | `checkTeamModeDependencies()` + `ensureBaseDirs()` if `team_mode.enabled` |
+| `src/plugin/tool-registry.ts` `teamModeToolsRecord` | Registers 12 `team_*` tools |
+| `create-transform-hooks.ts` | Conditionally builds `teamModeStatusInjector` (`team-mode-status-injector` hook) and `teamMailboxInjector` (`team-mailbox-injector` hook) — both Transform tier |
+| `create-tool-guard-hooks.ts` | Conditionally builds `teamToolGating` (`team-tool-gating` hook) — Tool Guard tier |
+| `src/plugin/event.ts` | Registers 4 team-session-event handlers from `src/hooks/team-session-events/`: `team-idle-wake-hint`, `team-lead-orphan-handler`, `team-member-error-handler`, `team-member-status-handler` |
+| `src/cli/doctor/checks/team-mode.ts` | Doctor check for team-mode prerequisites |
+| `skills-loader-core/src/features/builtin-skills/skills/team-mode.ts` | Built-in skill documenting the 12 tools — gated on `team_mode.enabled` |
 
 ## WHERE TO LOOK
 
 | Task | Location |
 |------|----------|
-| Add new team tool | `tools/` + register in [`src/plugin/tool-registry.ts`](../../plugin/tool-registry.ts) `teamModeToolsRecord` |
+| Add new team tool | `tools/` + register in `src/plugin/tool-registry.ts` `teamModeToolsRecord` |
 | Modify member eligibility | `types.ts` `AGENT_ELIGIBILITY_REGISTRY` |
 | Change storage format | `types.ts` Zod schemas |
 | Add worktree behavior | `team-worktree/manager.ts` |

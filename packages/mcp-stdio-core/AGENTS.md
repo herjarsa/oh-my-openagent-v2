@@ -30,4 +30,4 @@ The lowest-level core package: JSON-RPC 2.0 transport over stdio (line-mode and 
 - **Handler contract:** return `undefined` to skip silently; `onHandlerError` catches exceptions; `parseErrorResponse` customizes JSON parse errors.
 - **Output writes are awaited; closed output stops the loop:** `writeStdioJsonRpcResponse` is async and `writeChunk` removes its one-shot `error` listener after settle. `writeResponse` catches terminal output errors (`EPIPE`, `ERR_STREAM_DESTROYED`, `ERR_STREAM_WRITE_AFTER_END`), logs `output_error`, and returns false so the read loop exits; non-terminal write errors still propagate.
 - **Keep zero dependencies.** `.js` suffix on relative imports (ESM). This is the floor of the package layering; it must stay leaf.
-- Parent: [`packages/AGENTS.md`](../AGENTS.md).
+- Parent: `packages/AGENTS.md`.

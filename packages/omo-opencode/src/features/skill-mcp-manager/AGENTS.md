@@ -4,7 +4,7 @@
 
 ## OVERVIEW
 
-This module manages **tier 3** of the MCP system: skill-embedded MCP servers declared in SKILL.md YAML frontmatter. Per-session client isolation, dual transport (stdio + HTTP), OAuth 2.0 with step-up authentication, idle cleanup. Harness-neutral MCP client lifecycle and OAuth primitives are extracted to [`packages/mcp-client-core/`](../../../../../packages/mcp-client-core); this directory keeps the OpenCode manager wiring stable.
+This module manages **tier 3** of the MCP system: skill-embedded MCP servers declared in SKILL.md YAML frontmatter. Per-session client isolation, dual transport (stdio + HTTP), OAuth 2.0 with step-up authentication, idle cleanup. Harness-neutral MCP client lifecycle and OAuth primitives are extracted to `packages/mcp-client-core/`; this directory keeps the OpenCode manager wiring stable.
 
 ## THREE-TIER MCP CONTEXT
 

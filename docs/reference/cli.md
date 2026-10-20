@@ -14,14 +14,11 @@ All published packages expose the same compiled CLI with these bin entries:
 - `omo-agent-toolkit` (short name, recommended in docs and prompts)
 - `oh-my-openagent` (preferred package-matching name)
 - `oh-my-opencode` (legacy compatibility name)
-- `lazycodex` (Light edition shortcut; install defaults to `--platform=codex`)
-- `lazycodex-ai` (Light edition shortcut; install defaults to `--platform=codex`)
 
 The former `omo` bin was removed from these packages in this major release. The name now belongs to the OmO Native edition:
 
 | Bin | Package | Channel | What it is |
 | --- | --- | --- | --- |
-| `omo` | `omo-ai` | bun (recommended): `bun add -g omo-ai@beta`; npm fallback: `npm i -g omo-ai@beta` | Launches the pinned senpi release with the full OMO extension loaded. A bare `bun add -g omo-ai` or `npm i -g omo-ai` fails by design; see the [omo-ai publishing runbook](./omo-ai-publishing.md). |
 
 The `omo-agent-toolkit` npm bin stays with the wrapper packages above; `omo-ai` never declares it.
 
@@ -48,7 +45,6 @@ bunx oh-my-opencode
 | `config migrate` | Migrate legacy OMO configuration into the unified config at `~/.omo/omo.jsonc` (`--dry-run` prints the transform/backup plan without writing, `--json` emits a machine-readable report) |
 | `worktree-sweep` | Report (and optionally remove) stale linked git worktrees: SWEEP when merged into the default branch and clean, KEEP when locked/external/unmerged/dirty, PRUNE when the path is gone. Dry-run by default; `--apply` removes with `git worktree remove` (never forced) and prunes; `--older-than <days>` adds an age fallback, `--repo <path>` is repeatable, `--json` emits machine-readable output |
 | `ulw-loop [args...]` | Pass arguments through to the Codex LazyCodex ulw-loop CLI |
-| `update` | `lazycodex` / `lazycodex-ai` bins only: refresh the installed Codex Light edition in place (`--dry-run`, `--repo-root <path>`) |
 | `boulder` | Inspect boulder work-state (active plan, current-task timing, session count); supports `-d/--directory`, `-w/--work-id`, and `--json` |
 | `version` | Show CLI version |
 | `mcp oauth` | OAuth token management for MCP servers |
@@ -100,12 +96,11 @@ Anonymous telemetry uses PostHog with a SHA-256 hash of a machine-ID prefix plus
 
 Opt-out env vars:
 
-- Global opt-out for oh-my-openagent and omo-codex: `OMO_SEND_ANONYMOUS_TELEMETRY=0` or `OMO_DISABLE_POSTHOG=1`
 - Codex-only opt-out for `omo_codex_daily_active`: `OMO_CODEX_SEND_ANONYMOUS_TELEMETRY=0` or `OMO_CODEX_DISABLE_POSTHOG=1`
 
 The OpenCode plugin can also opt out through oh-my-openagent config with `"telemetry": false`.
 
-For the full Codex Light event inventory, collected properties, local state path, and lazycodex marketplace copy path, see [Codex Light telemetry](./codex-telemetry.md).
+For the full Codex Light event inventory, collected properties, local state path, and lazycodex marketplace copy path, see Codex Light telemetry.
 
 ---
 
@@ -124,7 +119,6 @@ omo-agent-toolkit uninstall --platform=codex
 
 | Option | Description |
 | --- | --- |
-| `--platform codex` | Required when using the shared `omo-agent-toolkit` CLI unless `OMO_INVOCATION_NAME` is `lazycodex` or `lazycodex-ai` |
 | `--codex-home <path>` | Codex home to clean, defaulting to `CODEX_HOME` or `~/.codex` |
 | `--project <path>` | Project directory to inspect for project-local legacy Codex artifacts |
 | `--json` | Output structured JSON result |

@@ -47,4 +47,4 @@ resolveModelPipeline(request, providerCache)
 - **Metadata beats family caps.** In `resolveCompatibleModelSettings()`, family `reasoningEffortAliases` are applied first, then explicit `capabilities.*` metadata, then heuristic family caps; an unknown family drops the value with `unknown-model-family`.
 - **Deprecated routing is tested contract:** deprecated Haiku / GPT-nano entries must NOT route through the `opencode` provider (`model-requirements-deprecated-routing.test.ts`).
 - **Error classification is specific by design:** provider "forbidden" (retryable) is distinguished from unrelated filesystem/access "forbidden"; do not broaden substring matching in `model-error-classifier.ts`.
-- Parent: [`packages/AGENTS.md`](../AGENTS.md)
+- Parent: `packages/AGENTS.md`

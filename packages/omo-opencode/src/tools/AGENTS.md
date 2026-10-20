@@ -4,7 +4,7 @@
 
 ## OVERVIEW
 
-Tools registered via [`createToolRegistry()`](../plugin/tool-registry.ts) in `src/plugin/`. Native tools are factory-based (`createXXXTool`) except `interactive_bash` (`ToolDefinition`). LSP tools are served by the Tier-1 built-in MCP `lsp`; structural search and rewrite is handled by the `ast-grep` skill.
+Tools registered via `createToolRegistry()` in `src/plugin/`. Native tools are factory-based (`createXXXTool`) except `interactive_bash` (`ToolDefinition`). LSP tools are served by the Tier-1 built-in MCP `lsp`; structural search and rewrite is handled by the `ast-grep` skill.
 
 ## TOOL CATALOG
 
@@ -29,7 +29,7 @@ Tools registered via [`createToolRegistry()`](../plugin/tool-registry.ts) in `sr
 | `task_create`, `task_get`, `task_list`, `task_update` | `experimental.task_system` | `task/` |
 | `monitor_start`, `monitor_stop`, `monitor_list`, `monitor_output` | `monitor.enabled` | `monitor/` (watcher engine: `../features/monitor/`) |
 | `edit` (hashline-edit) | `hashline_edit: true` | `hashline-edit/` |
-| `create_goal`, `update_goal`, `get_goal` | `goal.enabled` | [`../hooks/goal/tools.ts`](../hooks/goal/tools.ts) (registered in `tool-registry-core-tools.ts`) |
+| `create_goal`, `update_goal`, `get_goal` | `goal.enabled` | `../hooks/goal/tools.ts` (registered in `tool-registry-core-tools.ts`) |
 | 12 `team_*` tools | `team_mode.enabled: true` | `../features/team-mode/tools/` |
 
 ### 12 team_* Tools (when team_mode enabled)
@@ -51,7 +51,7 @@ Tools registered via [`createToolRegistry()`](../plugin/tool-registry.ts) in `sr
 
 ## DELEGATION CATEGORIES (built-in 9)
 
-`task` (delegate) selects model by category. Default category models live in provider-specific files under `src/tools/delegate-task/` and aggregate via `BUILTIN_CATEGORIES` in `builtin-categories.ts`. Authoritative fallback chains live in [`packages/model-core/src/category-model-requirements.ts`](../../../model-core/src/category-model-requirements.ts) `CATEGORY_MODEL_REQUIREMENTS`.
+`task` (delegate) selects model by category. Default category models live in provider-specific files under `src/tools/delegate-task/` and aggregate via `BUILTIN_CATEGORIES` in `builtin-categories.ts`. Authoritative fallback chains live in `packages/model-core/src/category-model-requirements.ts` `CATEGORY_MODEL_REQUIREMENTS`.
 
 | Category | Default Model | Source File | Domain |
 |----------|---------------|-------------|--------|

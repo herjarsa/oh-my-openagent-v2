@@ -4,7 +4,7 @@
 
 ## OVERVIEW
 
-Package: `@oh-my-opencode/openclaw-core`. Harness-neutral Core for OpenClaw bidirectional integration. Outbound dispatch fires HTTP webhooks or shell commands on session events; inbound reply-listener daemon polls Discord/Telegram and injects replies into tracked tmux panes. Consumed by the OpenCode adapter at [`packages/omo-opencode/src/openclaw/`](../omo-opencode/src/openclaw/AGENTS.md) via re-export shims.
+Package: `@oh-my-opencode/openclaw-core`. Harness-neutral Core for OpenClaw bidirectional integration. Outbound dispatch fires HTTP webhooks or shell commands on session events; inbound reply-listener daemon polls Discord/Telegram and injects replies into tracked tmux panes. Consumed by the OpenCode adapter at `packages/omo-opencode/src/openclaw/` via re-export shims.
 
 ## KEY FILES
 
@@ -39,4 +39,4 @@ Discord/Telegram API → reply-listener-poll-loop.ts
 - Rate limiter defaults to 10 injections per minute per pane.
 - `tmux.ts` pane confidence check skips injection if `analyzePaneContent()` returns below 0.3.
 
-Parent: [`packages/AGENTS.md`](../AGENTS.md)
+Parent: `packages/AGENTS.md`

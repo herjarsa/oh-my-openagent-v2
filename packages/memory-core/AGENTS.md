@@ -96,7 +96,6 @@ Keep adapter-specific behavior there, never imported back into this package.
 
 ```bash
 bun test packages/memory-core/src/
-bun run --cwd packages/memory-core typecheck
 ```
 
 For a focused change, run the nearest co-located `*.test.ts` first, then the

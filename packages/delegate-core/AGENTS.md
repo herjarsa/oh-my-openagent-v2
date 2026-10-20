@@ -25,7 +25,6 @@ Two harness-neutral primitives for the `task`/delegate tool: (1) resolve which m
 ## DEPENDENCIES & CONSUMERS
 
 - **Depends on:** `@oh-my-opencode/model-core` (`fuzzyMatchModel`, `normalizeModel`, `parseModelString`, `parseVariantFromModelID`, `transformModelForProvider`).
-- **Consumed by** (no Codex consumer): `packages/omo-opencode` (`src/tools/delegate-task/model-selection.ts` wires cache + logger deps; `hooks/delegate-task-retry/{patterns,guidance}.ts` re-export retry behavior) and `packages/senpi-task` (category resolver, category/agent fallback chains, `manager/types.ts`, `model-chain.ts` import `resolveModelForDelegateTask` + `DelegateFallbackEntry`). `packages/omo-senpi` declares the dep and uses the fallback-entry type in tests only.
 
 ## NOTES
 
@@ -33,4 +32,4 @@ Two harness-neutral primitives for the `task`/delegate tool: (1) resolve which m
 - **`-high` models** are matched on their base model exactly, never fuzzy-downgraded to a non-high variant.
 - **Variant propagation:** a matched `DelegateFallbackEntry`'s variant flows through to the result.
 - **Fallback-chain provider shaping:** each entry's model passes through `transformModelForProvider` before exact matching, so provider-prefixed IDs (e.g. Vercel `openai/gpt-5.6-sol`) resolve on the owning entry. Cross-provider fuzzy matching skips providers that have a later dedicated rung for the same model, so an unlisted custom provider keeps the earlier variant instead of being preempted by a later rung.
-- Parent: [`packages/AGENTS.md`](../AGENTS.md).
+- Parent: `packages/AGENTS.md`.

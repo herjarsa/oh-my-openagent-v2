@@ -57,7 +57,7 @@ Within the merged document each harness resolves its own view VSCode-style, late
 3. `profiles.<name>`
 4. `profiles.<name>.[harness]`
 
-Defaults apply once at the end. The option keys documented in this reference are the contents of the `[opencode]` block. `agents` and `categories` can also live at the shared base level so every harness sees them, using the shared field set documented in the [omo.json reference](./omo-json.md); OpenCode-specific agent options belong in `[opencode]`.
+Defaults apply once at the end. The option keys documented in this reference are the contents of the `[opencode]` block. `agents` and `categories` can also live at the shared base level so every harness sees them, using the shared field set documented in the omo.json reference; OpenCode-specific agent options belong in `[opencode]`.
 
 #### Profiles
 
@@ -83,7 +83,7 @@ Two more shared base keys, read by the Senpi harness, pick the main session mode
 | `model_profiles` | record<string, `{ display_name?, family?, tier?, models? }`> | Named ordered model chains. A name matching a builtin (`recommended`, `daily-normal`, `daily-heavy`, `geeky-normal`, `geeky-heavy`) replaces it wholesale; any other name adds one. Entries use the same string or object shape as a category chain and may reference `models.<catalog>` entries. |
 | `model_profile` | string | Which chain starts the session: a lane id such as `daily-normal`, or a literal `provider/model` that pins one exact model. Unset applies Recommended (`recommended`) on a fresh session. |
 
-Don't confuse these with `profiles.<name>` above: that key swaps configuration layers via `OMO_PROFILE`, while `model_profile` chooses a model within the loaded configuration. Builtin chains, session-start behavior, and override rules are in the [omo.json reference](./omo-json.md#model-profiles-native-harness).
+Don't confuse these with `profiles.<name>` above: that key swaps configuration layers via `OMO_PROFILE`, while `model_profile` chooses a model within the loaded configuration. Builtin chains, session-start behavior, and override rules are in the omo.json reference.
 
 #### Security Invariants
 
@@ -199,11 +199,11 @@ Override built-in agent settings. The main agent runs in your session on your se
 
 > **Removed**: the retired keys `agents.metis` and `agents.momus` no longer resolve to `plan-consultant` and `plan-reviewer`. Their one-release alias window closed after 5.0.0-beta.51, so such a key now defines an ordinary custom agent under that name. Rename it to the canonical id. <!-- retired-name-allowed -->
 
-The OpenCode edition adds `disabled_agents`, `agent_order`, and its own core-agent overrides. See [OpenCode edition configuration (legacy)](./opencode-config.md).
+The OpenCode edition adds `disabled_agents`, `agent_order`, and its own core-agent overrides. See OpenCode edition configuration (legacy).
 
 #### Agent Options
 
-This table is the `[opencode].agents` surface only. Shared-base agents use the core field set (`description`, `prompt`, `model`, `models`, `reasoning`, `tools`, `execution_mode`, `background`, `max_depth`, `allowed_subagents`, `disallowed_tools`, `max_turns`, `temperature`, `disable`, and deprecated `variant` / `reasoningEffort`) documented in the [omo.json reference](./omo-json.md); OpenCode-only fields are rejected there.
+This table is the `[opencode].agents` surface only. Shared-base agents use the core field set (`description`, `prompt`, `model`, `models`, `reasoning`, `tools`, `execution_mode`, `background`, `max_depth`, `allowed_subagents`, `disallowed_tools`, `max_turns`, `temperature`, `disable`, and deprecated `variant` / `reasoningEffort`) documented in the omo.json reference; OpenCode-only fields are rejected there.
 
 | Option            | Type                    | Description                                                     |
 | ----------------- | ----------------------- | --------------------------------------------------------------- |
@@ -394,7 +394,7 @@ The same resolved chain drives spawn-time selection and runtime retry fallback, 
 
 In the Senpi harness, `model_profile` applies to OmO Desktop and headless sessions; the interactive TUI keeps the model it started with. An explicit `--model`, scoped model or resumed session is preserved. A fresh session otherwise uses `model_profile` as a literal pin or a named chain; unset config selects Recommended. If no candidate is available, a notice explains the unavailable profile and the current model stays. `categories.*` and `agents.*` overrides do not select the main session model, and `model_profile` does not select delegated children. See [Model Profiles](#model-profiles).
 
-In the OpenCode plugin, every merged category appears in `availableCategories`; hiding categories with a dead fallback chain is not implemented here. That dead-chain filtering, the `model_unavailable` spawn failure, and the `task.warnings.unavailable_categories` flag belong to the Senpi/core `task` system, documented in the [omo.json reference](./omo-json.md).
+In the OpenCode plugin, every merged category appears in `availableCategories`; hiding categories with a dead fallback chain is not implemented here. That dead-chain filtering, the `model_unavailable` spawn failure, and the `task.warnings.unavailable_categories` flag belong to the Senpi/core `task` system, documented in the omo.json reference.
 
 #### Model Settings Compatibility
 
@@ -779,7 +779,7 @@ Configure git commit behavior:
 
 `commit_footer` (default `false`) opts in to an "Ultraworked with Sisyphus" footer in the commit body; a string replaces the builtin text. Commits keep your own git author and committer, and omo never adds a `Co-authored-by` trailer; `include_co_authored_by` is a deprecated no-op kept so existing configs still validate.
 
-This key configures the OpenCode plugin inside `[opencode]`. The Senpi harness reads the typed shared `git_master` section instead, documented in the [omo.json reference](./omo-json.md#git_master-native-harness).
+This key configures the OpenCode plugin inside `[opencode]`. The Senpi harness reads the typed shared `git_master` section instead, documented in the omo.json reference.
 
 `git_env_prefix` (default `"GIT_MASTER=1"`) is prepended to git commands; set it to `""` to disable.
 
@@ -1213,11 +1213,8 @@ The shared base and Senpi use an object:
 | --------------------- | ----------------------------------------------------------------- |
 | `OPENCODE_CONFIG_DIR` | Override OpenCode config directory (useful for profile isolation) |
 | `OPENGATEWAY_API_KEY` | API key for the OpenGateway provider; without this or an `opengateway` auth entry, the plugin does not inject the provider |
-| `OMO_DEBUG` | Set to `1` (any non-empty value) to print omo-senpi component `info` diagnostics on stderr. Unset, those lines are silent. `warn` and `error` still print. Component logs never go to stdout. |
 | `OMO_SEND_ANONYMOUS_TELEMETRY` | Set to `0`, `false`, or `no` to disable anonymous telemetry |
 | `OMO_DISABLE_POSTHOG` | Legacy telemetry opt-out flag. Set to `1`, `true`, or `yes` to disable PostHog |
-| `OMO_CODEX_DISABLE_POSTHOG` | Set to `1`, `true`, or `yes` to disable PostHog telemetry for the `omo-codex` adapter. Global `OMO_DISABLE_POSTHOG` also disables Codex telemetry. |
-| `OMO_CODEX_SEND_ANONYMOUS_TELEMETRY` | Set to `0`, `false`, `no`, or `yes` to disable anonymous telemetry for `omo-codex` |
 | `OMO_CODEX_GIT_BASH_PATH` | Native Windows Codex installs only. Absolute path to Git Bash, for example `C:\Program Files\Git\bin\bash.exe`, when `where bash` cannot find it |
 | `LAZYCODEX_CONFIG_MIGRATION_DISABLED` | Set to `1` to skip the Codex config migration that runs on every session start (including the `multi_agent_v2` force-disable and managed reasoning-profile sync), leaving `config.toml` untouched |
 | `OMO_CODEX_CONFIG_MIGRATION_DISABLED` | Alias of `LAZYCODEX_CONFIG_MIGRATION_DISABLED` |
@@ -1303,11 +1300,11 @@ that provider's quota and routing behavior.
 }
 ```
 
-**Note:** The `stream` option should be configured in your OpenCode settings or via environment variables, not in the agent config. See [Ollama Troubleshooting](../troubleshooting/ollama.md) for details on disabling streaming.
+**Note:** The `stream` option should be configured in your OpenCode settings or via environment variables, not in the agent config. See Ollama Troubleshooting for details on disabling streaming.
 
 Common models: `ollama/qwen3-coder`, `ollama/ministral-3:14b`, `ollama/lfm2.5-thinking`
 
-See [Ollama Troubleshooting](../troubleshooting/ollama.md) for `JSON Parse error: Unexpected EOF` issues.
+See Ollama Troubleshooting for `JSON Parse error: Unexpected EOF` issues.
 
 #### OpenGateway
 

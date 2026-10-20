@@ -22,7 +22,6 @@ Publishing is complete only after all release surfaces are verified:
 |---|---|---|
 | `omo pure components` | Core/MCP/shared-skill changes inside the published package payload | Release notes call out layer-specific version impact (from the workflow changelog, or `/get-unpublished-changes` when the user requested it). |
 | `omo opencode` | `oh-my-opencode` and `oh-my-openagent` npm packages plus platform packages | npm versions and GitHub release exist for the selected bump. |
-| `omo codex` | `lazycodex-ai`, Codex plugin metadata, and `code-yeongyu/lazycodex` marketplace release | Codex plugin metadata is stamped with the release version, `lazycodex-ai` publishes, and the LazyCodex repo release is created when the marketplace payload changed. |
 
 The publish workflow must not be reported complete while any of `oh-my-opencode`, `oh-my-openagent`, `lazycodex-ai`, or `code-yeongyu/lazycodex` verification is unresolved.
 
@@ -174,7 +173,6 @@ The publish run is a single workflow with sequential stages. Expected timeline (
 | `test` / `typecheck` / `codex-compatibility` (3 OS) | Re-runs the CI gates on the release source | 4–8 min (Windows is the long pole) |
 | `prepare-release-state` | Stamps versions, opens + auto-merges the `release: vX.Y.Z` PR, waits for that PR's required CI checks | 10–15 min (dominant stage) |
 | `publish-platform` (build + publish, 12 targets) | Builds and publishes both platform package families | 3–4 min |
-| `publish-main` → `release` | Publishes `oh-my-opencode` / `oh-my-openagent` / `lazycodex-ai`, creates the GitHub release, syncs `code-yeongyu/lazycodex` | 4–6 min |
 
 Poll job-level status every 30 seconds and report stage transitions to the user:
 ```bash
@@ -213,8 +211,6 @@ published commit already carries its own notes.
 Preview exactly what the release body will be:
 
 ```bash
-bun run script/generate-changelog.ts > /tmp/contributors.md
-bun run script/print-release-notes.ts "${NEW_VERSION}" /tmp/contributors.md
 ```
 
 <agent-instruction>
@@ -261,7 +257,6 @@ You are writing the **headline layer** — a product announcement that sits ABOV
 - ALWAYS focus on USER IMPACT: what can users DO now that they couldn't before?
 - ALWAYS group by THEME or CAPABILITY, not by commit type (feat/fix/refactor).
 - ALWAYS use concrete language: "You can now do X" not "Added X feature".
-- NEVER include internal adapter changes matching `senpi`, `omo-senpi`, `senpi-task`, `pi-goal`, or `pi-webfetch` in either release-note variant.
 </rules>
 
 <examples>

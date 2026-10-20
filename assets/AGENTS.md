@@ -30,7 +30,6 @@ assets/
 ```bash
 bun run build:schema
 bun run build:omo-schema
-bun run script/build-help-schemas.ts
 bun test tests/omo-schema-freshness.test.ts
 ```
 

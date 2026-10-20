@@ -20,7 +20,6 @@ node scripts/check-third-party-notices.mjs
 node scripts/check-third-party-notices.mjs --ship
 ```
 
-`bun run test:codex` invokes the `--ship` check after building the Codex payload. Release workflows also rely on this surface before publication.
 
 The checker test covers spawn invocation resolution (Windows/non-Windows) and `parseNpmPackJson` manifest parsing (npm 11/12 formats, malformed and ambiguous payloads); it does not cover notice discovery or failure cases. The default checker command is not a claim that the checker currently passes.
 

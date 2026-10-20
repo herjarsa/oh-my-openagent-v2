@@ -12,15 +12,6 @@ import {
 import { detectedToInitialValues, formatConfigSummary, SYMBOLS } from "./install-validators"
 import { getUnsupportedOpenCodeVersionMessage } from "./minimum-opencode-version"
 import { promptInstallConfig, promptInstallPlatform } from "./tui-install-prompts"
-import { detectCodexInstallation, formatCodexInstallationWarning, runCodexInstaller } from "./install-codex"
-import { runNativeDevInstaller } from "./install-native-dev"
-import {
-  nativeInstallFailureLines,
-  nativeInstallSuccessLine,
-  nativeSetupFollowUpLine,
-  offerNativeSetup,
-  runNativeInstall,
-} from "./install-native"
 import { NATIVE_EDITION_HINT_TITLE, nativeEditionHintLines, shouldShowNativeEditionHint } from "./native-edition-hint"
 import { starGitHubRepositories } from "./star-request"
 import { getNoModelProvidersWarning, hasAnyConfiguredProvider } from "./provider-availability"
@@ -37,7 +28,7 @@ export async function runTuiInstaller(args: InstallArgs, version: string): Promi
   const selectedPlatform = await promptInstallPlatform(args.platform ?? "opencode")
   if (!selectedPlatform) return 1
 
-  const hasOpenCode = selectedPlatform === "opencode" || selectedPlatform === "both"
+  const hasOpenCode = selectedPlatform === "opencode"
   const detected = hasOpenCode
     ? detectCurrentConfig()
     : {
@@ -150,69 +141,8 @@ export async function runTuiInstaller(args: InstallArgs, version: string): Promi
 
   p.note(formatConfigSummary(config), isUpdate ? "Updated Configuration" : "Installation Complete")
 
-  if (config.hasCodex) {
-    const codexInstallation = await detectCodexInstallation()
-    if (!codexInstallation.found) {
-      p.log.warn(formatCodexInstallationWarning(codexInstallation))
-    }
 
-    spinner.start("Installing Codex harness adapter")
-    try {
-      const codexResult = await runCodexInstaller({ autonomousPermissions: config.codexAutonomous })
-      spinner.stop(`Codex plugin installed to ${color.cyan(codexResult.configPath)}`)
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error)
-      spinner.stop(`Codex install failed ${color.yellow("[!]")}`)
-      if (!config.hasOpenCode) {
-        p.log.error(`Codex install failed: ${message}`)
-        p.outro(color.red("Installation failed."))
-        return 1
-      }
-      p.log.warn(`Codex install failed (OpenCode install remains successful): ${message}`)
-      p.log.info(
-        "The Codex harness is NOT installed. Fix the error above, then re-run: bunx oh-my-openagent install --platform=codex",
-      )
-    }
-  }
 
-  if (config.hasNative) {
-    spinner.start("Installing OmO Native")
-    const outcome = await runNativeInstall()
-    if (outcome.failure) {
-      spinner.stop(`OmO Native install failed ${color.yellow("[!]")}`)
-      for (const note of outcome.notes) p.log.info(note)
-      for (const warning of outcome.warnings) p.log.warn(warning)
-      for (const line of nativeInstallFailureLines(outcome.failure)) p.log.error(line)
-      p.outro(color.red("Installation failed."))
-      return 1
-    }
-    spinner.stop(nativeInstallSuccessLine(outcome.verified))
-    for (const note of outcome.notes) p.log.info(note)
-    for (const warning of outcome.warnings) p.log.warn(warning)
-    const setup = await offerNativeSetup(outcome, {
-      confirm: async (message) => {
-        const answer = await p.confirm({ message, initialValue: true })
-        return !p.isCancel(answer) && answer
-      },
-      onStart: (line) => p.log.step(line),
-    })
-    const followUp = nativeSetupFollowUpLine(setup)
-    if (followUp !== null) p.log.warn(followUp)
-  }
-
-  if (config.hasNativeDev) {
-    spinner.start("Installing the OmO Native development adapter")
-    try {
-      const nativeDevResult = await runNativeDevInstaller()
-      spinner.stop(`OmO Native development adapter installed to ${color.cyan(nativeDevResult.settingsPath)}`)
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error)
-      spinner.stop(`OmO Native development adapter install failed ${color.yellow("[!]")}`)
-      p.log.error(`OmO Native development adapter install failed: ${message}`)
-      p.outro(color.red("Installation failed."))
-      return 1
-    }
-  }
 
   p.log.success(color.bold(isUpdate ? "Configuration updated!" : "Installation complete!"))
   if (config.hasOpenCode) {

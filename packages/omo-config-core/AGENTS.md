@@ -61,7 +61,6 @@ Recursively deep-merges plain objects; scalars and arrays replace. `__proto__`, 
 ## DEPENDENCIES & CONSUMERS
 
 - **Depends on:** `@oh-my-opencode/utils` (`parseJsoncSafe`, `isPlainObject`, `isUnsafeObjectKey`), `jsonc-parser`, `zod`.
-- **Consumed by:** `packages/senpi-task` (schema types re-used by the task/team config surface), `packages/omo-senpi` (`components/config-resolution` wraps `loadOmoConfig` + `resolveModelReferences`; `components/config-startup` runs the migration engine at startup; `components/task` consumes the resolved config), `packages/omo-opencode` (`plugin-config/omo-config-chain.ts` builds the per-layer OpenCode views and the user-only protected view; `startup-migration.ts` drives the engine; `config-migration/` supplies OpenCode-side discovery + transform), and `packages/omo-codex` (`plugin/shared/src/config-loader.ts` + `config-migration.ts` for the `config.jsonc` group).
 
 ## QA
 
@@ -70,8 +69,8 @@ tsgo --noEmit -p packages/omo-config-core/tsconfig.json
 bun test packages/omo-config-core
 ```
 
-Co-located `*.test.ts` cover the schema (`src/schema/config-schema.test.ts`), the loader precedence and diagnostics (`src/loader/loader.test.ts`), the deep-merge and pollution guard (`src/loader/merge.test.ts`), and the writer plus its symlink/atomicity security path (`src/writer/writer.test.ts`, `src/writer/writer-security.test.ts`). Parent: [`packages/AGENTS.md`](../AGENTS.md).
+Co-located `*.test.ts` cover the schema (`src/schema/config-schema.test.ts`), the loader precedence and diagnostics (`src/loader/loader.test.ts`), the deep-merge and pollution guard (`src/loader/merge.test.ts`), and the writer plus its symlink/atomicity security path (`src/writer/writer.test.ts`, `src/writer/writer-security.test.ts`). Parent: `packages/AGENTS.md`.
 
 ## GENERATED SCHEMA
 
-The checked-in generated JSON artifact at `assets/omo.schema.json` is produced by `bun run build:omo-schema` via [`script/build-omo-schema.ts`](../../script/build-omo-schema.ts). Its `$id` and editor URL are `https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/omo.schema.json`. This package owns the schema source; the generated JSON artifact remains an ownership-boundary surface outside this package. Category-schema field parity with `packages/omo-opencode/src/config/schema/categories.ts` is pinned by the repo-root guard `tests/omo-config-category-drift.test.ts` (compares the inner `OmoCategoryConfigObjectSchema` shape, since the canonical export wraps a legacy-key preprocessor); schema changes must update both sides or that test fails.
+The checked-in generated JSON artifact at `assets/omo.schema.json` is produced by `bun run build:omo-schema` via `script/build-omo-schema.ts`. Its `$id` and editor URL are `https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/omo.schema.json`. This package owns the schema source; the generated JSON artifact remains an ownership-boundary surface outside this package. Category-schema field parity with `packages/omo-opencode/src/config/schema/categories.ts` is pinned by the repo-root guard `tests/omo-config-category-drift.test.ts` (compares the inner `OmoCategoryConfigObjectSchema` shape, since the canonical export wraps a legacy-key preprocessor); schema changes must update both sides or that test fails.

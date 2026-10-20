@@ -199,5 +199,5 @@ That's the goal.
 
 ## Further Reading
 
-- [Overview](./guide/overview.md)
-- [Orchestration Guide](./guide/orchestration.md)
+- Overview
+- Orchestration Guide

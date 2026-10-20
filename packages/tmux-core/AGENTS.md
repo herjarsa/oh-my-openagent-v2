@@ -35,4 +35,4 @@ spawnTmuxPane / spawnTmuxSession / spawnTmuxWindow
 - **Adapter shim pattern:** `omo-opencode/src/shared/tmux/` re-exports `runTmuxCommand` and wires `getTmuxPath` from `interactive-bash/tmux-path-resolver` into DI deps (`adapter-deps.ts`). `team-core` consumes the same primitives directly for team-mode tmux layouts.
 - **Stale session sweep:** `stale-session-sweep.ts` matches `omo-agents-<pid>` sessions, skips the current PID, and kills sessions whose owner process is dead.
 
-Parent: [packages/AGENTS.md](../AGENTS.md)
+Parent: packages/AGENTS.md

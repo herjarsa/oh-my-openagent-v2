@@ -24,9 +24,6 @@ import {
   validateNonTuiArgs,
 } from "./install-validators"
 import { getUnsupportedOpenCodeVersionMessage } from "./minimum-opencode-version"
-import { runCodexInstaller } from "./install-codex"
-import { runNativeDevInstaller } from "./install-native-dev"
-import { nativeInstallFailureLines, nativeInstallSuccessLine, runNativeInstall } from "./install-native"
 import { NATIVE_EDITION_HINT_TITLE, nativeEditionHintLines, shouldShowNativeEditionHint } from "./native-edition-hint"
 import { starGitHubRepositories } from "./star-request"
 import { getNoModelProvidersWarning, hasAnyConfiguredProvider } from "./provider-availability"
@@ -169,50 +166,8 @@ export async function runCliInstaller(args: InstallArgs, version: string): Promi
   }
   console.log()
 
-  if (config.hasCodex) {
-    printInfo("Installing Codex harness adapter...")
-    try {
-      const codexResult = await runCodexInstaller({ autonomousPermissions: config.codexAutonomous })
-      printSuccess(`Codex plugin installed ${SYMBOLS.arrow} ${color.dim(codexResult.configPath)}`)
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error)
-      if (!config.hasOpenCode) {
-        printError(`Codex install failed: ${message}`)
-        return 1
-      }
-      printWarning(`Codex install failed (OpenCode install is still complete): ${message}`)
-      printInfo(
-        `The Codex harness is NOT installed. Fix the error above, then re-run: ${color.cyan("bunx oh-my-openagent install --platform=codex")}`,
-      )
-    }
-    console.log()
-  }
 
-  if (config.hasNative) {
-    printInfo("Installing OmO Native...")
-    const outcome = await runNativeInstall()
-    for (const note of outcome.notes) printInfo(note)
-    for (const warning of outcome.warnings) printWarning(warning)
-    if (outcome.failure) {
-      for (const line of nativeInstallFailureLines(outcome.failure)) printError(line)
-      return 1
-    }
-    printSuccess(nativeInstallSuccessLine(outcome.verified))
-    console.log()
-  }
 
-  if (config.hasNativeDev) {
-    printInfo("Installing the OmO Native development adapter...")
-    try {
-      const nativeDevResult = await runNativeDevInstaller()
-      printSuccess(`OmO Native development adapter installed ${SYMBOLS.arrow} ${color.dim(nativeDevResult.settingsPath)}`)
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error)
-      printError(`OmO Native development adapter install failed: ${message}`)
-      return 1
-    }
-    console.log()
-  }
 
   printInfo(
     "Anonymous telemetry is enabled by default. Disable it with OMO_SEND_ANONYMOUS_TELEMETRY=0 or OMO_DISABLE_POSTHOG=1.",

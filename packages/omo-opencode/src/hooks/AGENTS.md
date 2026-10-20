@@ -21,7 +21,7 @@
 
 Total exposed hooks: **54 base, 61 with team-mode, 62 with team-mode + monitor** (counts the 4 team-session-events handlers individually).
 
-Hook name allowlist for `disabled_hooks`: all configurable hook names enumerated in [`src/config/schema/hooks.ts`](../config/schema/hooks.ts) `HookNameSchema`. Team-session-event sub-hooks are not individually listed in the schema -- they activate together with `team_mode.enabled`.
+Hook name allowlist for `disabled_hooks`: all configurable hook names enumerated in `src/config/schema/hooks.ts` `HookNameSchema`. Team-session-event sub-hooks are not individually listed in the schema -- they activate together with `team_mode.enabled`.
 
 ### Tier 1: Session Hooks (24)
 
@@ -36,7 +36,7 @@ Hook name allowlist for `disabled_hooks`: all configurable hook names enumerated
 | `agentUsageReminder` | chat.message | Remind about available agents |
 | `nonInteractiveEnv` | chat.message | Adjust behavior for `run` command |
 | `interactiveBashSession` | tool.execute | Tmux session lifecycle for interactive_bash tool |
-| `goal` | event | Persistent per-session objective; idle continuation + usage accounting. Replaces `ralphLoop` (see [`goal/AGENTS.md`](goal/AGENTS.md)) |
+| `goal` | event | Persistent per-session objective; idle continuation + usage accounting. Replaces `ralphLoop` (see `goal/AGENTS.md`) |
 | `editErrorRecovery` | tool.execute.after | Retry failed file edits |
 | `delegateTaskRetry` | tool.execute.after | Retry failed task delegations |
 | `ulwExecute` | chat.message | `/ulw-execute` command handler |
@@ -106,13 +106,13 @@ Hook name allowlist for `disabled_hooks`: all configurable hook names enumerated
 
 | Hook | Tier | Registered In | Purpose |
 |------|------|---------------|---------|
-| `team-mode-status-injector` | Transform | [`create-transform-hooks.ts`](../plugin/hooks/create-transform-hooks.ts) | Inject `<team_mode_status>` block into messages |
-| `team-mailbox-injector` | Transform | [`create-transform-hooks.ts`](../plugin/hooks/create-transform-hooks.ts) | Pull pending team mailbox messages into agent context |
-| `team-tool-gating` | Tool Guard | [`create-tool-guard-hooks.ts`](../plugin/hooks/create-tool-guard-hooks.ts) | Restrict `team_*` tools based on member role + permissions |
-| `team-idle-wake-hint` | event handler | [`src/plugin/event.ts`](../plugin/event.ts) | Nudge idle team members back to work |
-| `team-lead-orphan-handler` | event handler | [`src/plugin/event.ts`](../plugin/event.ts) | Detect lead departure → orphan members |
-| `team-member-error-handler` | event handler | [`src/plugin/event.ts`](../plugin/event.ts) | React to member session errors |
-| `team-member-status-handler` | event handler | [`src/plugin/event.ts`](../plugin/event.ts) | Track member status transitions |
+| `team-mode-status-injector` | Transform | `create-transform-hooks.ts` | Inject `<team_mode_status>` block into messages |
+| `team-mailbox-injector` | Transform | `create-transform-hooks.ts` | Pull pending team mailbox messages into agent context |
+| `team-tool-gating` | Tool Guard | `create-tool-guard-hooks.ts` | Restrict `team_*` tools based on member role + permissions |
+| `team-idle-wake-hint` | event handler | `src/plugin/event.ts` | Nudge idle team members back to work |
+| `team-lead-orphan-handler` | event handler | `src/plugin/event.ts` | Detect lead departure → orphan members |
+| `team-member-error-handler` | event handler | `src/plugin/event.ts` | React to member session errors |
+| `team-member-status-handler` | event handler | `src/plugin/event.ts` | Track member status transitions |
 
 The 4 `team-session-events/` handlers live in `src/hooks/team-session-events/` (separate files: `team-idle-wake-hint.ts`, `team-lead-orphan-handler.ts`, `team-member-error-handler.ts`, `team-member-status-handler.ts`) and are wired into `src/plugin/event.ts` directly, not through a tier composer.
 
@@ -140,7 +140,7 @@ hooks/
    - Continuation/idle? → `create-continuation-hooks.ts`
    - Skill awareness? → `create-skill-hooks.ts`
    - Team-mode-only? → register inside the team-mode conditional block
-3. Add hook name to [`config/schema/hooks.ts`](../config/schema/hooks.ts) `HookNameSchema`
+3. Add hook name to `config/schema/hooks.ts` `HookNameSchema`
 4. Cover with co-located `*.test.ts` (given/when/then style)
 
 ## NOTES
@@ -149,4 +149,4 @@ hooks/
 - **Mock files** (`zauc-mocks-*`, `zauc-sync-mocks`) are NOT hooks. They are placed inside `src/hooks/` purely so `bun:test` discovers them with the hook test fixtures.
 - **`atlasHook` vs `todoContinuationEnforcer`:** atlas handles boulder/ralph/subagent sessions, todoContinuationEnforcer handles the main Sisyphus session. Both fire on `session.idle` but check session type first.
 - **`runtime-fallback` vs `model-fallback`:** runtime-fallback is reactive (after error); model-fallback is proactive (chat.params). They operate independently.
-- **`goal` replaces `ralphLoop` (PR #6184):** `ralphLoop` was removed from `HookNameSchema` and `create-session-hooks.ts`; the `/ralph-loop`, `/ulw-loop`, `/cancel-ralph` builtin commands were removed. The `ralph-loop/` dir + `createRalphLoopHook` factory remain for migration (barrel export kept); `ralph_loop` config is a deprecated passthrough. See [`goal/AGENTS.md`](goal/AGENTS.md).
+- **`goal` replaces `ralphLoop` (PR #6184):** `ralphLoop` was removed from `HookNameSchema` and `create-session-hooks.ts`; the `/ralph-loop`, `/ulw-loop`, `/cancel-ralph` builtin commands were removed. The `ralph-loop/` dir + `createRalphLoopHook` factory remain for migration (barrel export kept); `ralph_loop` config is a deprecated passthrough. See `goal/AGENTS.md`.

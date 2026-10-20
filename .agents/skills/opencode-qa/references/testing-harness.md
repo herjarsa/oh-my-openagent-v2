@@ -44,7 +44,6 @@ bun test --grep "truncates large file"
 CI variant:
 
 ```bash
-bun run test:ci
 ```
 
 Turbo dependency: `opencode#test` depends on `^build`.
@@ -92,7 +91,6 @@ const it = testEffect(Layer.mergeAll(readLayer(), testInstanceStoreLayer))
 
 ## CLI subprocess harness (test/lib/cli-process.ts)
 
-`cliIt.live(name, body, timeoutMs?)` and `cliIt.concurrent(...)` spawn the real CLI (`bun run --conditions=browser src/index.ts`) in an isolated environment.
 
 Exposed helpers:
 
@@ -185,25 +183,21 @@ Commands (run from `packages/app`):
 
 ```bash
 bunx playwright install chromium
-bun run test:e2e:local
 ```
 
 Filter with grep:
 
 ```bash
-bun run test:e2e:local -- --grep "settings"
 ```
 
 UI mode:
 
 ```bash
-bun run test:e2e:ui
 ```
 
 App unit tests:
 
 ```bash
-bun run test:unit
 ```
 
 This equals `bun test --preload ./happydom.ts ./src`.

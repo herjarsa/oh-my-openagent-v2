@@ -1,5 +1,5 @@
 import type { DoctorOptions, DoctorResult, CheckDefinition, CheckResult, DoctorSummary } from "./framework/types"
-import { getAllCheckDefinitions, getCodexCheckDefinitions, gatherSystemInfo, gatherToolsSummary, gatherCodexSummary, gatherEditionDistTags, resolveLatestVersion } from "./checks"
+import { getAllCheckDefinitions, gatherSystemInfo, gatherToolsSummary, gatherEditionDistTags, resolveLatestVersion } from "./checks"
 import { EXIT_CODES } from "./framework/constants"
 import { formatDoctorOutput, formatJsonOutput } from "./framework/formatter"
 
@@ -68,13 +68,12 @@ export async function runDoctor(options: DoctorOptions): Promise<DoctorResult> {
   const start = performance.now()
 
   const target = options.target ?? "opencode"
-  const allChecks = target === "codex" ? getCodexCheckDefinitions() : getAllCheckDefinitions()
+  const allChecks = getAllCheckDefinitions()
 
   const checksPromise = Promise.all([
     Promise.all(allChecks.map(runCheck)),
     gatherSystemInfo(),
     gatherToolsSummary(),
-    target === "codex" ? gatherCodexSummary() : Promise.resolve(undefined),
     gatherEditionDistTags(target),
   ])
 
@@ -86,11 +85,10 @@ export async function runDoctor(options: DoctorOptions): Promise<DoctorResult> {
   let results: CheckResult[]
   let systemInfo: Awaited<ReturnType<typeof gatherSystemInfo>>
   let tools: Awaited<ReturnType<typeof gatherToolsSummary>>
-  let codex: Awaited<ReturnType<typeof gatherCodexSummary>> | undefined
   let distTags: Awaited<ReturnType<typeof gatherEditionDistTags>>
 
   try {
-    ;[results, systemInfo, tools, codex, distTags] = await Promise.race([checksPromise, timeoutPromise])
+    ;[results, systemInfo, tools, distTags] = await Promise.race([checksPromise, timeoutPromise])
   } catch (error) {
     clearTimeout(timer)
     if (error instanceof DoctorTimeoutError) {
@@ -112,8 +110,7 @@ export async function runDoctor(options: DoctorOptions): Promise<DoctorResult> {
     summary,
     exitCode,
     target,
-    codex,
-    latestVersion: resolveLatestVersion({ target, systemInfo, codex, distTags }),
+    latestVersion: resolveLatestVersion({ target, systemInfo, codex: undefined, distTags }),
   }
 
   if (options.json) {

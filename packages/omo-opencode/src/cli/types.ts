@@ -1,6 +1,6 @@
 export type ClaudeSubscription = "no" | "yes" | "max20"
 export type BooleanArg = "no" | "yes"
-export type InstallPlatform = "opencode" | "codex" | "both" | "native" | "native-dev"
+export type InstallPlatform = "opencode"
 
 export interface InstallArgs {
   tui: boolean

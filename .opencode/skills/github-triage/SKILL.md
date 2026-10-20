@@ -309,7 +309,7 @@ REPORT FORMAT (write this as the file content):
 
 ### Root Cause (if CONFIRMED_BUG)
 [Which file, which function, what goes wrong]
-- Problematic code: [`{path}#L{N}`](permalink)
+- Problematic code: `{path}#L{N}`
 
 ### Why Not A Bug (if NOT_A_BUG)
 [Rigorous proof with permalinks that current behavior is correct]

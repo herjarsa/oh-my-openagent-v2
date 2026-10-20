@@ -10,7 +10,7 @@ By accessing or using the Service, you agree to these Terms. If you do not agree
 
 ## 1. License
 
-Your use of the source code is governed by the repository license in [LICENSE.md](../../LICENSE.md). Your use of packaged releases, binaries, and hosted project surfaces is also subject to these Terms.
+Your use of the source code is governed by the repository license in LICENSE.md. Your use of packaged releases, binaries, and hosted project surfaces is also subject to these Terms.
 
 ## 2. Your Use of the Service
 

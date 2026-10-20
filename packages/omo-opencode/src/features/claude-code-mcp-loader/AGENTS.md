@@ -4,7 +4,7 @@
 
 ## OVERVIEW
 
-This module loads `.mcp.json` files from project/user scopes and expands `${VAR}` env vars. It feeds Tier 2 of the 3-tier MCP system into `mcp-config-handler.ts` during Phase 5 of config loading. Shared parsing, env expansion, and transform primitives are extracted to [`packages/claude-code-compat-core/`](../../../../../packages/claude-code-compat-core); this directory keeps the OpenCode adapter path stable.
+This module loads `.mcp.json` files from project/user scopes and expands `${VAR}` env vars. It feeds Tier 2 of the 3-tier MCP system into `mcp-config-handler.ts` during Phase 5 of config loading. Shared parsing, env expansion, and transform primitives are extracted to `packages/claude-code-compat-core/`; this directory keeps the OpenCode adapter path stable.
 
 ## WHY IT EXISTS
 

@@ -159,7 +159,7 @@ source script/agent/qa-sandbox.sh
 
 This exports an isolated, throwaway environment with its own `XDG_*` directories and a fresh `CODEX_HOME` under a `mktemp` directory. It also sets `OPENCODE_DISABLE_AUTOUPDATE=1` and `OPENCODE_DISABLE_MODELS_FETCH=1`. QA never reads or writes the host's real `~/.config/opencode` or `~/.codex`. This mirrors the conventions used by the `opencode-qa` and `codex-qa` skills.
 
-For containerized environments (Codespaces, Dev Containers, Docker), see [`.devcontainer/README.md`](.devcontainer/README.md). It documents injecting provider credentials (via `.env`, Codespaces secrets, or `remoteEnv`) and bind-mounting your `~/.codex`, `~/.claude`, and `~/.config/opencode` config into the container so OpenCode, Codex, and Claude Code all work inside it.
+For containerized environments (Codespaces, Dev Containers, Docker), see `.devcontainer/README.md`. It documents injecting provider credentials (via `.env`, Codespaces secrets, or `remoteEnv`) and bind-mounting your `~/.codex`, `~/.claude`, and `~/.config/opencode` config into the container so OpenCode, Codex, and Claude Code all work inside it.
 
 ## Project Structure
 
@@ -235,7 +235,6 @@ bun run build:schema
 bun test
 
 # Run the Codex Light compatibility suite
-bun run test:codex
 ```
 
 Tests are co-located as `*.test.ts` files and follow a given/when/then style.
@@ -340,7 +339,6 @@ Any change to `packages/omo-opencode` (the OpenCode side) must be QA'd with the 
    bun run typecheck  # Ensure no type errors
    bun run build      # Ensure build succeeds
    bun test           # Run the root test suite
-   bun run test:codex # Run the Codex Light compatibility suite
    ```
 4. **Test in OpenCode** using the local build method described above
 5. **Commit** with clear, descriptive messages:
@@ -355,7 +353,6 @@ Any change to `packages/omo-opencode` (the OpenCode side) must be QA'd with the 
 - [ ] `bun run typecheck` passes
 - [ ] `bun run build` succeeds
 - [ ] `bun test` passes
-- [ ] `bun run test:codex` passes (if Codex-side changed)
 - [ ] Tested locally with OpenCode
 - [ ] QA evidence recorded under `.omo/evidence/` and summarized in the PR body, not committed (if harness-connected changes)
 - [ ] Updated documentation if needed (README, AGENTS.md)

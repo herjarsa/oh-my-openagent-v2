@@ -29,4 +29,4 @@ The engine behind the Hashline edit tool (inspired by [oh-my-pi](https://github.
 - **Legacy hash compatibility:** validation accepts both `computeLineHash` (trimEnd + strip `\r`) and `computeLegacyLineHash` (strip ALL whitespace) — old stored hashes still validate.
 - **Seed rule:** content lines seed `0`; whitespace-only lines seed `lineNumber` (distinct hash per position).
 - **`normalizeHashlineEdits` rejects unknown ops** with `"Legacy format was removed; use op/pos/end/lines."` — the discriminated union is `replace | append | prepend` only.
-- Parent: [`packages/AGENTS.md`](../AGENTS.md).
+- Parent: `packages/AGENTS.md`.

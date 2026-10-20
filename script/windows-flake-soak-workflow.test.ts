@@ -9,18 +9,8 @@ const unsupportedTargetFixture = "bun-test-from-user-input"
 
 const expectedTargets = [
   {
-    name: "reconciliation",
-    arguments: [
-      '@("test", "packages/omo-senpi/src/components/memory/worker/run-reconciliation.test.ts")',
-    ],
-  },
-  {
     name: "hooks-state",
     arguments: ['@("test", "script/senpi-hooks-state.test.ts")'],
-  },
-  {
-    name: "mailbox",
-    arguments: ['@("test", "packages/omo-senpi/src/components/thread/mailbox.test.ts")'],
   },
   {
     name: "team-message",
@@ -29,31 +19,13 @@ const expectedTargets = [
     ],
   },
   {
-    name: "memory-supervisor",
-    arguments: [
-      '@("test", "packages/omo-senpi/src/components/memory/worker/memory-run-supervisor.integration.test.ts")',
-    ],
-  },
-  {
     name: "facts-lock",
-    arguments: [
-      '@("test", "packages/memory-core/src/locks", "packages/omo-senpi/src/components/memory/commands/facts.test.ts")',
-    ],
+    arguments: ['@("test", "packages/memory-core/src/locks")'],
   },
   {
     name: "reply-listener",
     arguments: [
       '@("test", "packages/openclaw-core/src/__tests__/reply-listener-startup.test.ts")',
-    ],
-  },
-  {
-    name: "dag-race",
-    arguments: ['@("test", "packages/senpi-task/src/dag")'],
-  },
-  {
-    name: "memfs-restore",
-    arguments: [
-      '@("test", "packages/omo-senpi/src/components/memory/commands/memfs-extra.test.ts")',
     ],
   },
   {
@@ -63,13 +35,9 @@ const expectedTargets = [
     ],
   },
   {
-    name: "senpi-overflow",
-    arguments: [] as readonly string[],
-  },
-  {
     name: "full-shard-2",
     arguments: [
-      '@("test", "packages/senpi-task/src/runners/rpc-process.windows.test.ts", "packages/senpi-task/src/__adversarial__/chaos-bench.test.ts", "packages/omo-codex/src/install/install-codex-legacy-agent-purge.test.ts", "script/codex-installer-version.test.ts", "packages/shared-skills/provenance-gate.test.ts", "packages/omo-codex/src/install/install-codex-mcp-manifest.test.ts", "packages/senpi-task/src/dag/scheduler.test.ts", "packages/omo-native/test/payload.test.ts", "script/build-omo-binary.test.ts", "packages/senpi-task/src/team/member-extension/residency.test.ts", "script/omob-refresh.test.ts", "script/release-version.test.ts")',
+      '@("test", "packages/shared-skills/provenance-gate.test.ts", "script/release-version.test.ts")',
       '@("--config=bunfig.win2.parallel.toml", "test", "--parallel")',
     ],
   },
@@ -189,8 +157,6 @@ describe("Windows flake soak workflow", () => {
         expect(step).toContain(args)
       }
     }
-    expect(step).toContain('$target -eq "senpi-overflow"')
-    expect(step).toContain("target not yet implemented: senpi-overflow")
     expect(step).toContain("-TestArguments $phase.Arguments")
     expect(step).not.toContain("${{ inputs.target }}")
     expect(step).not.toContain("Invoke-Expression")

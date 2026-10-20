@@ -2,7 +2,6 @@ import { afterEach, beforeEach, describe, expect, it, mock, spyOn } from "bun:te
 import * as p from "@clack/prompts"
 import * as configManager from "./config-manager"
 import * as astGrepInstall from "./install-ast-grep-sg"
-import * as nativeDevInstaller from "./install-native-dev"
 import * as tuiInstallPrompts from "./tui-install-prompts"
 import { NATIVE_EDITION_GUIDE_URL, NATIVE_EDITION_INSTALL_COMMAND } from "./native-edition-hint"
 import { runTuiInstaller } from "./tui-installer"
@@ -20,7 +19,7 @@ function createMockSpinner(): ReturnType<typeof p.spinner> {
   }
 }
 
-function installConfig(platform: "opencode" | "native-dev"): InstallConfig {
+function installConfig(platform: "opencode"): InstallConfig {
   return {
     platform,
     hasOpenCode: platform === "opencode",
@@ -30,7 +29,7 @@ function installConfig(platform: "opencode" | "native-dev"): InstallConfig {
     hasGemini: false,
     hasCopilot: false,
     hasCodex: false,
-    hasNativeDev: platform === "native-dev",
+    hasNativeDev: false,
     hasOpencodeZen: false,
     hasZaiCodingPlan: false,
     hasKimiForCoding: false,
@@ -110,25 +109,5 @@ describe("runTuiInstaller OmO Native hint", () => {
     expect(output).toContain(NATIVE_EDITION_GUIDE_URL)
   })
 
-  it("stays silent about OmO Native when the install target is the native development adapter", async () => {
-    // given
-    spyOn(tuiInstallPrompts, "promptInstallPlatform").mockResolvedValue("native-dev")
-    spyOn(tuiInstallPrompts, "promptInstallConfig").mockResolvedValue(installConfig("native-dev"))
-    spyOn(nativeDevInstaller, "runNativeDevInstaller").mockResolvedValue({
-      ok: true,
-      action: "install",
-      agentDir: "/tmp/omo-agent",
-      settingsPath: "/tmp/omo-agent/settings.json",
-      pluginPath: "/tmp/repo/packages/omo-senpi/plugin",
-      changed: true,
-      backupPath: "/tmp/omo-agent/settings.json.20260921T000000000Z.backup",
-    })
-
-    // when
-    const result = await runTuiInstaller({ tui: true, platform: "native-dev" }, "3.16.0")
-
-    // then
-    expect(result).toBe(0)
-    expect(printed.join("\n")).not.toContain(NATIVE_EDITION_INSTALL_COMMAND)
-  })
+)
 })

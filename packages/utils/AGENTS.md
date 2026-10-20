@@ -33,4 +33,4 @@ Harness-neutral pure-TypeScript core package (`@oh-my-opencode/utils`). Consumed
 - **Runtime portability:** `runtime/spawn.ts` wraps both Bun and Node APIs so downstream packages can run under Electron-hosted OpenCode.
 - **Side effects:** `package.json` `sideEffects` pins `src/prompt-async-gate/queue.ts`; tree-shaking must keep the queue module.
 - **Process-sweep invariant:** the LSP daemon *server* shape (`cli.js daemon`, no `mcp`) is NEVER a proxy candidate — only the proxy shape is swept (`process-sweep/lsp-proxy-family.ts`, pinned by tests).
-- **Prompt-async-gate is critical infrastructure:** every internal prompt dispatch across the plugin must route through `dispatchInternalPrompt()` to prevent duplicate injections and race conditions. See the root [`AGENTS.md`](../../AGENTS.md) "Internal message injection is dangerous" section.
+- **Prompt-async-gate is critical infrastructure:** every internal prompt dispatch across the plugin must route through `dispatchInternalPrompt()` to prevent duplicate injections and race conditions. See the root `AGENTS.md` "Internal message injection is dangerous" section.

@@ -8,7 +8,7 @@
 
 ## Four lanes pick the main agent's model
 
-The main agent thinks with your session model. The easiest way to choose it is a **model profile**: a named, ordered chain you pick by lane (Daily or Geeky, Normal or Heavy). At session start omo walks the chain and applies the first model your connected providers serve. Chains live in [`packages/omo-senpi/src/components/model-profile/builtin-profiles.ts`](../../packages/omo-senpi/src/components/model-profile/builtin-profiles.ts); every rung lists each provider that serves the model, so a Copilot-only or gateway-only account resolves the same way a direct API key does.
+The main agent thinks with your session model. The easiest way to choose it is a **model profile**: a named, ordered chain you pick by lane (Daily or Geeky, Normal or Heavy). At session start omo walks the chain and applies the first model your connected providers serve. Chains live in `packages/omo-senpi/src/components/model-profile/builtin-profiles.ts`; every rung lists each provider that serves the model, so a Copilot-only or gateway-only account resolves the same way a direct API key does.
 
 | Lane | Id | Pick it for | Chain |
 | --- | --- | --- | --- |
@@ -33,7 +33,7 @@ The session prints `OmO Native: model profile "daily-normal" (Daily · Normal) s
 - **Session-scoped.** The apply never writes `settings.json` or `omo.json`. Mid-session failures follow Senpi's retry chains, not the profile.
 - **The interactive TUI ignores `model_profile`**, pins included, because it has no lane surface yet. A TUI session that starts on an implicit default is moved by Senpi's own recommended-model switch, which uses the same six-model order.
 - **Retired ids are unknown.** `capable`, `deep-work`, and `simple-work` are not aliases. A config still naming one of them gets the unknown-profile notice listing `recommended` and the four lane ids.
-- **Your own chains.** `model_profiles.<name>` adds a profile or replaces a builtin's entire model chain. A builtin override keeps its family/tier identity unless those metadata fields are supplied. A provider-qualified candidate is used only on that provider; if absent, only the next configured candidate is tried. Bare model ids may match any provider. Key reference: [omo.json](../reference/omo-json.md#model-profiles-native-harness).
+- **Your own chains.** `model_profiles.<name>` adds a profile or replaces a builtin's entire model chain. A builtin override keeps its family/tier identity unless those metadata fields are supplied. A provider-qualified candidate is used only on that provider; if absent, only the next configured candidate is tried. Bare model ids may match any provider. Key reference: omo.json.
 
 You can still pick with `/model` and switch mid-session; the main agent switches with you, and the prompt preset follows the new model.
 
@@ -95,7 +95,7 @@ A model profile picks the main session model and nothing else. Every delegated c
 
 ### Curated agents
 
-Delegation goes through the `task` tool. Four curated read-only agents have their own fallback chains, hardcoded in [`packages/senpi-task/src/agents/builtin/fallback-chains.ts`](../../packages/senpi-task/src/agents/builtin/fallback-chains.ts). The first rung your connected providers can serve wins.
+Delegation goes through the `task` tool. Four curated read-only agents have their own fallback chains, hardcoded in `packages/senpi-task/src/agents/builtin/fallback-chains.ts`. The first rung your connected providers can serve wins.
 
 | Agent | Job | Primary | Chain |
 | --- | --- | --- | --- |
@@ -110,9 +110,6 @@ The ulw-loop reviewers have no hand-written chains. Each one names categories on
 
 | Agent | Categories, in order |
 | --- | --- |
-| `omo-native-code-reviewer` | `unspecified-high` |
-| `omo-native-gate-reviewer` | `deep-high`, then `unspecified-high` |
-| `omo-native-qa-executor` | `deep-low`, then `unspecified-low` |
 
 Overriding one of those categories in `omo.json` moves the reviewer with it.
 
@@ -143,7 +140,7 @@ Claude Fable 5.1 is the first rung of `plan-consultant`, of the `architect`, `vi
 
 ### Categories
 
-When the main agent delegates implementation work, it doesn't pick a model name. It picks a **category**, and the category spawns the category worker: a fresh worker session configured by the category's model and skills. Chains live in [`packages/senpi-task/src/category/fallback-chains.ts`](../../packages/senpi-task/src/category/fallback-chains.ts); defaults, descriptions and prompt appends live next to them in `packages/senpi-task/src/category/*-categories.ts`.
+When the main agent delegates implementation work, it doesn't pick a model name. It picks a **category**, and the category spawns the category worker: a fresh worker session configured by the category's model and skills. Chains live in `packages/senpi-task/src/category/fallback-chains.ts`; defaults, descriptions and prompt appends live next to them in `packages/senpi-task/src/category/*-categories.ts`.
 
 | Category | Used for | Default | Chain |
 | --- | --- | --- | --- |
@@ -164,13 +161,13 @@ A category you haven't configured is offered to the main agent only when your pr
 
 The `quick` category ships a caller warning: small fast models need an explicit prompt with numbered must-do steps, forbidden deviations, and concrete success criteria. `deep-low` and `deep-high` take one goal plus one deliverable per call; fan out several goals as parallel `deep-low` calls, and escalate to `deep-high` only when the central decision can't be settled from evidence.
 
-See the [Orchestration System Guide](./orchestration.md) for how the main agent decides between a category and a curated agent.
+See the Orchestration System Guide for how the main agent decides between a category and a curated agent.
 
 ---
 
 ## Customizing in `omo.json`
 
-Override any category or curated agent in `omo.json`. `model` sets one model; `models` sets an ordered chain that's tried before the builtin one. Entries may be plain `provider/model` strings (with an optional `:level` reasoning suffix such as `openai/gpt-6-astra:xhigh`) or objects carrying `model`, `reasoning`, `max_tokens`, or `provider_options`. Full key reference: [omo.json](../reference/omo-json.md).
+Override any category or curated agent in `omo.json`. `model` sets one model; `models` sets an ordered chain that's tried before the builtin one. Entries may be plain `provider/model` strings (with an optional `:level` reasoning suffix such as `openai/gpt-6-astra:xhigh`) or objects carrying `model`, `reasoning`, `max_tokens`, or `provider_options`. Full key reference: omo.json.
 
 ### Example A: Claude plus OpenAI
 
@@ -286,9 +283,6 @@ Your explicit configuration always wins. If you set a model for a category or ag
 
 ## See Also
 
-- [Installation Guide](./installation.md): setup and provider authentication
-- [Orchestration System Guide](./orchestration.md): how the main agent delegates to categories and curated agents
-- [omo.json Reference](../reference/omo-json.md): `model_profiles`, `model_profile`, `agents`, `categories`, and `models` keys
-- [`packages/omo-senpi/src/components/model-profile/builtin-profiles.ts`](../../packages/omo-senpi/src/components/model-profile/builtin-profiles.ts): the Recommended ladder and the four lane chains
-- [`packages/senpi-task/src/agents/builtin/fallback-chains.ts`](../../packages/senpi-task/src/agents/builtin/fallback-chains.ts): curated agent chains
-- [`packages/senpi-task/src/category/fallback-chains.ts`](../../packages/senpi-task/src/category/fallback-chains.ts): category chains
+- Installation Guide: setup and provider authentication
+- Orchestration System Guide: how the main agent delegates to categories and curated agents
+- omo.json Reference: `model_profiles`, `model_profile`, `agents`, `categories`, and `models` keys

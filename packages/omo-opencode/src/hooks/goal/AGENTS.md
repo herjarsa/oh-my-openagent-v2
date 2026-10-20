@@ -8,7 +8,7 @@
 
 A goal is a per-session persistent objective. While `status: active`, each `session.idle` re-injects a continuation prompt that drives the agent toward the objective and forbids marking complete without a completion audit. The continuation prompt surfaces `tokensUsed` / `timeUsedSeconds` from the goal record.
 
-Opt-in: requires `goal.enabled: true` (config) AND the `goal` hook enabled. Wired in [`create-session-hooks.ts`](../../plugin/hooks/create-session-hooks.ts); event dispatched via `event-hook-dispatcher.ts`; tools registered in `tool-registry-core-tools.ts`; `/goal` command parsed in `command-execute-before.ts` and `chat-message/loop-commands.ts`.
+Opt-in: requires `goal.enabled: true` (config) AND the `goal` hook enabled. Wired in `create-session-hooks.ts`; event dispatched via `event-hook-dispatcher.ts`; tools registered in `tool-registry-core-tools.ts`; `/goal` command parsed in `command-execute-before.ts` and `chat-message/loop-commands.ts`.
 
 ## KEY FILES
 

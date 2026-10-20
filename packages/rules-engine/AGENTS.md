@@ -50,4 +50,4 @@ Ordering
 - Deps: `picomatch` + `@oh-my-opencode/utils` only.
 - Default char budgets: static 12K rule / 40K total; dynamic 4K / 10K; post-compact 3.5K / 4K.
 - `AGENTS.md` discovery lives here but injection logic is in `agents-md-core`.
-- Parent: [`packages/AGENTS.md`](../AGENTS.md)
+- Parent: `packages/AGENTS.md`

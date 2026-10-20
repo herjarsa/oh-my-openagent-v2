@@ -111,5 +111,5 @@ the `config-reload` builtin spawns a filesystem-watch worker per session
 (tracked upstream as senpi#1794); with that builtin disabled the increment is 0.
 It is linear, not flat; size a long-lived daemon from those numbers.
 
-See also: [omob dev binary](./omob-dev-binary.md), [omo.json](./omo-json.md),
-[senpi-task guide](../guide/senpi-task.md).
+See also: omob dev binary, omo.json,
+senpi-task guide.

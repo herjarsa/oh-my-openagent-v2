@@ -6,7 +6,7 @@ describe("download stats automation", () => {
   test("#given package and release counts #when collected #then stats use aggregate download sources", async () => {
     // given
     const stats = await collectDownloadStats({
-      fetchJson: async (url) => ({ downloads: url.includes("lazycodex-ai") ? 30 : 10 }),
+      fetchJson: async (url) => ({ downloads: url.includes("oh-my-openagent") ? 30 : 10 }),
       runGhApi: async () => [
         { assets: [{ download_count: 4 }, { download_count: 6 }] },
         { assets: [{ download_count: 9 }] },
@@ -28,7 +28,7 @@ describe("download stats automation", () => {
         source: "github_release",
       },
     })
-    expect(events.filter((event) => event.properties.source === "npm")).toHaveLength(3)
+    expect(events.filter((event) => event.properties.source === "npm")).toHaveLength(2)
   })
 
   test("#given slurped GitHub release pages #when collected #then stats aggregate every page", async () => {

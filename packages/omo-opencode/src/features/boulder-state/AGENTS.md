@@ -6,7 +6,7 @@
 
 10 files (~1k LOC excl. tests). Tracks Sisyphus's "boulder" — the active work plan being rolled across sessions, worktrees, and subagent task delegations. Named after the Sisyphus myth: the boulder must keep rolling until the plan is complete.
 
-Inspected interactively via `bunx oh-my-opencode boulder` (see [`src/cli/boulder/`](../../cli/boulder)).
+Inspected interactively via `bunx oh-my-opencode boulder` (see `src/cli/boulder/`).
 
 ## SCHEMA (v2)
 
@@ -57,10 +57,10 @@ session.completed
 
 | Where | What |
 |-------|------|
-| [`src/cli/boulder/`](../../cli/boulder) | CLI inspector formats this state |
-| [`src/hooks/atlas/`](../../hooks/atlas) | Reads work state + `task_sessions` (subagent resume); drives boulder-complete and parallel-delegation prompts |
-| [`src/hooks/ulw-execute/`](../../hooks/ulw-execute) | Creates the BoulderState on `/ulw-execute` invocation |
-| [`src/hooks/todo-continuation-enforcer/`](../../hooks/todo-continuation-enforcer) | Session-idle continuation when boulder incomplete |
+| `src/cli/boulder/` | CLI inspector formats this state |
+| `src/hooks/atlas/` | Reads work state + `task_sessions` (subagent resume); drives boulder-complete and parallel-delegation prompts |
+| `src/hooks/ulw-execute/` | Creates the BoulderState on `/ulw-execute` invocation |
+| `src/hooks/todo-continuation-enforcer/` | Session-idle continuation when boulder incomplete |
 
 ## STORAGE
 
