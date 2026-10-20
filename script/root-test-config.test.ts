@@ -34,11 +34,17 @@ describe("root test Bun config", () => {
     }
   })
 
-  test("#given the dedicated Senpi compatibility job #when root tests run #then omo-senpi is excluded", () => {
+  test("#given the OpenCode-only fork #when root tests run #then no removed-harness path is excluded", () => {
     expect(existsSync(rootConfigPath)).toBe(true)
     if (!existsSync(rootConfigPath)) return
 
-    expect(quotedPatterns(readFileSync(rootConfigPath, "utf8"))).toContain("packages/omo-senpi/**")
+    const rootPatterns = quotedPatterns(readFileSync(rootConfigPath, "utf8"))
+    for (const pattern of rootPatterns) {
+      expect(pattern).not.toContain("omo-senpi")
+      expect(pattern).not.toContain("senpi-task")
+      expect(pattern).not.toContain("omo-codex")
+      expect(pattern).not.toContain("omo-native")
+    }
   })
 
   test("#given bun 1.3.x test argv #when CI selects the dedicated config #then --config= is passed before test", () => {
@@ -49,12 +55,8 @@ describe("root test Bun config", () => {
     expect(workflow).not.toContain("--path-ignore-patterns=")
   })
 
-  test("#given bunfig.root.toml #when bun loads it via --config= #then Senpi tests are ignored", () => {
-    const output = spawnBun([
-      "--config=bunfig.root.toml",
-      "test",
-      "packages/omo-senpi/src/components/memory/status.test.ts",
-    ])
+  test("#given bunfig.root.toml #when bun loads it via --config= #then vendored web tests are ignored", () => {
+    const output = spawnBun(["--config=bunfig.root.toml", "test", "packages/web"])
     expect(output).toContain("filters did not match any test files")
   })
 })

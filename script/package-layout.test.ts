@@ -7,22 +7,9 @@ import { fileURLToPath } from "node:url"
 const repositoryRoot = fileURLToPath(new URL("..", import.meta.url))
 const commandRoots = [".opencode/command", ".agents/command"] as const
 const skillRoots = [".opencode/skills", ".agents/skills"] as const
-const codexMaterializedRuntimePayloadPaths = [
+const openCodeMaterializedRuntimePayloadPaths = [
   "dist/cli/index.js",
   "dist/cli-node/index.js",
-  "packages/omo-codex/plugin/components/bootstrap/dist/cli.js",
-  "packages/omo-codex/plugin/components/bootstrap/scripts/bootstrap.ps1",
-  "packages/omo-codex/plugin/components/bootstrap/scripts/node-dispatch.ps1",
-  "packages/omo-codex/plugin/components/comment-checker/dist/cli.js",
-  "packages/omo-codex/plugin/components/git-bash/dist/cli.js",
-  "packages/omo-codex/plugin/components/lazycodex-executor-verify/dist/cli.js",
-  "packages/omo-codex/plugin/components/lsp/dist/cli.js",
-  "packages/omo-codex/plugin/components/rules/dist/cli.js",
-  "packages/omo-codex/plugin/components/ulw-execute-continuation/dist/cli.js",
-  "packages/omo-codex/plugin/components/teammode/dist/cli.js",
-  "packages/omo-codex/plugin/components/telemetry/dist/cli.js",
-  "packages/omo-codex/plugin/components/ultrawork/dist/cli.js",
-  "packages/omo-codex/plugin/components/ulw-loop/dist/cli.js",
 ] as const
 const webTerminalVisualQaRuntimePaths = [
   "script/qa/strip-ansi.mjs",
@@ -180,7 +167,7 @@ describe("published package layout", () => {
     return expect(gitmodules).resolves.not.toContain("packages/lsp-tools-mcp")
   })
 
-  test("#given Codex LSP file dependency #when packing package #then lsp-tools-mcp package metadata ships", async () => {
+  test("#given LSP file dependency #when packing package #then lsp-tools-mcp package metadata ships", async () => {
     // given
     const expectedPackageRootManifest = "packages/lsp-tools-mcp/package.json"
 
@@ -191,23 +178,10 @@ describe("published package layout", () => {
     expect(packedPaths.has(expectedPackageRootManifest)).toBe(true)
   }, packDryRunTimeoutMs)
 
-  test("#given generated Codex installer bundle #when packing package #then generated output ships and stale forks do not", async () => {
+
+  test("#given OpenCode materialized runtime payloads #when packing package #then every current payload target ships", async () => {
     // given
-    const expectedGeneratedInstaller = "packages/omo-codex/scripts/install-dist/install-local.mjs"
-    const obsoleteForkPrefix = "packages/omo-codex/scripts/install/"
-
-    // when
-    const packedPaths = await packDryRunPaths()
-    const packedObsoleteForks = [...packedPaths].filter((packagePath) => packagePath.startsWith(obsoleteForkPrefix))
-
-    // then
-    expect(packedPaths.has(expectedGeneratedInstaller)).toBe(true)
-    expect(packedObsoleteForks).toEqual([])
-  }, packDryRunTimeoutMs)
-
-  test("#given Codex materialized runtime payloads #when packing package #then every current payload target ships", async () => {
-    // given
-    const expectedRuntimePaths = codexMaterializedRuntimePayloadPaths
+    const expectedRuntimePaths = openCodeMaterializedRuntimePayloadPaths
 
     // when
     const packedPaths = await packDryRunPaths()
@@ -240,19 +214,6 @@ describe("published package layout", () => {
     // then
     expect(missingDocPaths).toEqual([])
   }, packDryRunTimeoutMs)
-
-  test("#given Codex installer source tree #when checking obsolete forks #then hand-written install mjs files are absent", () => {
-    // given
-    const obsoleteForkRoot = join(repositoryRoot, "packages/omo-codex/scripts/install")
-
-    // when
-    const obsoleteForks = existsSync(obsoleteForkRoot)
-      ? collectPackagePathsRecursively(obsoleteForkRoot).filter((packagePath) => packagePath.endsWith(".mjs"))
-      : []
-
-    // then
-    expect(obsoleteForks).toEqual([])
-  })
 
   test("#given dot-directory command and skill assets #when packing package #then slash-command discovery assets ship", async () => {
     // given

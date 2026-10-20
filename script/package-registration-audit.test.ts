@@ -34,22 +34,10 @@ const mcpPackagePaths: readonly string[] = [
   "packages/lsp-daemon",
   "packages/lsp-tools-mcp",
 ] as const
-const adapterPackagePaths: readonly string[] = [
-  "packages/omo-codex",
-  "packages/omo-senpi",
-  "packages/senpi-task",
-  "packages/omo-opencode",
-  "packages/omo-native",
-] as const
-const enginePackagePaths: readonly string[] = [
-  "packages/senpi-desktop-prelude",
-  "packages/senpi-desktop-protocol",
-  "packages/senpi-desktop-engine",
-  "packages/senpi-desktop-service",
-  "packages/senpi-desktop-tool",
-] as const
+const adapterPackagePaths: readonly string[] = ["packages/omo-opencode"] as const
+const enginePackagePaths: readonly string[] = [] as const
 const skillPackagePaths: readonly string[] = ["packages/shared-skills"] as const
-const shimSourceRoots: readonly string[] = ["packages/omo-opencode/src", "packages/omo-codex/src"] as const
+const shimSourceRoots: readonly string[] = ["packages/omo-opencode/src"] as const
 const reExportShimFirstLinePattern = /^export (\*|\{).*from ["'](@oh-my-opencode\/[^/"']+)/
 
 const layerRanks = {
@@ -191,12 +179,8 @@ function unclassifiedRootPackageWorkspaces(workspaces: readonly string[]): reado
   return workspaces.filter((path) => path.startsWith("packages/") && !isManagedWorkspacePackage(path)).toSorted()
 }
 
-function isNestedCodexPluginPackage(path: string): boolean {
-  return path.startsWith("packages/omo-codex/plugin/")
-}
-
-function isRootManagedTypecheckPackage(path: string): boolean {
-  return !isNestedCodexPluginPackage(path)
+function isRootManagedTypecheckPackage(_path: string): boolean {
+  return true
 }
 
 function packageLayer(path: string): keyof typeof layerRanks | undefined {
@@ -237,9 +221,7 @@ describe("package registration audit", () => {
     const expectedDevDependencyNames = (
       await Promise.all(
         managedWorkspacePaths
-          // omo-opencode stays linked because the Senpi build imports its config-migration export.
-          // omo-native publishes under its own npm name and is not an internal workspace devDependency.
-          .filter((path) => path !== "packages/omo-native")
+          // omo-opencode is the OpenCode-only build entry and stays linked as a workspace devDependency.
           .map((path) => readManifest(join(path, "package.json")).then((manifest) => manifest.name)),
       )
     ).toSorted()
