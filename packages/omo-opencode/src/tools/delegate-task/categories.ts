@@ -67,10 +67,14 @@ export function resolveCategoryConfig(
 
   let userConfig = configuredUserConfig
   if (configuredUserConfig?.models && availableModels && availableModels.size > 0) {
-    const models = configuredUserConfig.models
-      .map((entry) => resolveAvailableModelEntry(entry, availableModels))
-      .filter((entry): entry is CategoryModelEntry => entry !== null)
-    if (models.length === 0) return null
+    // The user owns the model and the provider: an entry the plugin's catalog does not know
+    // is KEPT, not dropped. The chain is the runtime fallback (the background agent retries
+    // the next rung when the request fails), so skipping an entry here would silently run a
+    // model other than the configured one. An entry the catalog DOES know is still resolved
+    // to the real model id.
+    const models = configuredUserConfig.models.map(
+      (entry) => resolveAvailableModelEntry(entry, availableModels) ?? entry,
+    )
     userConfig = { ...configuredUserConfig, models }
   }
 
