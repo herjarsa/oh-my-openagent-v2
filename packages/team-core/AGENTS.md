@@ -4,7 +4,7 @@
 
 ## OVERVIEW
 
-Harness-neutral domain primitives for team-mode: registry, mailbox, tasklist, state store, worktree, and tmux layout. Consumed by the OpenCode adapter at [omo-opencode team-mode](../omo-opencode/src/features/team-mode/AGENTS.md) (gated on `team_mode.enabled`). Package: `@oh-my-opencode/team-core`.
+Harness-neutral domain primitives for team-mode: registry, mailbox, tasklist, state store, worktree, and tmux layout. Consumed by the OpenCode adapter at omo-opencode team-mode (gated on `team_mode.enabled`). Package: `@oh-my-opencode/team-core`.
 
 ## DOMAIN PRIMITIVES
 
@@ -39,7 +39,7 @@ A member mailbox inbox is `<stateDir>/teams/runtime/<teamRunId>/inboxes/<memberN
 - **Zod schemas** in `types.ts` define `TeamSpec`, `Member`, `Message`, `Task`, `RuntimeState`, and `AGENT_ELIGIBILITY_REGISTRY`.
 - **Eligible agents** are sisyphus, atlas, sisyphus-junior, and hephaestus (conditional). Hard-reject agents are blocked at parse time.
 - **Atomic writes** via `team-state-store/locks.ts`: temp file + rename, with file-based locking for task claims and state transitions.
-- Parent: [`packages/AGENTS.md`](../AGENTS.md).
+- Parent: `packages/AGENTS.md`.
 
 ## QA
 

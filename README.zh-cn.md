@@ -1,7 +1,7 @@
 > [!NOTE]
 > **OmO 测试版: OmO ❤️ Pi**
 > 使用 `bun add -g omo-ai@beta` 试用。记忆系统、CodeMode、Anthropic 订阅,全部支持。
-> [![OmO Herdr DAG - live OmO workflow DAGs in a Herdr side pane](./.github/assets/omo-herdr-dag.png)](https://github.com/jc01rho/omo-herdr-dag)
+> ![OmO Herdr DAG - live OmO workflow DAGs in a Herdr side pane](https://github.com/jc01rho/omo-herdr-dag)
 > *只需在提示词中输入 "mass ulw" - 你就是图工程的大师。多模型 ultracode,搭配更出色的记忆系统。(右侧面板是 [omo-herdr-dag](https://github.com/jc01rho/omo-herdr-dag))*
 
 
@@ -13,12 +13,12 @@
 > [!NOTE]
 > **正在进行多 Harness 代理操作系统重构**
 >
-> 我们正在重构代码库以支持多个代理 harness（OpenCode、Codex、Pi、Claude Code 等）。如果您有兴趣贡献，请先阅读 [ROADMAP](./ROADMAP.md)。与 ROADMAP 相关的 PR 请使用 `ROADMAP` 标签。
+> 我们正在重构代码库以支持多个代理 harness（OpenCode、Codex、Pi、Claude Code 等）。如果您有兴趣贡献，请先阅读 ROADMAP。与 ROADMAP 相关的 PR 请使用 `ROADMAP` 标签。
 
 
 > [!NOTE]
 >
-> [![Sisyphus Labs - Meet Dori. Not a demo. Subscribes to everything.](./.github/assets/sisyphuslabs.png?v=4)](https://sisyphuslabs.ai)
+> ![Sisyphus Labs - Meet Dori. Not a demo. Subscribes to everything.](https://sisyphuslabs.ai)
 > > **OmO 由上述的 Jobdori 进行维护。认识你专属的 Jobdori — Dori。<br />[在此处](https://sisyphuslabs.ai)加入等待名单。**
 
 > [!TIP]
@@ -35,9 +35,9 @@
 
 <a href="https://github.com/code-yeongyu/oh-my-openagent#oh-my-openagent"><img src="./.github/assets/omo-icon-light.svg" alt="OmO" width="200" /></a>
 
-[![Oh My OpenAgent](./.github/assets/hero.jpg)](https://github.com/code-yeongyu/oh-my-openagent#oh-my-openagent)
+![Oh My OpenAgent](https://github.com/code-yeongyu/oh-my-openagent#oh-my-openagent)
 
-[![Preview](./.github/assets/omo.png)](https://github.com/code-yeongyu/oh-my-openagent#oh-my-openagent)
+![Preview](https://github.com/code-yeongyu/oh-my-openagent#oh-my-openagent)
 
 </div>
 
@@ -61,7 +61,7 @@
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/code-yeongyu/oh-my-openagent)
 [![Docs](https://img.shields.io/badge/docs-omo.dev-369eff?labelColor=black&logo=readthedocs&logoColor=white&style=flat-square)](https://omo.dev/docs)
 
-[English](README.md) | [한국어](README.ko.md) | [日本語](README.ja.md) | [简体中文](README.zh-cn.md)
+English | 한국어 | 日本語 | 简体中文
 
 </div>
 
@@ -111,7 +111,7 @@ Install and configure oh-my-openagent by following the instructions here:
 https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/refs/heads/dev/docs/guide/installation.md
 ```
 
-或者你也可以直接去读 [安装指南](docs/guide/installation.md)，但说真的，让 Agent 去干吧。人类在配置环境的时候，总是容易敲错字母。
+或者你也可以直接去读 安装指南，但说真的，让 Agent 去干吧。人类在配置环境的时候，总是容易敲错字母。
 
 ### 给 LLM Agent 看的
 
@@ -125,9 +125,9 @@ curl -fsSL https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/refs/h
 
 推荐的 `bunx`/`npx` 调用方式是 `oh-my-openagent install`（或原来的 `oh-my-opencode install`）。安装完成后，短命令是 `omo-agent-toolkit`。这些包在本次大版本中移除了 `omo` bin，这个名字现在归 OmO Native 所有，通过 `bun add -g omo-ai@beta` 安装（仅 beta 通道）。**不要**使用 `bunx omo` 或 `npx omo`：npm 上的 `omo` 是另一位作者的无关包，这两条命令会解析到它。OmO Native 的包名是 `omo-ai`。`lazycodex-ai` 是一个单一用途的 Node/npm 安装器包：`npx lazycodex-ai install` 会直接进入 Codex Light 安装器。它不是 Codex marketplace 的名字（marketplace 仓库是 `code-yeongyu/lazycodex`）。Codex 看到的是 marketplace `sisyphuslabs` 和插件 `omo`，以 `omo@sisyphuslabs` 启用。
 
-匿名遥测默认开启，用于统计活跃安装数(DAU/WAU/MAU)。每台机器每个 UTC 日最多发送一次事件,使用哈希化的安装标识符,绝不会使用原始主机名,且不会创建 PostHog person profile。可通过 `OMO_SEND_ANONYMOUS_TELEMETRY=0` 或 `OMO_DISABLE_POSTHOG=1` 禁用。详见 [隐私政策](docs/legal/privacy-policy.md) 和 [服务条款](docs/legal/terms-of-service.md)。
+匿名遥测默认开启，用于统计活跃安装数(DAU/WAU/MAU)。每台机器每个 UTC 日最多发送一次事件,使用哈希化的安装标识符,绝不会使用原始主机名,且不会创建 PostHog person profile。可通过 `OMO_SEND_ANONYMOUS_TELEMETRY=0` 或 `OMO_DISABLE_POSTHOG=1` 禁用。详见 隐私政策 和 服务条款。
 
-**Ultimate、Light 与 OmO Native:** oh-my-openagent 以同一产品的三个版本发布：两个插件加载到你已经在用的宿主里，另有一个独立版本。**Ultimate 版本**（`bunx oh-my-openagent install` 或 `--platform=opencode`，默认值）在 OpenCode 上提供完整功能 —— 11 个智能体、54+ 个生命周期钩子、Team Mode、4 个内置 MCP（websearch、context7、grep_app、lsp）、所有斜杠命令、IntentGate 模式。**Light 版本**（`npx lazycodex-ai install`）提供能够干净地移植到 OpenAI Codex CLI 插件系统的 核心组件（`rules`、`comment-checker`、`git-bash`、`lsp`、`ultrawork`、`ulw-loop`、`ulw-execute-continuation`、`telemetry`），外加 `teammode` 和配套组件（`bootstrap`、`lcx` 等），并会把 Codex 智能体 TOML 安装到 `~/.codex/agents/`。要同时安装这两个插件版本，使用 `--platform=both`。**OmO Native（独立，beta）** 是内建 OMO 扩展的 `omo` 命令：`bun add -g omo-ai@beta`，然后运行 `omo`。它从 `omo-ai@beta` 安装，不加载进 OpenCode 或 Codex；仅提供 beta 通道，直接 `bun add -g omo-ai` 会按设计失败。从 OpenCode 版本迁移请参阅 [Migrating from OpenCode](docs/guide/migrating-from-opencode.md)。Codex 专用遥测可通过 `OMO_CODEX_DISABLE_POSTHOG=1` 或 `OMO_CODEX_SEND_ANONYMOUS_TELEMETRY=0` 禁用。
+**Ultimate、Light 与 OmO Native:** oh-my-openagent 以同一产品的三个版本发布：两个插件加载到你已经在用的宿主里，另有一个独立版本。**Ultimate 版本**（`bunx oh-my-openagent install` 或 `--platform=opencode`，默认值）在 OpenCode 上提供完整功能 —— 11 个智能体、54+ 个生命周期钩子、Team Mode、4 个内置 MCP（websearch、context7、grep_app、lsp）、所有斜杠命令、IntentGate 模式。**Light 版本**（`npx lazycodex-ai install`）提供能够干净地移植到 OpenAI Codex CLI 插件系统的 核心组件（`rules`、`comment-checker`、`git-bash`、`lsp`、`ultrawork`、`ulw-loop`、`ulw-execute-continuation`、`telemetry`），外加 `teammode` 和配套组件（`bootstrap`、`lcx` 等），并会把 Codex 智能体 TOML 安装到 `~/.codex/agents/`。要同时安装这两个插件版本，使用 `--platform=both`。**OmO Native（独立，beta）** 是内建 OMO 扩展的 `omo` 命令：`bun add -g omo-ai@beta`，然后运行 `omo`。它从 `omo-ai@beta` 安装，不加载进 OpenCode 或 Codex；仅提供 beta 通道，直接 `bun add -g omo-ai` 会按设计失败。从 OpenCode 版本迁移请参阅 Migrating from OpenCode。Codex 专用遥测可通过 `OMO_CODEX_DISABLE_POSTHOG=1` 或 `OMO_CODEX_SEND_ANONYMOUS_TELEMETRY=0` 禁用。
 
 ---
 
@@ -143,7 +143,7 @@ Read this and tell me why it's not just another boilerplate: https://raw.githubu
 
 我们正在重构代码库以支持多个代理 harness（OpenCode、Codex、Pi、Claude Code 等）。当前最紧迫的任务是包分层重构：将纯 TypeScript 核心逻辑、MCP 服务器、技能和适配器 shim 分离到不同的层，以便跨 harness 复用而不产生重复。
 
-如果你有兴趣贡献，请先阅读 [ROADMAP](./ROADMAP.md)。与此重构相关的 PR 请使用 `ROADMAP` 标签，以便我们追踪。
+如果你有兴趣贡献，请先阅读 ROADMAP。与此重构相关的 PR 请使用 `ROADMAP` 标签，以便我们追踪。
 
 
 ## 核心亮点
@@ -165,8 +165,7 @@ Read this and tell me why it's not just another boilerplate: https://raw.githubu
 |       | 特性                                                            | Editions | 功能说明                                                                                                                                                                        |
 | :---: | :-------------------------------------------------------------- | :------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 |   🤖   | **自律军团 (Discipline Agents)**                                | Ultimate | 主 Agent 负责调度架构师咨询、Librarian、Explore 和类别工作者。一支完整的 AI 开发团队并行工作。                                                                                   |
-|   🧩   | **Codex CLI Light Edition**                                      | Light    | 在 OpenAI Codex CLI 中运行的 omo 的可移植组件 (rules, comment-checker, git-bash, LSP, ultrawork, ulw-loop, ulw-execute continuation, telemetry, teammode 等)。安装: `npx lazycodex-ai install`。                    |
-|   👥   | **Team Mode** (选择性启用)                                       | Ultimate | 领导 Agent + 最多 8 个并行成员，实时 tmux 可视化，专用 `team_*` 工具家族。驱动 `hyperplan`(5 个敌对评论者) 和 `security-research`(3 个猎手 + 2 个 PoC 工程师)。[文档 →](docs/guide/team-mode.md) |
+|   👥   | **Team Mode** (选择性启用)                                       | Ultimate | 领导 Agent + 最多 8 个并行成员，实时 tmux 可视化，专用 `team_*` 工具家族。驱动 `hyperplan`(5 个敌对评论者) 和 `security-research`(3 个猎手 + 2 个 PoC 工程师)。文档 → |
 |   ⚡   | **`ultrawork` / `ulw`**                                         | Both     | 一键触发，所有智能体(Ultimate)或 Codex `ultrawork` 组件(Light)出动。任务完成前绝不罢休。                                                                                          |
 |   🚪   | **[IntentGate 意图门](https://factory.ai/news/terminal-bench)** | Ultimate | 检测 `ultrawork`/`ulw`、`team`、`hyperplan` 关键词(不做语义层面的意图分类)。(Light 仅识别 `ulw` / `ultrawork` 关键词。)                                                       |
 |   🔗   | **基于哈希的编辑工具**                                          | Ultimate | Hashline (`LINE#ID`) 编辑/读取标记。需手动启用：在 `~/.omo/omo.jsonc` 中设置 `hashline_edit: true`、0% 错误修改。灵感来自 [oh-my-pi](https://github.com/can1357/oh-my-pi)。[The Harness Problem →](https://blog.can.ac/2026/02/12/the-harness-problem/) (Codex 使用其原生 `apply_patch`。) |
@@ -192,7 +191,7 @@ Read this and tell me why it's not just another boilerplate: https://raw.githubu
 
 **Ultrawork Planner** (`/ulw-plan`) 是你的战略规划师。他通过访谈模式，在动一行代码之前，先通过提问确定范围并构建详尽的执行计划。随后 `/ulw-execute` 在同一会话中执行该计划。
 
-每一个提示词预设都针对其底层模型的特点进行了专门调优。你无需手动来回切换模型。[阅读背景设定了解更多 →](docs/guide/overview.md)
+每一个提示词预设都针对其底层模型的特点进行了专门调优。你无需手动来回切换模型。阅读背景设定了解更多 →
 
 > Anthropic [因为我们屏蔽了 OpenCode](https://x.com/thdxr/status/2010149530486911014)。这就是为什么我们将主 Agent 称为"正牌工匠 (The Legitimate Craftsman)"。这是一个故意的讽刺。
 >
@@ -220,7 +219,7 @@ Read this and tell me why it's not just another boilerplate: https://raw.githubu
 - **`hyperplan`** — 5 个敌对 Agent 在写下第一行代码之前，从正交角度撕碎你的计划。
 - **`security-research`** — 3 个漏洞猎手 + 2 个 PoC 工程师并行审计你的代码库。严重性按 *实际可利用性* 校准。
 
-> **默认关闭。需要时再开。** [Team Mode 完整指南 →](docs/guide/team-mode.md)
+> **默认关闭。需要时再开。** Team Mode 完整指南 →
 
 ### 智能体调度机制
 
@@ -307,11 +306,11 @@ Ultrawork Planner (`/ulw-plan`) **会像一个真实的主管那样去采访你*
 
 想加你自己的？放进 `.opencode/skills/*/SKILL.md` 或者 `~/.config/opencode/skills/*/SKILL.md` 就行。
 
-**想看所有的硬核功能说明吗？** 点击查看 **[详细特性文档 (Features)](docs/reference/features.md)**，深入了解 Agent 架构、Hook 流水线、核心工具链和所有的内置 MCP 等等。
+**想看所有的硬核功能说明吗？** 点击查看 **详细特性文档 (Features)**，深入了解 Agent 架构、Hook 流水线、核心工具链和所有的内置 MCP 等等。
 
 ---
 
-> **第一次用 oh-my-openagent？** 阅读 **[Overview](docs/guide/overview.md)** 了解你拥有哪些功能，或查看 **[Orchestration Guide](docs/guide/orchestration.md)** 了解 Agent 如何协作。
+> **第一次用 oh-my-openagent？** 阅读 **Overview** 了解你拥有哪些功能，或查看 **Orchestration Guide** 了解 Agent 如何协作。
 
 ## 如何卸载
 
@@ -365,7 +364,7 @@ Ultrawork Planner (`/ulw-plan`) **会像一个真实的主管那样去采访你*
 
 那种"这个功能本来就该一直存在"的感觉。一用就回不去。
 
-完整内容请见 [Features Documentation](docs/reference/features.md)。
+完整内容请见 Features Documentation。
 
 **简要概览：**
 - **Agents**: 主 Agent（调度器）、Ultrawork Planner（`/ulw-plan`）、架构师咨询（架构/调试）、Librarian（文档/代码检索）、Explore（快速 grep）、Multimodal Looker
@@ -374,20 +373,20 @@ Ultrawork Planner (`/ulw-plan`) **会像一个真实的主管那样去采访你*
 - **基于哈希的编辑工具**（通过 `hashline_edit: true` 手动启用）: `LINE#ID` 引用在应用每次修改前都会验证内容。外科手术级编辑，零陈旧行错误
 - **上下文注入**: 自动注入 AGENTS.md、README.md、条件规则
 - **Claude Code 兼容**: 完整的 Hook 系统、命令、技能、Agents、MCP
-- **内置 MCP**: websearch（Exa）、context7（文档）、grep_app（GitHub 检索）、lsp ——由插件在运行时注入，不会显示在 `opencode mcp list`  中(参见文档 [MCP docs](docs/reference/features.md#native-vs-plugin-injected-mcps))
+- **内置 MCP**: websearch（Exa）、context7（文档）、grep_app（GitHub 检索）、lsp ——由插件在运行时注入，不会显示在 `opencode mcp list`  中(参见文档 MCP docs)
 - **会话工具**: 列出、读取、搜索、分析会话历史
 - **效率功能**: Goal、Todo Enforcer、Comment Checker、Think Mode 等
 - **Doctor 命令**: 内置诊断（`bunx oh-my-opencode doctor`），验证插件注册、配置、模型和环境
 - **模型回退**: `fallback_models` 可以在同一数组中混合使用普通模型字符串和 per-fallback 对象配置
 - **文件提示词**: 通过 `file://` 在 Agent 配置中从文件加载提示词
 - **会话恢复**: 从会话错误、上下文窗口上限、API 失败中自动恢复
-- **模型设置**: Agent 与模型的匹配已内置在 [安装指南](docs/guide/installation.md#step-5-understand-your-model-setup) 中
+- **模型设置**: Agent 与模型的匹配已内置在 安装指南 中
 
 ## 配置
 
 我们有自己主见的默认值。如果你真要改，也可以调。
 
-详细内容见 [Configuration Documentation](docs/reference/configuration.md)。
+详细内容见 Configuration Documentation。
 
 **简要概览：**
 - **配置文件位置**: 用户 `~/.omo/omo.jsonc`，同时会从当前目录向上查找项目 `.omo/omo.jsonc`（查到 `$HOME` 为止），离当前目录越近的优先级越高。旧版 `oh-my-*` 文件只会被迁移一次到 `omo.jsonc`。
@@ -405,7 +404,7 @@ Ultrawork Planner (`/ulw-plan`) **会像一个真实的主管那样去采访你*
 
 ## 闲聊环节 (Author's Note)
 
-**想知道做这个插件的哲学理念吗？** 阅读 [Ultrawork Manifesto](docs/manifesto.md)。
+**想知道做这个插件的哲学理念吗？** 阅读 Ultrawork Manifesto。
 
 ---
 

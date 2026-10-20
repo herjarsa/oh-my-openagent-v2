@@ -41,7 +41,7 @@ bash scripts/lib/common.sh --self-check    # confirm the harness + deps
 
 **Docker is the default QA surface.** Run QA inside a disposable container that
 has the latest opencode and a copy of your config, with the host untouched:
-`script/agent/qa-docker.sh` (see [references/docker-qa.md](references/docker-qa.md)).
+`script/agent/qa-docker.sh` (see references/docker-qa.md).
 The local scripts below are the fallback for when Docker is unavailable or on
 Windows.
 

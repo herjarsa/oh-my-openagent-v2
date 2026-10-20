@@ -12,8 +12,8 @@ Confirmed by grep: consumed by `omo-opencode` skill features in ~70 files across
 
 | Area | Purpose | Sub-AGENTS.md |
 |------|---------|---------------|
-| `features/opencode-skill-loader/` | Multi-source SKILL.md discovery, parse, merge, deduplication | [src/features/opencode-skill-loader/AGENTS.md](src/features/opencode-skill-loader/AGENTS.md) |
-| `features/builtin-skills/` | Built-in skill catalog (git-master, browser variants, frontend, debugging, visual-qa, security, review-work, team-mode) | [src/features/builtin-skills/AGENTS.md](src/features/builtin-skills/AGENTS.md) |
+| `features/opencode-skill-loader/` | Multi-source SKILL.md discovery, parse, merge, deduplication | src/features/opencode-skill-loader/AGENTS.md |
+| `features/builtin-skills/` | Built-in skill catalog (git-master, browser variants, frontend, debugging, visual-qa, security, review-work, team-mode) | src/features/builtin-skills/AGENTS.md |
 | `features/opencode-runtime-skills/` | Runtime security skill source (security-research, security-review) | — |
 | `tools/skill/` | Skill name matching and scope priority sorting | — |
 | `hooks/auto-slash-command/` | Slash command detection and processed command store | — |
@@ -27,4 +27,4 @@ Confirmed by grep: consumed by `omo-opencode` skill features in ~70 files across
 - **Runtime skill source:** `features/opencode-runtime-skills/` exports `selectRuntimeSecuritySkills()` and `createRuntimeSkillSourceServer()`; dual-runtime (Bun.serve preferred, Node http fallback), loopback-only, `cache-control: no-store`, 404 on unknown paths.
 - **123 TypeScript files** under `src/` (86 non-test). Barrel entry `src/index.ts`.
 
-Parent: [packages/AGENTS.md](../AGENTS.md)
+Parent: packages/AGENTS.md

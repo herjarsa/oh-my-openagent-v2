@@ -43,4 +43,4 @@ Harness-neutral MCP client lifecycle and OAuth primitives. Consumed by `omo-open
 - **Cleanup:** idle clients evicted after 5 minutes. Process signal handlers close all transports on SIGINT/SIGTERM. `disconnectAll()` is safe across plugin reloads.
 - **Consumers:** `packages/omo-opencode/src/features/skill-mcp-manager/`, `packages/omo-opencode/src/features/mcp-oauth/`, and `packages/omo-opencode/src/cli/mcp-oauth/` import this Core package.
 
-Parent: [`packages/AGENTS.md`](../AGENTS.md)
+Parent: `packages/AGENTS.md`

@@ -98,7 +98,6 @@ Each refused item is named in the summary with its reason and the fix.
 
 - `small_model`: omo has no small-model setting.
 - OpenCode's own primary agents `build` and `plan`: omo's main session has no per-mode agent, it runs the default model.
-- An agent name omo doesn't have (for example `oracle`): omo's agents are `explore`, `librarian`, `plan-consultant`, `plan-reviewer` and the three `omo-native-*` reviewers. Route that work through a category instead. Setup names each dropped one rather than creating a promptless agent of that name.
 - Overrides on a provider omo already serves (a custom `baseURL` for `openai`, say): set them in `models.json` by hand if you need them.
 - OpenCode UI settings (`theme`, `share`, `autoupdate`, keybinds), tool permissions and OpenCode plugin hooks: these belong to OpenCode's TUI and plugin system and have no counterpart in the engine.
 
@@ -192,4 +191,4 @@ bun remove -g omo-ai
 
 (or `npm uninstall -g omo-ai`). On a bun install, omo-ai replaces bun's `omo` symlink with a small launcher shim so each start skips a node boot, and `bun remove` leaves that file behind; delete it with `rm ~/.bun/bin/omo` (the shim says so in its header). Your state under `~/.omo/agent/` and `~/.omo/omo.jsonc` stays on disk; delete it yourself if you want a clean slate. The OpenCode plugin, if you kept it, is unaffected.
 
-See also: [Installation](./installation.md#omo-native-beta-omo-via-omo-ai) for where omo keeps its state, and [Agent Model Matching](./agent-model-matching.md) for choosing models per category.
+See also: Installation for where omo keeps its state, and Agent Model Matching for choosing models per category.

@@ -45,7 +45,7 @@ Ask @explore for the policy on this feature
 | plan-consultant   | Same read-only allowlist; plan-gated                                                     |
 | plan-reviewer     | Same read-only allowlist; plan-gated and one-shot (`task_send` is refused)              |
 
-The OpenCode edition's agent roster, tab-cycling order, and agent-specific hooks are documented separately. See [OpenCode edition configuration (legacy)](./opencode-config.md).
+The OpenCode edition's agent roster, tab-cycling order, and agent-specific hooks are documented separately. See OpenCode edition configuration (legacy).
 
 ### Instruction Files vs Enforcement
 
@@ -136,7 +136,7 @@ Customize agent models, prompts, and permissions in the `[opencode]` block of `~
 
 Parallel multi-agent coordination modeled after Claude Code's experimental Agent Teams. Enable via `team_mode.enabled: true`. Exposes 12 `team_*` tools for spawning a lead + up to 8 members, a shared deferred-ack mailbox, a shared task list with file-locked claims, optional per-member git worktrees, and an optional tmux layout that streams each member's session output into dedicated panes.
 
-See the **[Team Mode Guide](../guide/team-mode.md)** for configuration, team spec format, lifecycle, bounds, and storage layout.
+See the **Team Mode Guide** for configuration, team spec format, lifecycle, bounds, and storage layout.
 
 ### Architecture Snapshot (current)
 

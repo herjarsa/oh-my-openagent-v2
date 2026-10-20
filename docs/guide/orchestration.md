@@ -14,7 +14,7 @@ omo-senpi turns one coding session into a coordinated team by separating plannin
 | Complex, and explaining the context is tedious | Type `ulw` (or `ultrawork`) | The main agent enters ultrawork mode: explores, plans in a notepad, delegates, verifies with evidence. |
 | Complex, and you want a written, reviewed plan first | `/ulw-plan`, then `/ulw-execute` | The Ultrawork Planner interviews you and writes `.omo/plans/<slug>.md`. `/ulw-execute` then runs that plan in the same session. |
 | Many tasks where some must wait on others | `mass-ulw` | The main agent defines a dependency graph and drives it through the `workflow` tool, one run per phase. |
-| Several lanes that touch the same module and need to talk mid-flight | Team mode (`team_create`) | The main agent leads background member children. See [Team Mode](./team-mode.md). |
+| Several lanes that touch the same module and need to talk mid-flight | Team mode (`team_create`) | The main agent leads background member children. See Team Mode. |
 
 **Decision flow:**
 
@@ -61,7 +61,7 @@ flowchart TB
 
 ### The main agent
 
-The main agent is whatever model your session is using. It carries the ultrawork directive, the planning skill, and the execution skill; there's no separate "planner agent" or "executor agent" to switch to. Tuned prompt presets exist for the common frontier models, and the planning and execution prompts are written to work across families. See [Agent-Model Matching](./agent-model-matching.md) for the model-specific notes.
+The main agent is whatever model your session is using. It carries the ultrawork directive, the planning skill, and the execution skill; there's no separate "planner agent" or "executor agent" to switch to. Tuned prompt presets exist for the common frontier models, and the planning and execution prompts are written to work across families. See Agent-Model Matching for the model-specific notes.
 
 ### Delegation through `task`
 
@@ -70,7 +70,6 @@ Every spawn provides exactly one of `category` or `subagent_type`:
 - `task(category="...")` routes to **the category worker**: a fresh worker session configured by the category's model and skills. This is how implementation, tests, and QA get done. A category-routed task always takes its model from `omo.json` (`categories.<name>.models`); passing `model` alongside `category` is rejected.
 - `task(subagent_type="...")` invokes a named agent directly. The builtin roster is:
   - Curated read-only agents (in-process, cannot write files): `explore` (codebase grep: "where is X?"), `librarian` (remote repos, official docs, OSS examples), `plan-consultant` (pre-planning gap analysis), `plan-reviewer` (plan review). `plan-consultant` and `plan-reviewer` are **plan-gated**: spawnable only after you explicitly asked for the ulw-plan workflow, a `.omo/plans/*.md` file was touched this session, and `/ulw-execute` hasn't run.
-  - ulw-loop reviewers (they write report artifacts, so they aren't in the read-only set): `omo-native-code-reviewer` (diff, tests, risk), `omo-native-qa-executor` (runs real scenarios, records surface evidence), `omo-native-gate-reviewer` (approves unless it can cite a failed success criterion). The pre-rename `omo-senpi-*` spellings still resolve.
 
 Useful spawn options: `run_in_background: true` for parallel waves (the default posture), `load_skills` to prepend skills to the child's prompt, `name` for a stable handle, `task_summary` for the one-line footer label. Continue a child with `task_send`, peek with `task_output`, end it with `task_cancel`; `/tasks` lists what this session spawned. `plan-reviewer` is one-shot: `task_send` to it is always refused.
 
@@ -245,7 +244,7 @@ When tasks have real ordering (C needs A and B first), `mass-ulw` defines a run 
 
 ## Team Mode
 
-Team mode is for overlapping lanes that need to exchange discoveries mid-flight. The main agent becomes the lead of background member children (`team_create`), sends work with `task_send`, tracks it through `task_create` / `task_list` / `task_update`, and tears down with `team_delete`. Curated read-only agents can't be members. Full details, config schema, and eligibility rules: [Team Mode](./team-mode.md).
+Team mode is for overlapping lanes that need to exchange discoveries mid-flight. The main agent becomes the lead of background member children (`team_create`), sends work with `task_send`, tracks it through `task_create` / `task_list` / `task_update`, and tears down with `team_delete`. Curated read-only agents can't be members. Full details, config schema, and eligibility rules: Team Mode.
 
 ---
 
@@ -278,7 +277,7 @@ Team mode is for overlapping lanes that need to exchange discoveries mid-flight.
 }
 ```
 
-Agent entries accept `model`, `models` (ordered fallback chain), `reasoning`, `tools`, `allowed_subagents`, `disallowed_tools`, `max_turns`, `temperature`, and `disable`. Category entries carry the `models` chain the category worker is built from. The full schema is in the [omo.json reference](../reference/omo-json.md).
+Agent entries accept `model`, `models` (ordered fallback chain), `reasoning`, `tools`, `allowed_subagents`, `disallowed_tools`, `max_turns`, `temperature`, and `disable`. Category entries carry the `models` chain the category worker is built from. The full schema is in the omo.json reference.
 
 ---
 
@@ -317,9 +316,9 @@ Then `/ulw-execute` runs against the written scope instead of treating the task 
 
 ## Further Reading
 
-- [Overview](./overview.md)
-- [Team Mode](./team-mode.md)
-- [Agent-Model Matching](./agent-model-matching.md)
-- [Features Reference](../reference/features.md)
-- [Configuration Reference](../reference/configuration.md)
-- [Manifesto](../manifesto.md)
+- Overview
+- Team Mode
+- Agent-Model Matching
+- Features Reference
+- Configuration Reference
+- Manifesto

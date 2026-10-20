@@ -24,11 +24,10 @@ Owns all static markdown prompt content (`prompts/` tree), bundles it at build t
 ## DEPENDENCIES & CONSUMERS
 
 - **Peer deps:** `@oh-my-opencode/model-core` (`isGptModel`, `isGeminiModel`, `isKimiK2Model`, …), `@oh-my-opencode/utils` (`parseFrontmatter`).
-- **Consumers:** `omo-opencode/src/hooks/keyword-detector/{ultrawork,hyperplan,team}/*.ts` (thin re-export shims), `agents/atlas/agent.ts`, `agents/prometheus/system-prompt.ts`; `omo-codex` resolves `prompts-core/prompts/ultrawork/codex.md` directly (secondary export path).
 
 ## NOTES
 
 - **Edit prompt bodies in `prompts/*.md`, NOT the `.ts` loaders.** The `-prompts.ts` files just import + wrap the markdown.
 - **No `@opencode-ai/*` imports** — enforced by `test/opencode-coupling-audit.test.ts`.
 - **`codex.md` is exported via a secondary package path** (`./prompts/ultrawork/codex.md`) for the Light edition; prometheus stays single-variant (no per-model files).
-- Parent: [`packages/AGENTS.md`](../AGENTS.md).
+- Parent: `packages/AGENTS.md`.

@@ -8,7 +8,6 @@ Node-side launch surface for every public CLI alias. The root shim resolves a pl
 
 | Task | Location | Notes |
 |------|----------|-------|
-| Main launcher | `oh-my-opencode.js` | Entry for `oh-my-opencode`, `oh-my-openagent`, `omo`, `lazycodex`, and `lazycodex-ai` |
 | Platform selection | `platform.js` | OS/arch/libc package candidates and baseline fallback |
 | Platform types | `platform.d.ts` | Public declarations for the plain-JS selector |
 | Version mismatch output | `version-mismatch.js` | User-facing installed-wrapper/platform-package mismatch diagnostics |

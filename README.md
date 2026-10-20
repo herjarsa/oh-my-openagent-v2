@@ -1,7 +1,7 @@
 > [!NOTE]
 > **OmO Beta: OmO ❤️ Pi**
 > Try it with `bun add -g omo-ai@beta`. Memory system, CodeMode, Anthropic subscriptions, all covered.
-> [![OmO Herdr DAG - live OmO workflow DAGs in a Herdr side pane](./.github/assets/omo-herdr-dag.png)](https://github.com/jc01rho/omo-herdr-dag)
+> ![OmO Herdr DAG - live OmO workflow DAGs in a Herdr side pane](https://github.com/jc01rho/omo-herdr-dag)
 > *Just type "mass ulw" with your prompt - now you are the master of graph engineering. Multi-model ultracode, together with a better memory system. (The right panel is [omo-herdr-dag](https://github.com/jc01rho/omo-herdr-dag).)*
 
 > **Sponsors**
@@ -12,7 +12,7 @@
 
 > [!NOTE]
 >
-> [![Sisyphus Labs - Meet Dori. Not a demo. Subscribes to everything.](./.github/assets/sisyphuslabs.png?v=4)](https://sisyphuslabs.ai)
+> ![Sisyphus Labs - Meet Dori. Not a demo. Subscribes to everything.](https://sisyphuslabs.ai)
 > > **OmO is maintained by Jobdori, the AI assistant shown above. Meet your own Jobdori, Dori. <br />Join the waitlist [here](https://sisyphuslabs.ai).**
 
 > [!TIP]
@@ -29,9 +29,9 @@
 
 <a href="https://github.com/code-yeongyu/oh-my-openagent#oh-my-openagent"><img src="./.github/assets/omo-icon-light.svg" alt="OmO" width="200" /></a>
 
-[![Oh My OpenAgent](./.github/assets/hero.jpg)](https://github.com/code-yeongyu/oh-my-openagent#oh-my-openagent)
+![Oh My OpenAgent](https://github.com/code-yeongyu/oh-my-openagent#oh-my-openagent)
 
-[![Preview](./.github/assets/omo.png)](https://github.com/code-yeongyu/oh-my-openagent#oh-my-openagent)
+![Preview](https://github.com/code-yeongyu/oh-my-openagent#oh-my-openagent)
 
 </div>
 
@@ -55,7 +55,7 @@
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/code-yeongyu/oh-my-openagent)
 [![Docs](https://img.shields.io/badge/docs-omo.dev-369eff?labelColor=black&logo=readthedocs&logoColor=white&style=flat-square)](https://omo.dev/docs)
 
-[English](README.md) | [한국어](README.ko.md) | [日本語](README.ja.md) | [简体中文](README.zh-cn.md)
+English | 한국어 | 日本語 | 简体中文
 
 </div>
 
@@ -104,7 +104,7 @@ oh-my-openagent ships in three editions of the same product: two plugins that lo
 
 **Light Edition (omo for Codex CLI)** carries the portable components that fit Codex's plugin system: `rules`, `comment-checker`, `git-bash`, `lsp`, `ultrawork`, `ulw-loop`, `ulw-execute-continuation`, and `telemetry` at the core, plus `teammode` and supporting components (`bootstrap`, `lcx`, and more), plugin-scoped MCPs for `grep_app`, `context7`, `git_bash`, and `lsp`, and the shared `ast-grep` skill. It installs Codex agent TOMLs into `~/.codex/agents/`. There are no OpenCode `team_*` tools; Codex CLI's own spawn/collaboration surface does that work.
 
-**OmO Native (standalone, beta)** is the `omo` command with the OMO extension built in. It installs from `omo-ai@beta` and loads into neither OpenCode nor Codex. Already on the OpenCode edition? See [Migrating from OpenCode](docs/guide/migrating-from-opencode.md).
+**OmO Native (standalone, beta)** is the `omo` command with the OMO extension built in. It installs from `omo-ai@beta` and loads into neither OpenCode nor Codex. Already on the OpenCode edition? See Migrating from OpenCode.
 
 Pick the edition(s) you want.
 
@@ -113,9 +113,7 @@ Pick the edition(s) you want.
 | You want | Run | What lands on disk |
 | :--- | :--- | :--- |
 | **Ultimate** (OpenCode) | `bunx oh-my-openagent install` (TUI walks you through it) | Plugin registered in `opencode.json` + agent/model config + provider auth prompts |
-| **Light** (Codex CLI) | `npx lazycodex-ai install` | `~/.codex/plugins/cache/sisyphuslabs/omo/` + local Codex marketplace cache + `~/.codex/config.toml` marketplace/plugin/agent blocks + optional autonomous permissions + component CLIs in `~/.local/bin` |
 | **Both** | `bunx oh-my-openagent install --platform=both` | Both of the above |
-| **OmO Native** (beta) | `bun add -g omo-ai@beta`, then `omo` | The `omo` command: pinned senpi engine with the OMO extension built in. Beta channel only; a bare `bun add -g omo-ai` fails by design. See the [install guide](docs/guide/installation.md#omo-native-beta-omo-via-omo-ai). |
 
 `lazycodex-ai` defaults to the Codex Light installer and runs through Node/npm. `--platform` on the shared `omo-agent-toolkit` CLI still defaults to `opencode` (Ultimate).
 
@@ -166,7 +164,7 @@ Anonymous telemetry is enabled by default to track active installations (DAU/WAU
 
 Opt out per product. For the main plugin, set `"telemetry": false` in the oh-my-openagent config, or export `OMO_DISABLE_POSTHOG=1` or `OMO_SEND_ANONYMOUS_TELEMETRY=0`. For the Codex CLI Light edition, export `OMO_CODEX_DISABLE_POSTHOG=1` or `OMO_CODEX_SEND_ANONYMOUS_TELEMETRY=0`; the global flags also disable Codex.
 
-See [Privacy Policy](docs/legal/privacy-policy.md) and [Terms of Service](docs/legal/terms-of-service.md).
+See Privacy Policy and Terms of Service.
 
 ---
 
@@ -183,7 +181,7 @@ Read this and tell me why it's not just another boilerplate: https://raw.githubu
 
 We are restructuring the codebase to support multiple agent harnesses (OpenCode, Codex, Pi, Claude Code, and others). The most urgent work is the package layering refactor: separating pure TypeScript core logic, MCP servers, skills, and adapter shims into distinct layers so the same logic can be reused across harnesses without duplication.
 
-If you want to contribute, read the [ROADMAP](./ROADMAP.md) first. PRs related to this refactor should use the `ROADMAP` label so they are easy to track.
+If you want to contribute, read the ROADMAP first. PRs related to this refactor should use the `ROADMAP` label so they are easy to track.
 
 ## Highlights
 
@@ -200,8 +198,7 @@ Even with only a [ChatGPT subscription ($20)](https://chatgpt.com/), a [Kimi Cod
 |       | Feature                                                  | Edition  | What it does                                                                                                                                                                                                     |
 | :---: | :------------------------------------------------------- | :------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 |   🤖   | **Discipline Agents**                                    | Ultimate | The main agent orchestrates the architect consult, Librarian, Explore and category workers. A full AI dev team in parallel.                                                                                     |
-|   🧩   | **Codex CLI Light Edition**                              | Light    | Portable OMO components (rules, comment-checker, git-bash, LSP, ultrawork, ulw-loop, ulw-execute continuation, telemetry, teammode, and more) running inside OpenAI Codex CLI. Install via `npx lazycodex-ai install`.             |
-|   👥   | **Team Mode** (opt-in)                                   | Ultimate | Lead agent + up to 8 parallel members, real-time tmux visualization, dedicated `team_*` tools. Powers `hyperplan` (5 hostile critics) and `security-research` (3 hunters + 2 PoC engineers). [Docs →](docs/guide/team-mode.md) |
+|   👥   | **Team Mode** (opt-in)                                   | Ultimate | Lead agent + up to 8 parallel members, real-time tmux visualization, dedicated `team_*` tools. Powers `hyperplan` (5 hostile critics) and `security-research` (3 hunters + 2 PoC engineers). Docs → |
 |   ⚡   | **`ultrawork` / `ulw`**                                  | Both     | One word. Every agent activates. Doesn't stop until done.                                                                                                                                                        |
 |   🚪   | **[IntentGate](https://factory.ai/news/terminal-bench)** | Ultimate | Keyword detection for `ultrawork`/`ulw`, `team`, and `hyperplan` (does not semantically classify intent). (Light edition only recognises the `ultrawork`/`ulw` keyword.)                                                       |
 |   🔗   | **Hash-Anchored Edit Tool**                              | Ultimate | Hashline (`LINE#ID`) edit/read tagging. Opt-in: set `hashline_edit: true` in `~/.omo/omo.jsonc`. Zero stale-line errors. Inspired by [oh-my-pi](https://github.com/can1357/oh-my-pi). [The Harness Problem →](https://blog.can.ac/2026/02/12/the-harness-problem/) |
@@ -228,7 +225,7 @@ Even with only a [ChatGPT subscription ($20)](https://chatgpt.com/), a [Kimi Cod
 
 **The Ultrawork Planner** (`/ulw-plan`) is your strategic planner. Interview mode: it asks questions, identifies scope, and builds a detailed plan before a single line of code is touched. `/ulw-execute` then carries that plan out in the same session.
 
-Every prompt preset is tuned to its model's specific strengths. No manual model juggling. [Learn more →](docs/guide/overview.md)
+Every prompt preset is tuned to its model's specific strengths. No manual model juggling. Learn more →
 
 > Anthropic [blocked OpenCode because of us.](https://x.com/thdxr/status/2010149530486911014) That's why we call the main agent "The Legitimate Craftsman." The irony is intentional.
 >
@@ -253,7 +250,7 @@ One agent is fast. A coordinated team is *devastating*.
 
 Restart opencode and the `team_*` tool family appears. Two skills already ride on top of it. `hyperplan` sends 5 hostile agents at your plan from orthogonal angles before a single line of code is written. `security-research` runs 3 vulnerability hunters and 2 PoC engineers over your codebase in parallel, with severity calibrated by *actual exploitability*.
 
-> **Off by default. Enable it when you want it.** [Full Team Mode guide →](docs/guide/team-mode.md)
+> **Off by default. Enable it when you want it.** Full Team Mode guide →
 
 ### Agent Orchestration
 
@@ -331,11 +328,11 @@ Built-ins include `playwright` (browser automation), `git-master` (atomic commit
 
 Add your own under `.opencode/skills/*/SKILL.md` or `~/.config/opencode/skills/*/SKILL.md`.
 
-**Want the full feature breakdown?** See the **[Features Documentation](docs/reference/features.md)** for agents, hooks, tools, MCPs, and everything else in detail.
+**Want the full feature breakdown?** See the **Features Documentation** for agents, hooks, tools, MCPs, and everything else in detail.
 
 ---
 
-> **New to oh-my-openagent?** Read the **[Overview](docs/guide/overview.md)** to understand what you have, or check the **[Orchestration Guide](docs/guide/orchestration.md)** for how agents collaborate.
+> **New to oh-my-openagent?** Read the **Overview** to understand what you have, or check the **Orchestration Guide** for how agents collaborate.
 
 ## Uninstallation
 
@@ -393,19 +390,19 @@ The uninstall command removes managed `sisyphuslabs` Codex cache/marketplace sta
 
 Features you'll think should've always existed. Once you use them, you can't go back.
 
-See the full [Features Documentation](docs/reference/features.md). The short version follows.
+See the full Features Documentation. The short version follows.
 
 The main agent orchestrates; the Ultrawork Planner (`/ulw-plan`), the architect consult (architecture and debugging), Librarian (docs and code search), Explore (fast codebase grep) and the Multimodal Looker specialize, and background agents run several of them in parallel like a real dev team. LSP and AST tools cover refactoring, rename, diagnostics and AST-aware code search. The hash-anchored edit tool (opt-in via `hashline_edit: true`) validates `LINE#ID` references before applying every change, so edits are surgical and stale-line errors are gone.
 
-AGENTS.md, README.md and conditional rules are injected into context automatically. Claude Code hooks, commands, skills, agents and MCPs run unchanged. The built-in MCPs (websearch via Exa, context7 for docs, grep_app for GitHub search, lsp) are injected at runtime by the plugin, which is why they do not show up in `opencode mcp list` (see the [MCP docs](docs/reference/features.md#native-vs-plugin-injected-mcps)). Session tools list, read, search and analyze session history.
+AGENTS.md, README.md and conditional rules are injected into context automatically. Claude Code hooks, commands, skills, agents and MCPs run unchanged. The built-in MCPs (websearch via Exa, context7 for docs, grep_app for GitHub search, lsp) are injected at runtime by the plugin, which is why they do not show up in `opencode mcp list` (see the MCP docs). Session tools list, read, search and analyze session history.
 
-Goal, the Todo Enforcer, the Comment Checker and Think Mode keep a run on track. `bunx oh-my-opencode doctor` checks plugin registration, config, models and environment. `fallback_models` can mix plain model strings with per-fallback object settings in the same array, agent prompts can load from files with `file://`, and sessions recover from session errors, context window limits and API failures on their own. Agent-model matching is part of the [Installation Guide](docs/guide/installation.md#step-5-understand-your-model-setup).
+Goal, the Todo Enforcer, the Comment Checker and Think Mode keep a run on track. `bunx oh-my-opencode doctor` checks plugin registration, config, models and environment. `fallback_models` can mix plain model strings with per-fallback object settings in the same array, agent prompts can load from files with `file://`, and sessions recover from session errors, context window limits and API failures on their own. Agent-model matching is part of the Installation Guide.
 
 ## Configuration
 
 Opinionated defaults, adjustable if you insist.
 
-See the [Configuration Documentation](docs/reference/configuration.md). The short version follows.
+See the Configuration Documentation. The short version follows.
 
 Config lives in the user file `~/.omo/omo.jsonc` plus walked project `.omo/omo.jsonc` files up to `$HOME`; the closest one wins, and legacy `oh-my-*` files are migrated once into `omo.jsonc`. JSONC is accepted, comments and trailing commas included. You can override models, temperatures, prompts and permissions for any agent, set concurrency limits for background tasks per provider or model, and turn any of the 54+ lifecycle hooks (61 with Team Mode) off through `disabled_hooks`.
 
@@ -414,7 +411,7 @@ The main agent orchestrates with the Ultrawork Planner (`/ulw-plan`) and the Pla
 
 ## Author's Note
 
-**Want the philosophy?** Read the [Ultrawork Manifesto](docs/manifesto.md).
+**Want the philosophy?** Read the Ultrawork Manifesto.
 
 ---
 

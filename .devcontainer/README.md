@@ -1,9 +1,9 @@
 # Dev container guide
 
 This dev container backs GitHub Codespaces, VS Code Dev Containers, and plain
-Docker (via [`script/agent/docker-dev.sh`](../script/agent/docker-dev.sh)). It
-builds [`Dockerfile`](./Dockerfile) (Node 24 + Bun 1.4.2 + tmux) and runs
-[`script/agent/setup.sh`](../script/agent/setup.sh) on create. This guide covers
+Docker (via `script/agent/docker-dev.sh`). It
+builds `Dockerfile` (Node 24 + Bun 1.4.2 + tmux) and runs
+`script/agent/setup.sh` on create. This guide covers
 getting your credentials and per-harness config INTO the container so OpenCode,
 Codex, and Claude Code all work inside it.
 
@@ -16,7 +16,7 @@ brand refs until the next online `script/agent/setup.sh` run.
 
 ## Provider credentials (required)
 
-`setup.sh` and [`script/agent/qa-sandbox.sh`](../script/agent/qa-sandbox.sh)
+`setup.sh` and `script/agent/qa-sandbox.sh`
 auto-source a repo-root `.env`. Inside the container, create it once:
 
 ```bash
@@ -37,7 +37,7 @@ Alternatives:
 
 To use OpenCode / Codex / Claude Code from inside the container with your
 existing auth and settings, bind-mount the host config dirs. Add a `mounts`
-entry to [`devcontainer.json`](./devcontainer.json) (it supports JSONC):
+entry to `devcontainer.json` (it supports JSONC):
 
 ```jsonc
 "mounts": [
@@ -63,7 +63,7 @@ Notes:
 ## Maintenance
 
 If the image, the bootstrap, or the injected config changes, update
-[`Dockerfile`](./Dockerfile), [`script/agent/setup.sh`](../script/agent/setup.sh),
+`Dockerfile`, `script/agent/setup.sh`,
 this README, and the "Development Environment" sections of the root
-[`AGENTS.md`](../AGENTS.md) and [`CONTRIBUTING.md`](../CONTRIBUTING.md) together.
+`AGENTS.md` and `CONTRIBUTING.md` together.
 See the maintenance directive in `AGENTS.md`.

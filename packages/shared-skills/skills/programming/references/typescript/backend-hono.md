@@ -522,8 +522,6 @@ export default {
 ```json
 {
   "scripts": {
-    "dev": "bun run --hot src/index.ts",
-    "start": "bun run src/index.ts",
     "build": "tsc --noEmit"
   }
 }
@@ -660,7 +658,6 @@ bun add -d typescript @types/bun
 
 # 4. Write app.ts (copy from section 2 above)
 # 5. Run
-bun run --hot app.ts
 ```
 
 Endpoints after startup:

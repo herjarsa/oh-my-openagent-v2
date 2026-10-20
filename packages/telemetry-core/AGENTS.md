@@ -23,7 +23,6 @@ Harness-neutral PostHog telemetry: env-gated opt-out, SHA256-hashed machine id, 
 ## DEPENDENCIES & CONSUMERS
 
 - **Depends on:** `@oh-my-opencode/utils` (`writeFileAtomically`, `resolveXdgDataDir`) + `posthog-node` (^5).
-- **Consumed by BOTH editions:** `omo-opencode/src/shared/posthog*.ts`; `omo-codex/src/telemetry/*` and `omo-codex/plugin/components/telemetry/*`.
 
 ## NOTES
 
@@ -34,4 +33,4 @@ Harness-neutral PostHog telemetry: env-gated opt-out, SHA256-hashed machine id, 
 - **NO_OP_CLIENT** returned when disabled or transport init fails (`enabled: false`, all methods no-op). Transport + OS provider are injectable for tests.
 - **Diagnostics** JSONL: 7-day retention, 256 KB cap, cleanup on every write.
 - **`createEventTelemetryClient`** (events.ts) — event telemetry with a per-product `propertyAllowlist`: unknown properties are DROPPED with diagnostics, never sent. Hard-rejected keys: `$ip`, non-allowlisted `$` keys (only `$os`, `$os_version`, `$process_person_profile`, `$session_id` pass), `*_text|*_path|*_prompt` suffixes (allowlisted non-string flags excepted), and non-finite numbers. Batching overrides (`flushAt: 20`, `flushInterval: 10s`) are applied LAST so a product config cannot weaken them. `disableGeoip: false` lets PostHog derive `$geoip_country_code` server-side from the transport IP — the client still never authors/stores an IP. No-op client when disabled, same as the daily-active path.
-- Parent: [`packages/AGENTS.md`](../AGENTS.md).
+- Parent: `packages/AGENTS.md`.

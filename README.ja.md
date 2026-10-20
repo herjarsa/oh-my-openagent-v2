@@ -1,7 +1,7 @@
 > [!NOTE]
 > **OmO ベータ: OmO ❤️ Pi**
 > `bun add -g omo-ai@beta` でお試しください。メモリシステム、CodeMode、Anthropic サブスクリプションにすべて対応しています。
-> [![OmO Herdr DAG - live OmO workflow DAGs in a Herdr side pane](./.github/assets/omo-herdr-dag.png)](https://github.com/jc01rho/omo-herdr-dag)
+> ![OmO Herdr DAG - live OmO workflow DAGs in a Herdr side pane](https://github.com/jc01rho/omo-herdr-dag)
 > *プロンプトに "mass ulw" と入れるだけ。あなたはもうグラフエンジニアリングのマスター。マルチモデルの ultracode を、より良いメモリシステムとともに。(右側のパネルは [omo-herdr-dag](https://github.com/jc01rho/omo-herdr-dag) です)*
 
 
@@ -13,12 +13,12 @@
 > [!NOTE]
 > **マルチハーネスエージェントOSへのリファクタリング進行中**
 >
-> OpenCode、Codex、Pi、Claude Codeなどの複数エージェントハーネスをサポートするため、コードベースを再構成しています。貢献に興味がある方は、まず[ROADMAP](./ROADMAP.md)をご確認ください。ROADMAP関連のPRには`ROADMAP`ラベルを付けてください。
+> OpenCode、Codex、Pi、Claude Codeなどの複数エージェントハーネスをサポートするため、コードベースを再構成しています。貢献に興味がある方は、まずROADMAPをご確認ください。ROADMAP関連のPRには`ROADMAP`ラベルを付けてください。
 
 
 > [!NOTE]
 >
-> [![Sisyphus Labs - Meet Dori. Not a demo. Subscribes to everything.](./.github/assets/sisyphuslabs.png?v=4)](https://sisyphuslabs.ai)
+> ![Sisyphus Labs - Meet Dori. Not a demo. Subscribes to everything.](https://sisyphuslabs.ai)
 > > **OmO は上記の Jobdori によってメンテナンスされています。あなた専用の Jobdori、Dori に会いましょう。 <br />[こちら](https://sisyphuslabs.ai) からウェイトリストにご登録ください。**
 
 > [!TIP]
@@ -35,9 +35,9 @@
 
 <a href="https://github.com/code-yeongyu/oh-my-openagent#oh-my-openagent"><img src="./.github/assets/omo-icon-light.svg" alt="OmO" width="200" /></a>
 
-[![Oh My OpenAgent](./.github/assets/hero.jpg)](https://github.com/code-yeongyu/oh-my-openagent#oh-my-openagent)
+![Oh My OpenAgent](https://github.com/code-yeongyu/oh-my-openagent#oh-my-openagent)
 
-[![Preview](./.github/assets/omo.png)](https://github.com/code-yeongyu/oh-my-openagent#oh-my-openagent)
+![Preview](https://github.com/code-yeongyu/oh-my-openagent#oh-my-openagent)
 
 </div>
 
@@ -61,7 +61,7 @@
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/code-yeongyu/oh-my-openagent)
 [![Docs](https://img.shields.io/badge/docs-omo.dev-369eff?labelColor=black&logo=readthedocs&logoColor=white&style=flat-square)](https://omo.dev/docs)
 
-[English](README.md) | [한국어](README.ko.md) | [日本語](README.ja.md) | [简体中文](README.zh-cn.md)
+English | 한국어 | 日本語 | 简体中文
 
 </div>
 
@@ -111,7 +111,7 @@ Install and configure oh-my-openagent by following the instructions here:
 https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/refs/heads/dev/docs/guide/installation.md
 ```
 
-もしくは [インストールガイド](docs/guide/installation.md) を直接読んでもいいですが、マジでエージェントにやらせてください。人間は設定で必ずタイポします。
+もしくは インストールガイド を直接読んでもいいですが、マジでエージェントにやらせてください。人間は設定で必ずタイポします。
 
 ### LLM エージェント向け
 
@@ -125,9 +125,9 @@ curl -fsSL https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/refs/h
 
 推奨される `bunx`/`npx` コマンドは `oh-my-openagent install` (もしくは元の `oh-my-opencode install`) です。インストール後の短いコマンドは `omo-agent-toolkit` です。今回のメジャーリリースで `omo` bin はこれらのパッケージから削除され、その名前は `bun add -g omo-ai@beta` (beta チャネルのみ) でインストールする OmO Native のものになりました。`bunx omo` や `npx omo` は**使わないでください**。npm 上の `omo` は別の作者による無関係なパッケージで、これらのコマンドはそちらに解決されます。OmO Native のパッケージ名は `omo-ai` です。`lazycodex-ai` は単一目的の Node/npm インストーラーパッケージで、`npx lazycodex-ai install` は Codex Light インストーラーに直接つながります。Codex マーケットプレイス名ではありません (マーケットプレイスのリポジトリは `code-yeongyu/lazycodex`)。Codex 側ではマーケットプレイス `sisyphuslabs` とプラグイン `omo` として見え、`omo@sisyphuslabs` として有効化されます。
 
-匿名のテレメトリは、アクティブなインストール数(DAU/WAU/MAU)の集計のためにデフォルトで有効になっています。マシン1台につきUTC日あたり最大1回イベントが送信され、ハッシュ化されたインストール識別子を使用し、生のホスト名は使用せず、PostHog person profile も作成されません。無効化するには `OMO_SEND_ANONYMOUS_TELEMETRY=0` または `OMO_DISABLE_POSTHOG=1` を設定してください。[プライバシーポリシー](docs/legal/privacy-policy.md)と[利用規約](docs/legal/terms-of-service.md)をご覧ください。
+匿名のテレメトリは、アクティブなインストール数(DAU/WAU/MAU)の集計のためにデフォルトで有効になっています。マシン1台につきUTC日あたり最大1回イベントが送信され、ハッシュ化されたインストール識別子を使用し、生のホスト名は使用せず、PostHog person profile も作成されません。無効化するには `OMO_SEND_ANONYMOUS_TELEMETRY=0` または `OMO_DISABLE_POSTHOG=1` を設定してください。プライバシーポリシーと利用規約をご覧ください。
 
-**Ultimate / Light / OmO Native:** oh-my-openagent は同じ製品の 3 つのエディションとして提供されます。すでに使っているホストに読み込まれるプラグイン 2 つと、スタンドアロンのエディション 1 つです。**Ultimate エディション**（`bunx oh-my-openagent install` または `--platform=opencode`、デフォルト）は OpenCode 上のフル機能で、11 エージェント、54+ フック、Team Mode、4 つの組み込み MCP (websearch、context7、grep_app、lsp)、スラッシュコマンド、IntentGate モードを提供します。**Light エディション**（`npx lazycodex-ai install`）は OpenAI Codex CLI のプラグインシステムへ綺麗に移植できるコアコンポーネント（`rules`、`comment-checker`、`git-bash`、`lsp`、`ultrawork`、`ulw-loop`、`ulw-execute-continuation`、`telemetry`）に加え、`teammode` と補助コンポーネント（`bootstrap`、`lcx` など）を提供し、Codex エージェントの TOML を `~/.codex/agents/` にインストールします。両方を同時にインストールするには `--platform=both`。**OmO Native**（スタンドアロン、beta）は OMO 拡張を内蔵した `omo` コマンドです。OpenCode や Codex に読み込むのではなく、`bun add -g omo-ai@beta` でインストールして `omo` を実行します。beta チャネルのみで、タグなしの `bun add -g omo-ai` は意図的に失敗します。OpenCode エディションからの移行は [Migrating from OpenCode](docs/guide/migrating-from-opencode.md) を参照してください。Codex 専用テレメトリは `OMO_CODEX_DISABLE_POSTHOG=1` または `OMO_CODEX_SEND_ANONYMOUS_TELEMETRY=0` で無効化できます。
+**Ultimate / Light / OmO Native:** oh-my-openagent は同じ製品の 3 つのエディションとして提供されます。すでに使っているホストに読み込まれるプラグイン 2 つと、スタンドアロンのエディション 1 つです。**Ultimate エディション**（`bunx oh-my-openagent install` または `--platform=opencode`、デフォルト）は OpenCode 上のフル機能で、11 エージェント、54+ フック、Team Mode、4 つの組み込み MCP (websearch、context7、grep_app、lsp)、スラッシュコマンド、IntentGate モードを提供します。**Light エディション**（`npx lazycodex-ai install`）は OpenAI Codex CLI のプラグインシステムへ綺麗に移植できるコアコンポーネント（`rules`、`comment-checker`、`git-bash`、`lsp`、`ultrawork`、`ulw-loop`、`ulw-execute-continuation`、`telemetry`）に加え、`teammode` と補助コンポーネント（`bootstrap`、`lcx` など）を提供し、Codex エージェントの TOML を `~/.codex/agents/` にインストールします。両方を同時にインストールするには `--platform=both`。**OmO Native**（スタンドアロン、beta）は OMO 拡張を内蔵した `omo` コマンドです。OpenCode や Codex に読み込むのではなく、`bun add -g omo-ai@beta` でインストールして `omo` を実行します。beta チャネルのみで、タグなしの `bun add -g omo-ai` は意図的に失敗します。OpenCode エディションからの移行は Migrating from OpenCode を参照してください。Codex 専用テレメトリは `OMO_CODEX_DISABLE_POSTHOG=1` または `OMO_CODEX_SEND_ANONYMOUS_TELEMETRY=0` で無効化できます。
 
 ---
 
@@ -159,8 +159,7 @@ Read this and tell me why it's not just another boilerplate: https://raw.githubu
 |       | 機能                                                     | Editions | 何をするのか                                                                                                                                                                                                                   |
 | :---: | :------------------------------------------------------- | :------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 |   🤖   | **規律あるエージェント (Discipline Agents)**             | Ultimate | メインエージェントがアーキテクトコンサルト、Librarian、Explore、カテゴリーワーカーをオーケストレーションします。完全な AI 開発チームが並列で動きます。                                                                        |
-|   🧩   | **Codex CLI Light Edition**                              | Light    | OpenAI Codex CLI 上で動作する omo の移植コンポーネント (rules, comment-checker, git-bash, LSP, ultrawork, ulw-loop, ulw-execute continuation, telemetry, teammode など)。インストール: `npx lazycodex-ai install`。                                    |
-|   👥   | **Team Mode** (オプトイン)                                | Ultimate | リードエージェント + 最大 8 メンバーの並列実行、リアルタイム tmux 可視化、専用 `team_*` ツール群。`hyperplan`(5 人の敵対的批評家)と `security-research`(3 人のハンター + 2 人の PoC エンジニア)を駆動します。[ドキュメント →](docs/guide/team-mode.md) |
+|   👥   | **Team Mode** (オプトイン)                                | Ultimate | リードエージェント + 最大 8 メンバーの並列実行、リアルタイム tmux 可視化、専用 `team_*` ツール群。`hyperplan`(5 人の敵対的批評家)と `security-research`(3 人のハンター + 2 人の PoC エンジニア)を駆動します。ドキュメント → |
 |   ⚡   | **`ultrawork` / `ulw`**                                  | Both     | 一言で OK。すべてのエージェント (Ultimate) または Codex `ultrawork` コンポーネント (Light) がアクティブになり、終わるまで止まりません。                                                                                          |
 |   🚪   | **[IntentGate](https://factory.ai/news/terminal-bench)** | Ultimate | `ultrawork`/`ulw`、`team`、`hyperplan` のキーワードを検出します (意図を意味的に分類するわけではありません)。(Light は `ulw` / `ultrawork` キーワードのみ認識。)                                                                          |
 |   🔗   | **ハッシュベースの編集ツール**                           | Ultimate | Hashline (`LINE#ID`) による編集/読取タグ付け。オプトイン: `~/.omo/omo.jsonc` で `hashline_edit: true` を設定。stale-line エラー 0%。[oh-my-pi](https://github.com/can1357/oh-my-pi) にインスパイア。[The Harness Problem →](https://blog.can.ac/2026/02/12/the-harness-problem/) (Codex はネイティブの `apply_patch` を使用。) |
@@ -186,7 +185,7 @@ Read this and tell me why it's not just another boilerplate: https://raw.githubu
 
 **Ultrawork Planner** (`/ulw-plan`) はあなたの戦略プランナーです。インタビューモードで質問を投げ、スコープを特定し、コードに一行触れる前に詳細な計画を構築します。続いて `/ulw-execute` が同じセッションでその計画を実行します。
 
-すべてのプロンプトプリセットは、それぞれのモデルの強みに合わせてチューニングされています。手動でモデルを切り替える必要はありません。[詳しくはこちら →](docs/guide/overview.md)
+すべてのプロンプトプリセットは、それぞれのモデルの強みに合わせてチューニングされています。手動でモデルを切り替える必要はありません。詳しくはこちら →
 
 > Anthropic が [私たちのせいで OpenCode をブロックしました。](https://x.com/thdxr/status/2010149530486911014) だからこそメインエージェントは「正当なる職人 (The Legitimate Craftsman)」と呼ばれているのです。皮肉を込めています。
 >
@@ -214,7 +213,7 @@ opencode を再起動すると `team_*` ツールファミリーが解放され�
 - **`hyperplan`** — 5 人の敵対的エージェントが、一行のコードが書かれる前に直交する角度から計画を引き裂きます。
 - **`security-research`** — 3 人の脆弱性ハンター + 2 人の PoC エンジニアがコードベースを並列で監査。重大度は*実際の悪用可能性*で校正されます。
 
-> **デフォルトは OFF。必要なときに ON。** [Team Mode ガイド全文 →](docs/guide/team-mode.md)
+> **デフォルトは OFF。必要なときに ON。** Team Mode ガイド全文 →
 
 ### エージェントのオーケストレーション
 
@@ -301,11 +300,11 @@ Ultrawork Planner (`/ulw-plan`) は**本物のエンジニアのようにあな�
 
 独自に追加するには `.opencode/skills/*/SKILL.md` または `~/.config/opencode/skills/*/SKILL.md` に配置してください。
 
-**全機能を知りたいですか？** エージェント、フック、ツール、MCP などの詳細は **[機能ドキュメント (Features)](docs/reference/features.md)** をご覧ください。
+**全機能を知りたいですか？** エージェント、フック、ツール、MCP などの詳細は **機能ドキュメント (Features)** をご覧ください。
 
 ---
 
-> **oh-my-openagent は初めてですか？** 手に入れるものの全体像は **[Overview](docs/guide/overview.md)** を、エージェント同士の協調については **[Orchestration Guide](docs/guide/orchestration.md)** をお読みください。
+> **oh-my-openagent は初めてですか？** 手に入れるものの全体像は **Overview** を、エージェント同士の協調については **Orchestration Guide** をお読みください。
 
 ## アンインストール
 
@@ -363,7 +362,7 @@ oh-my-openagent を削除するには:
 
 最初から存在していて当然だと感じる機能たち。一度使うと戻れなくなります。
 
-全体は [Features Documentation](docs/reference/features.md) を参照してください。
+全体は Features Documentation を参照してください。
 
 **概要:**
 - **エージェント**: メインエージェント (オーケストレーター)、Ultrawork Planner (`/ulw-plan`)、アーキテクトコンサルト (アーキテクチャ・デバッグ)、Librarian (ドキュメント・コード検索)、Explore (高速な codebase grep)、Multimodal Looker
@@ -372,20 +371,20 @@ oh-my-openagent を削除するには:
 - **ハッシュベース編集ツール** (`hashline_edit: true` でオプトイン): `LINE#ID` 参照で全ての変更前に内容を検証。外科的な編集、stale-line エラー 0
 - **コンテキスト注入**: AGENTS.md、README.md、条件付きルールを自動注入
 - **Claude Code 互換性**: 完全なフックシステム、コマンド、スキル、エージェント、MCP
-- **組み込み MCP**: websearch (Exa)、context7 (ドキュメント)、grep_app (GitHub 検索)、lsp。プラグインがランタイム注入するため `opencode mcp list` には表示されません ([MCP ドキュメント](docs/reference/features.md#native-vs-plugin-injected-mcps) 参照)
+- **組み込み MCP**: websearch (Exa)、context7 (ドキュメント)、grep_app (GitHub 検索)、lsp。プラグインがランタイム注入するため `opencode mcp list` には表示されません (MCP ドキュメント 参照)
 - **セッションツール**: セッション履歴のリスト・閲覧・検索・分析
 - **生産性機能**: Goal、Todo Enforcer、Comment Checker、Think Mode など
 - **Doctor コマンド**: 組み込みの診断 (`bunx oh-my-opencode doctor`) でプラグイン登録、設定、モデル、環境を検証
 - **モデルフォールバック**: `fallback_models` で単純なモデル文字列と per-fallback オブジェクト設定を同じ配列に混在可能
 - **ファイルプロンプト**: エージェント設定で `file://` を使ってファイルからプロンプトを読み込み
 - **セッション回復**: セッションエラー、コンテキストウィンドウ上限、API 障害からの自動回復
-- **モデルセットアップ**: エージェントとモデルのマッチングは [インストールガイド](docs/guide/installation.md#step-5-understand-your-model-setup) に組み込み済み
+- **モデルセットアップ**: エージェントとモデルのマッチングは インストールガイド に組み込み済み
 
 ## 設定
 
 意見のあるデフォルト。それでも手を入れたければ調整可能です。
 
-詳細は [Configuration Documentation](docs/reference/configuration.md) を参照してください。
+詳細は Configuration Documentation を参照してください。
 
 **概要:**
 - **設定ファイルの場所**: ユーザーの `~/.omo/omo.jsonc` と、`$HOME` までたどるプロジェクトの `.omo/omo.jsonc`。近い設定が優先されます。レガシーの `oh-my-*` ファイルは一度だけ `omo.jsonc` にマイグレーションされます。
@@ -403,7 +402,7 @@ oh-my-openagent を削除するには:
 
 ## 著者の言葉
 
-**哲学が知りたいですか？** [Ultrawork Manifesto](docs/manifesto.md) をお読みください。
+**哲学が知りたいですか？** Ultrawork Manifesto をお読みください。
 
 ---
 

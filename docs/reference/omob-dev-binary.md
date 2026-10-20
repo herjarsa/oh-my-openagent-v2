@@ -44,4 +44,4 @@ Behavior:
 A dev binary participates in the shared engine host like any other build: its
 build epoch gives it an ordinal, so `omo daemon run` from a newer `omob` hands off
 from an older release and vice versa never happens on an uncomparable pair. See
-[omo daemon](./omo-daemon.md).
+omo daemon.

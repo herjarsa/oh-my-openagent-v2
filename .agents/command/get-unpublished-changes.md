@@ -20,7 +20,6 @@ Analyze every change against these exact layers:
 |---|---|---|
 | `omo pure components` | `packages/*-core`, MCP packages, `packages/shared-skills`, reusable scripts | Do shared components need a patch/minor/major release note even if adapters only consume them internally? |
 | `omo opencode` | Root `oh-my-opencode` / `oh-my-openagent`, `src/`, `.opencode/`, `.agents/`, CLI, config, hooks, tools, docs | What semver bump should the OpenCode/OpenAgent npm packages use? |
-| `omo codex` | `packages/omo-codex`, `lazycodex-ai`, Codex plugin metadata/hooks, bundled MCP runtimes, `code-yeongyu/lazycodex` marketplace payload | Does LazyCodex need the same bump, a Codex-only note, or a marketplace release? |
 
 Exclude commits and paths matching `senpi`, `omo-senpi`, `senpi-task`, `pi-goal`, or `pi-webfetch` from user-facing notes and version recommendations. Record them only in a separate internal-adapter exclusion ledger.
 

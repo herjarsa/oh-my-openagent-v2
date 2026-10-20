@@ -48,17 +48,7 @@ packages/web/
 ```bash
 # from packages/web/ directory
 bun install
-bun run dev              # next dev (local Node.js)
-bun run lint             # biome lint + eslint
-bun run lint:fix
-bun run format           # prettier --write
-bun run format:check
-bun run type-check       # tsgo --noEmit
 bun run build            # next build (Turbopack, Node target)
-bun run preview          # opennextjs-cloudflare build + preview locally
-bun run deploy           # opennextjs-cloudflare build + deploy to Cloudflare
-bun run test:e2e         # playwright test
-bun run cf-typegen       # regenerate cloudflare-env.d.ts from wrangler.toml bindings
 ```
 
 ## CI/CD
@@ -94,7 +84,6 @@ Root `bun test` ignores `packages/web/**` through `bunfig.toml` so `packages/web
 
 - Never run `npm install` in `packages/web/`. Use `bun install` only. (Root `.gitignore` already blocks `package-lock.json`.)
 - Never commit `.next/`, `.open-next/`, `.wrangler/`, `node_modules/` (covered by `packages/web/.gitignore`).
-- Never deploy locally with `bun run deploy` against production — use the GitHub Actions workflow so Cloudflare credentials live in one place.
 - Do not add `framer-motion`; CSS keyframes/Tailwind animation only (narrow `motion/react layoutId` exception in DESIGN.md). No serif typography; no layout-property animation (`width`/`height`/`top`/`left`/margin/padding).
 - Known accepted debt: docs pages overflow horizontally at 390×844 — do not worsen without the docs-shell design work.
 

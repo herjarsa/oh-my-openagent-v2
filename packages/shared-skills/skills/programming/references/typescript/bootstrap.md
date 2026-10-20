@@ -7,7 +7,6 @@ When starting a new TypeScript project (or scripting against the world), the cho
 ```
 Is this a CLI / script / single-binary tool?
 └─ Yes → Bun (single executable, hot reload, native TS)
-        Use `bun run script.ts` directly. No build step.
 
 Is this a backend service?
 ├─ Edge (Cloudflare Workers / Vercel / Deno Deploy) → match the platform
@@ -88,7 +87,6 @@ Vite for any frontend. Replaces webpack, parcel, rollup-as-app-bundler. Works wi
 bun create vite my-app -- --template react-ts
 cd my-app
 bun install
-bun run dev
 ```
 
 ## Lint + format — Biome
@@ -175,8 +173,6 @@ bun biome init
 ```json
 {
   "scripts": {
-    "dev": "bun run --hot src/index.ts",
-    "start": "bun run src/index.ts",
     "build": "bun build src/index.ts --target bun --outdir dist",
     "typecheck": "tsc --noEmit",
     "lint": "biome check --write src tests",

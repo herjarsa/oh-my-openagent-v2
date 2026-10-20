@@ -11,7 +11,7 @@ Each run writes these files under the chosen evidence directory:
 - `terminal-ansi.txt`: the redacted raw pty byte stream, for debugging.
 - `metadata.json`: connector, color path, source, interaction, output paths, and cleanup receipt.
 
-The PR should cite `metadata.json` and attach `terminal.png` for OpenCode/Codex TUI proof. For PR-body image hosting, use GitHub user attachments as documented in [docs/reference/github-attachment-upload.md](github-attachment-upload.md); do not commit temporary PNGs, use releases, or use external image hosts.
+The PR should cite `metadata.json` and attach `terminal.png` for OpenCode/Codex TUI proof. For PR-body image hosting, use GitHub user attachments as documented in docs/reference/github-attachment-upload.md; do not commit temporary PNGs, use releases, or use external image hosts.
 
 ## Live Capture (default)
 

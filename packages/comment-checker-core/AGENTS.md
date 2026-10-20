@@ -20,7 +20,6 @@ Two responsibilities: (1) parse LLM apply-patch edits into structured `CheckerEd
 ## DEPENDENCIES & CONSUMERS
 
 - **Depends on:** `@oh-my-opencode/utils` (`isRecord` from `utils/record-type-guard`).
-- **Consumed by BOTH editions:** `omo-opencode/src/hooks/comment-checker/{hook,types,cli}.ts` and `omo-codex/plugin/components/comment-checker/src/{core,core-values,apply-patch,request-extractor}.ts`.
 
 ## NOTES
 
@@ -28,4 +27,4 @@ Two responsibilities: (1) parse LLM apply-patch edits into structured `CheckerEd
 - **Spawn timeouts:** default 30s, 1s kill grace, SIGTERM→SIGKILL escalation.
 - **`SpawnProcess` is an injected interface** — `stdin.write/end`, `ReadableStream<Uint8Array>` stdout/stderr, `exited: Promise<number>` — never the Node `ChildProcess` type directly.
 - **`HookInput` mirrors OpenCode's `tool.execute.before` input schema** exactly, so the same parser serves the Codex `PreToolUse`/`PostToolUse` adapters.
-- Parent: [`packages/AGENTS.md`](../AGENTS.md).
+- Parent: `packages/AGENTS.md`.
