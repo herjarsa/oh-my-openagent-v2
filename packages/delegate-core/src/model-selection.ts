@@ -22,7 +22,6 @@ export type DelegateModelResolutionInput = {
   readonly fallbackChain?: readonly DelegateFallbackEntry[]
   readonly availableModels: ReadonlySet<string>
   readonly systemDefaultModel?: string
-  readonly honorUserModelVerbatim?: boolean
 }
 
 export type DelegateModelResolutionResult =
@@ -90,24 +89,6 @@ export function resolveModelForDelegateTask(
     const userResult = parsed?.variant
       ? { model: parsed.baseModel, variant: parsed.variant }
       : { model: userModel }
-
-    if (input.honorUserModelVerbatim === true) {
-      if (input.availableModels.size > 0) {
-        const providerHint = parsed?.providerHint
-        const primaryMatch = fuzzyMatchModel(userResult.model, new Set(input.availableModels), providerHint)
-        if (primaryMatch) {
-          if (parsed?.variant) {
-            return { model: primaryMatch, variant: parsed.variant }
-          }
-          return { model: primaryMatch }
-        }
-        deps.log?.("[resolveModelForDelegateTask] user model outside plugin catalog; using configured model verbatim (runtime fallback chain covers failures)", {
-          userModel: userResult.model,
-        })
-      }
-
-      return userResult
-    }
 
     const userFallbackModels = input.userFallbackModels
     if (

@@ -29,17 +29,6 @@ const legacyGptEntry: DelegateFallbackEntry = {
 const gpt56SolFallbackChain = [nativeSolEntry, copilotSolEntry, legacyGptEntry]
 
 describe("resolveModelForDelegateTask", () => {
-  test("#given user model is outside plugin catalog #when fallback_models has reachable entry #then returns user model verbatim", () => {
-    const result = resolveModelForDelegateTask({
-      userModel: "acme/custom-model",
-      userFallbackModels: ["vendor/other-model"],
-      availableModels: new Set(["vendor/other-model"]),
-      honorUserModelVerbatim: true,
-    }, noCacheDeps)
-
-    expect(result).toEqual({ model: "acme/custom-model" })
-  })
-
   test("#given no provider cache exists #when no user override is configured #then returns skipped sentinel", () => {
     const result = resolveModelForDelegateTask({
       availableModels: new Set(),
@@ -61,27 +50,6 @@ describe("resolveModelForDelegateTask", () => {
       variant: "high",
       matchedFallback: true,
     })
-  })
-
-  test("#given user primary is unreachable #when honorUserModelVerbatim is set #then returns user primary verbatim", () => {
-    const result = resolveModelForDelegateTask({
-      userModel: "quotio/claude-haiku-4-5-unavailable",
-      userFallbackModels: ["openai/gpt-5.4 high"],
-      availableModels: new Set(["openai/gpt-5.4-preview"]),
-      honorUserModelVerbatim: true,
-    }, noCacheDeps)
-
-    expect(result).toEqual({ model: "quotio/claude-haiku-4-5-unavailable" })
-  })
-
-  test("#given user model is outside plugin catalog #when flag is absent #then promotes the first reachable user fallback", () => {
-    const result = resolveModelForDelegateTask({
-      userModel: "acme/custom-model",
-      userFallbackModels: ["vendor/other-model"],
-      availableModels: new Set(["vendor/other-model"]),
-    }, noCacheDeps)
-
-    expect(result).toEqual({ model: "vendor/other-model", matchedFallback: true })
   })
 
   test("#given connected providers cache #when fallback chain starts disconnected #then selects first connected provider", () => {
