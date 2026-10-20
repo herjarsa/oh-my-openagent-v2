@@ -1,4 +1,5 @@
 import { getAgentToolRestrictions } from "../../../shared"
+import { normalizeAgentForPromptKey } from "../../../shared/agent-display-names"
 import type { TaskPromptBody } from "./task-prompt-body"
 
 export const FALLBACK_AGENT = "general"
@@ -31,7 +32,7 @@ export function buildFallbackBody(
 ): TaskPromptBody {
   return {
     ...originalBody,
-    agent: fallbackAgent,
+    agent: normalizeAgentForPromptKey(fallbackAgent) ?? fallbackAgent,
     tools: {
       task: false,
       call_omo_agent: true,

@@ -1,4 +1,5 @@
 import { createInternalAgentTextPart, getAgentToolRestrictions } from "../../../shared"
+import { normalizeAgentForPromptKey } from "../../../shared/agent-display-names"
 import type { LaunchInput } from "../types"
 
 type PromptModel = LaunchInput["model"]
@@ -46,7 +47,7 @@ export function buildTaskPromptBody(options: TaskPromptBodyOptions): TaskPromptB
   const promptVariant = options.model?.variant
 
   return {
-    agent: options.agent,
+    agent: normalizeAgentForPromptKey(options.agent) ?? options.agent,
     ...(promptModel ? { model: promptModel } : {}),
     ...(promptVariant ? { variant: promptVariant } : {}),
     ...(options.kind === "launch" ? { system: options.system } : {}),

@@ -195,7 +195,7 @@ describe("resolveModelForDelegateTask", () => {
 		})
 
 		describe("#when user primary model is unreachable and user fallback_models are provided", () => {
-			test("#then promotes the first reachable user fallback (regression: bug where fallback_models were ignored when userModel set)", () => {
+			test("#then keeps the user primary verbatim (the configured model always wins; the runtime fallback chain handles failures)", () => {
 				const result = resolveModelForDelegateTask({
 					userModel: "opencode/gemini-3.1-pro high",
 					userFallbackModels: [
@@ -211,9 +211,8 @@ describe("resolveModelForDelegateTask", () => {
 				})
 
 				expect(result).toEqual({
-					model: "amazon-bedrock/us.anthropic.claude-opus-4-7",
-					variant: "max",
-					matchedFallback: true,
+					model: "opencode/gemini-3.1-pro",
+					variant: "high",
 				})
 			})
 
