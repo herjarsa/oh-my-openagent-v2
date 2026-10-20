@@ -142,6 +142,8 @@ describe("validateNonTuiArgs", () => {
     expect(result.errors).toContain("--gemini is required (values: no, yes)")
     expect(result.errors).toContain("--copilot is required (values: no, yes)")
   })
+})
+
 
 describe("formatConfigSummary", () => {
   test("shows the OpenCode platform in the summary", () => {
@@ -180,6 +182,4 @@ describe("formatConfigSummary", () => {
     expect(summary).toContain("MiniMax Coding Plan (minimax.io)")
     expect(summary).toContain("MiniMax-M3 fallback")
   })
-
-)
 })

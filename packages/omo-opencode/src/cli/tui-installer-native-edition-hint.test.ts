@@ -108,6 +108,4 @@ describe("runTuiInstaller OmO Native hint", () => {
     expect(output).toContain(NATIVE_EDITION_INSTALL_COMMAND)
     expect(output).toContain(NATIVE_EDITION_GUIDE_URL)
   })
-
-)
 })

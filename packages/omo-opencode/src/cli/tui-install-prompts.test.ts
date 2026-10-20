@@ -66,6 +66,8 @@ describe("promptInstallPlatform", () => {
       options: [{ value: "opencode" }],
     })
   })
+})
+
 
 describe("promptInstallConfig platform branching", () => {
   let restoreTty: () => void
@@ -106,6 +108,4 @@ describe("promptInstallConfig platform branching", () => {
     expect(noOption?.hint).toContain(ULTIMATE_FALLBACK)
     expect(noOption?.hint).not.toContain("big-pickle")
   })
-
-)
 })
