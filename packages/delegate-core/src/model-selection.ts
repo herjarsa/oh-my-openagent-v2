@@ -90,35 +90,13 @@ export function resolveModelForDelegateTask(
       ? { model: parsed.baseModel, variant: parsed.variant }
       : { model: userModel }
 
-    const userFallbackModels = input.userFallbackModels
-    if (
-      input.availableModels.size > 0 &&
-      userFallbackModels &&
-      userFallbackModels.length > 0
-    ) {
+    if (input.availableModels.size > 0) {
       const providerHint = parsed?.providerHint
       const primaryMatch = fuzzyMatchModel(userResult.model, new Set(input.availableModels), providerHint)
       if (!primaryMatch) {
-        for (const fallbackModel of userFallbackModels) {
-          const parsedFallback = parseUserFallbackModel(fallbackModel)
-          if (!parsedFallback) continue
-          const fbMatch = fuzzyMatchModel(
-            parsedFallback.baseModel,
-            new Set(input.availableModels),
-            parsedFallback.providerHint,
-          )
-          if (fbMatch) {
-            deps.log?.("[resolveModelForDelegateTask] user primary model unreachable; promoting user fallback_models entry", {
-              userPrimary: userResult.model,
-              selectedFallback: fbMatch,
-            })
-            return {
-              model: fbMatch,
-              variant: parsedFallback.variant,
-              matchedFallback: true,
-            }
-          }
-        }
+        deps.log?.("[resolveModelForDelegateTask] user model outside plugin catalog; using configured model verbatim", {
+          userModel: userResult.model,
+        })
       }
     }
 
