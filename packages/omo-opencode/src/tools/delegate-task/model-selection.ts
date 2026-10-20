@@ -13,7 +13,7 @@ export function resolveModelForDelegateTask(input: DelegateModelResolutionInput)
     ? connectedProvidersCache.readConnectedProvidersCache()
     : null
 
-  return resolveModelForDelegateTaskCore(input, {
+  return resolveModelForDelegateTaskCore({ ...input, honorUserModelVerbatim: true }, {
     connectedProviders,
     hasProviderModelsCache: connectedProvidersCache.hasProviderModelsCache(),
     hasConnectedProvidersCache: connectedProvidersCache.hasConnectedProvidersCache(),

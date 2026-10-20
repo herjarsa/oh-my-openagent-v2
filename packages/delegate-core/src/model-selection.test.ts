@@ -34,6 +34,7 @@ describe("resolveModelForDelegateTask", () => {
       userModel: "acme/custom-model",
       userFallbackModels: ["vendor/other-model"],
       availableModels: new Set(["vendor/other-model"]),
+      honorUserModelVerbatim: true,
     }, noCacheDeps)
 
     expect(result).toEqual({ model: "acme/custom-model" })
@@ -48,14 +49,39 @@ describe("resolveModelForDelegateTask", () => {
     expect(result).toEqual({ skipped: true })
   })
 
-  test("#given user primary is unreachable #when fallback_models has a reachable model #then returns user primary verbatim", () => {
+  test("#given user primary is unreachable #when fallback_models has a reachable model #then promotes fallback with variant", () => {
     const result = resolveModelForDelegateTask({
       userModel: "quotio/claude-haiku-4-5-unavailable",
       userFallbackModels: ["openai/gpt-5.4 high"],
       availableModels: new Set(["openai/gpt-5.4-preview"]),
     }, noCacheDeps)
 
+    expect(result).toEqual({
+      model: "openai/gpt-5.4-preview",
+      variant: "high",
+      matchedFallback: true,
+    })
+  })
+
+  test("#given user primary is unreachable #when honorUserModelVerbatim is set #then returns user primary verbatim", () => {
+    const result = resolveModelForDelegateTask({
+      userModel: "quotio/claude-haiku-4-5-unavailable",
+      userFallbackModels: ["openai/gpt-5.4 high"],
+      availableModels: new Set(["openai/gpt-5.4-preview"]),
+      honorUserModelVerbatim: true,
+    }, noCacheDeps)
+
     expect(result).toEqual({ model: "quotio/claude-haiku-4-5-unavailable" })
+  })
+
+  test("#given user model is outside plugin catalog #when flag is absent #then promotes the first reachable user fallback", () => {
+    const result = resolveModelForDelegateTask({
+      userModel: "acme/custom-model",
+      userFallbackModels: ["vendor/other-model"],
+      availableModels: new Set(["vendor/other-model"]),
+    }, noCacheDeps)
+
+    expect(result).toEqual({ model: "vendor/other-model", matchedFallback: true })
   })
 
   test("#given connected providers cache #when fallback chain starts disconnected #then selects first connected provider", () => {
