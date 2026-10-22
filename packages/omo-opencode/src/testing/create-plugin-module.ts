@@ -314,6 +314,37 @@ export function createPluginModule(overrides: Partial<PluginModuleDeps> = {}): P
       availableSkills: toolsResult.availableSkills,
     })
 
+    // Crash/restart recovery: resume active goals that were interrupted mid-turn.
+    // Fire-and-forget so plugin startup never blocks on session-store I/O.
+    // The hook is optional here so partial test harnesses can omit it.
+    const goalHook: {
+      readonly recoverActiveGoals?: () => Promise<{
+        readonly scanned: number
+        readonly resumed: readonly string[]
+        readonly pruned: readonly string[]
+        readonly skipped: number
+      }>
+    } | null | undefined = hooks.goal
+    const recoverActiveGoals = goalHook?.recoverActiveGoals
+    if (typeof recoverActiveGoals === "function") {
+      void recoverActiveGoals()
+        .then((result) => {
+          if (result.resumed.length > 0 || result.pruned.length > 0) {
+            deps.log("[goal] startup recovery completed", {
+              scanned: result.scanned,
+              resumed: result.resumed.length,
+              pruned: result.pruned.length,
+              skipped: result.skipped,
+            })
+          }
+        })
+        .catch((error: unknown) => {
+          deps.log("[goal] startup recovery failed", {
+            error: error instanceof Error ? error.message : String(error),
+          })
+        })
+    }
+
     const pluginInterface = deps.createPluginInterface({
       ctx: input,
       pluginConfig,

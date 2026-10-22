@@ -93,6 +93,7 @@ function createPluginContext(toasts: ToastCall[]): PluginContext {
 function createPluginConfig(defaultMode: DefaultModeConfig): OhMyOpenCodeConfig {
   return unsafeTestValue<OhMyOpenCodeConfig>({
     default_mode: defaultMode,
+    goal: { auto_start: defaultMode.goal ?? false },
   })
 }
 

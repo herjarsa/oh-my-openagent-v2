@@ -9144,12 +9144,24 @@
           "type": "number",
           "minimum": 1,
           "maximum": 1000
+        },
+        "resume_on_start": {
+          "default": true,
+          "type": "boolean"
+        },
+        "resume_window_minutes": {
+          "default": 30,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10080
         }
       },
       "required": [
         "enabled",
         "auto_start",
-        "default_max_iterations"
+        "default_max_iterations",
+        "resume_on_start",
+        "resume_window_minutes"
       ],
       "additionalProperties": false
     },

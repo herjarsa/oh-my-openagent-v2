@@ -6,6 +6,11 @@ import { log } from "../../shared"
 import { extractPromptText } from "./prompt-text"
 import type { ChatMessageHooks, ChatMessageHandlerOutput, ChatMessageInput } from "./types"
 
+function explicitGoalArguments(promptText: string): string | undefined {
+  const match = /^\/goal(?:\s+([\s\S]*))?$/i.exec(promptText.trim())
+  return match === null ? undefined : (match[1] ?? "").trim()
+}
+
 export function handleGoalMessage(args: {
   readonly hooks: ChatMessageHooks
   readonly input: ChatMessageInput
@@ -23,12 +28,26 @@ export function handleGoalMessage(args: {
   if (promptText.includes(AUTO_SLASH_COMMAND_TAG_OPEN)) {
     return
   }
-  const parsed = parseGoalCommand(promptText)
+
+  const explicitArguments = explicitGoalArguments(promptText)
+  const parsed = parseGoalCommand(explicitArguments ?? promptText)
+  const autoStart = isFirstMessage
+    && pluginConfig.default_mode?.goal === true
+    && pluginConfig.goal?.auto_start === true
 
   switch (parsed.kind) {
     case "setObjective":
-      hooks.goal.setGoal(input.sessionID, parsed.objective)
-      log("[chat-message] Goal set", { sessionID: input.sessionID, objective: parsed.objective })
+      if (explicitArguments === undefined && !autoStart) {
+        break
+      }
+      if (parsed.objective.length > 0) {
+        hooks.goal.setGoal(input.sessionID, parsed.objective)
+        log("[chat-message] Goal set", {
+          sessionID: input.sessionID,
+          objective: parsed.objective,
+          source: explicitArguments === undefined ? "auto-start" : "explicit-command",
+        })
+      }
       break
     case "setStatus":
       if (parsed.status === "paused") {
@@ -48,17 +67,5 @@ export function handleGoalMessage(args: {
       break
     default:
       break
-  }
-
-  if (
-    parsed.kind === "show"
-    && isFirstMessage
-    && pluginConfig.default_mode?.goal
-  ) {
-    const objective = promptText.trim()
-    if (objective.length > 0) {
-      hooks.goal.setGoal(input.sessionID, objective)
-      log("[chat-message] Default goal auto-started", { sessionID: input.sessionID, objective })
-    }
   }
 }
