@@ -167,6 +167,8 @@ export function createSessionHooks(args: {
           projectDir: ctx.directory,
           autoStart: pluginConfig.goal?.auto_start ?? false,
           ultrawork: pluginConfig.default_mode?.ultrawork ?? false,
+          resumeOnStart: pluginConfig.goal?.resume_on_start ?? true,
+          resumeWindowMinutes: pluginConfig.goal?.resume_window_minutes ?? 30,
           getSessionExists: async (sessionId) => await sessionExists(sessionId),
         }))
     : null

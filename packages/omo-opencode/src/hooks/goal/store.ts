@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto"
-import { mkdirSync, readFileSync, renameSync, unlinkSync, writeFileSync } from "node:fs"
+import { mkdirSync, readdirSync, readFileSync, renameSync, unlinkSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
+import { log } from "../../shared"
 import { GoalFileSchema, type Goal, type GoalFile, type GoalStoreRef, type GoalUpdate } from "./types"
 
 const STORE_VERSION = 1
@@ -27,6 +28,44 @@ export function readGoal(ref: GoalStoreRef): Goal | null {
 
   const parsed = parseGoalFile(raw)
   return parsed.goal
+}
+
+/**
+ * Read every goal file in a store directory. Unreadable or malformed files are
+ * skipped (and logged) so one bad file cannot take the whole store down.
+ */
+export function listGoals(baseDir: string): Goal[] {
+  let entries: string[]
+  try {
+    entries = readdirSync(baseDir)
+  } catch (error) {
+    if (isErrorWithCode(error) && error.code === "ENOENT") {
+      return []
+    }
+    log("[goal] failed to list goal store", {
+      baseDir,
+      error: error instanceof Error ? error.message : String(error),
+    })
+    return []
+  }
+
+  const goals: Goal[] = []
+  for (const entry of entries) {
+    if (!entry.endsWith(".json")) continue
+    const filePath = join(baseDir, entry)
+    try {
+      const parsed = parseGoalFile(readFileSync(filePath, "utf-8"))
+      if (parsed.goal !== null) {
+        goals.push(parsed.goal)
+      }
+    } catch (error) {
+      log("[goal] failed to read goal file", {
+        path: filePath,
+        error: error instanceof Error ? error.message : String(error),
+      })
+    }
+  }
+  return goals
 }
 
 export function writeGoal(ref: GoalStoreRef, goal: Goal | null): void {
@@ -63,6 +102,7 @@ export function createGoal(ref: GoalStoreRef, objective: string): Goal {
     createdAt: now,
     updatedAt: now,
     lastStartedAt: now,
+    resumeCount: 0,
   }
   writeGoal(ref, goal)
   return goal
@@ -82,6 +122,10 @@ export function updateGoal(ref: GoalStoreRef, update: GoalUpdate): Goal | null {
     tokensUsed: update.tokensUsed ?? existing.tokensUsed,
     timeUsedSeconds: update.timeUsedSeconds ?? existing.timeUsedSeconds,
     updatedAt: now,
+    ...(update.lastStartedAt !== undefined ? { lastStartedAt: update.lastStartedAt } : {}),
+    ...(update.resumeCount !== undefined ? { resumeCount: update.resumeCount } : {}),
+    ...(update.lastAccountedAt !== undefined ? { lastAccountedAt: update.lastAccountedAt } : {}),
+    ...(update.lastAccountedTokens !== undefined ? { lastAccountedTokens: update.lastAccountedTokens } : {}),
   }
 
   if (update.status === "active" && existing.status !== "active") {
