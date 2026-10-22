@@ -48,6 +48,12 @@
         "type": "string"
       }
     },
+    "ecc_profiles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "disabled_hooks": {
       "type": "array",
       "items": {

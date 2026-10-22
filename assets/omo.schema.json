@@ -2370,6 +2370,12 @@
             "type": "string"
           }
         },
+        "ecc_profiles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "disabled_hooks": {
           "type": "array",
           "items": {
@@ -20332,6 +20338,12 @@
                 }
               },
               "disabled_skills": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "ecc_profiles": {
                 "type": "array",
                 "items": {
                   "type": "string"
