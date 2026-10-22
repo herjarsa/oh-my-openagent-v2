@@ -1,4 +1,5 @@
-import { join } from "path"
+import { join, dirname } from "path"
+import { existsSync } from "node:fs"
 import { getHomeDirectory } from "@oh-my-opencode/utils"
 import { sharedSkillsRootPath } from "@oh-my-opencode/shared-skills"
 import {
@@ -68,10 +69,12 @@ export async function loadGlobalAgentsSkills(homeDirectory: string = getHomeDire
 export interface DiscoverSkillsOptions {
   includeClaudeCodePaths?: boolean
   directory?: string
+  eccProfiles?: string[]
+  disabledSkills?: Set<string>
 }
 
 export async function discoverAllSkills(directory?: string): Promise<LoadedSkill[]> {
-  const [opencodeProjectSkills, opencodeGlobalSkills, sharedSkills, projectSkills, userSkills, agentsProjectSkills, agentsGlobalSkills] =
+  const [opencodeProjectSkills, opencodeGlobalSkills, sharedSkills, projectSkills, userSkills, agentsProjectSkills, agentsGlobalSkills, eccSkills] =
     await Promise.all([
       discoverOpencodeProjectSkills(directory),
       discoverOpencodeGlobalSkills(),
@@ -80,6 +83,7 @@ export async function discoverAllSkills(directory?: string): Promise<LoadedSkill
       discoverUserClaudeSkills(),
       discoverProjectAgentsSkills(directory),
       discoverGlobalAgentsSkills(),
+      discoverEccSkills(),
     ])
 
   return deduplicateSkillsByName([
@@ -90,16 +94,104 @@ export async function discoverAllSkills(directory?: string): Promise<LoadedSkill
     ...userSkills,
     ...agentsGlobalSkills,
     ...sharedSkills,
+    ...eccSkills,
   ])
 }
 
+export function eccSkillsRootPath(): string | undefined {
+  try {
+    const parent = dirname(sharedSkillsRootPath())
+    const candidate = join(parent, "ecc-skills")
+    return existsSync(candidate) ? candidate : undefined
+  } catch {
+    return undefined
+  }
+}
+
+export function eccAgentsRootPath(): string | undefined {
+  try {
+    const parent = dirname(sharedSkillsRootPath())
+    const candidate = join(parent, "ecc-agents")
+    return existsSync(candidate) ? candidate : undefined
+  } catch {
+    return undefined
+  }
+}
+
+export function eccCommandsRootPath(): string | undefined {
+  try {
+    const parent = dirname(sharedSkillsRootPath())
+    const candidate = join(parent, "ecc-commands")
+    return existsSync(candidate) ? candidate : undefined
+  } catch {
+    return undefined
+  }
+}
+
+export const ECC_PROFILES: Record<string, string[] | null> = {
+  core: [
+    "tdd-workflow",
+    "verification-loop",
+    "debugging",
+    "security-review",
+    "code-review",
+    "refactor-clean",
+    "e2e-testing",
+    "eval-harness",
+    "deep-research",
+    "architecture-decision-records",
+    "codebase-onboarding",
+    "context-budget",
+    "conventional-commit-review",
+    "git-workflow",
+    "continuous-learning",
+    "strategic-compact",
+    "iterative-retrieval",
+    "production-audit",
+    "delivery-gate",
+    "agent-self-evaluation",
+  ],
+  all: null,
+}
+
+export async function discoverEccSkills(
+  profiles?: string[],
+  disabledSkills?: Set<string>,
+): Promise<LoadedSkill[]> {
+  const root = eccSkillsRootPath()
+  if (!root) return []
+  if (!profiles || profiles.length === 0) return []
+
+  const allSkills = await loadSkillsFromDir({ skillsDir: root, scope: "shared" })
+  const allowed = new Set<string>()
+  let includeAll = false
+  for (const profile of profiles) {
+    const spec = ECC_PROFILES[profile]
+    if (spec === null) {
+      includeAll = true
+      break
+    }
+    if (Array.isArray(spec)) {
+      for (const name of spec) allowed.add(name)
+    }
+  }
+  if (!includeAll && allowed.size === 0) return []
+
+  const filtered = includeAll
+    ? allSkills
+    : allSkills.filter((skill) => allowed.has(skill.name))
+
+  if (!disabledSkills || disabledSkills.size === 0) return filtered
+  return filtered.filter((s) => !disabledSkills.has(s.name) && ![...disabledSkills].some(d => d.toLowerCase() === s.name.toLowerCase()))
+}
 export async function discoverSkills(options: DiscoverSkillsOptions = {}): Promise<LoadedSkill[]> {
   const { includeClaudeCodePaths = true, directory } = options
 
-  const [opencodeProjectSkills, opencodeGlobalSkills, sharedSkills] = await Promise.all([
+  const [opencodeProjectSkills, opencodeGlobalSkills, sharedSkills, eccSkills] = await Promise.all([
     discoverOpencodeProjectSkills(directory),
     discoverOpencodeGlobalSkills(),
     discoverSharedSkills(),
+    discoverEccSkills(options?.eccProfiles, options?.disabledSkills),
   ])
 
   if (!includeClaudeCodePaths) {
@@ -107,6 +199,7 @@ export async function discoverSkills(options: DiscoverSkillsOptions = {}): Promi
       ...opencodeProjectSkills,
       ...opencodeGlobalSkills,
       ...sharedSkills,
+      ...eccSkills,
     ])
   }
 
@@ -125,6 +218,7 @@ export async function discoverSkills(options: DiscoverSkillsOptions = {}): Promi
     ...userSkills,
     ...agentsGlobalSkills,
     ...sharedSkills,
+    ...eccSkills,
   ])
 }
 

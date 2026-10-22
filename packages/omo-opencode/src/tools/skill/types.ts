@@ -40,6 +40,8 @@ export interface SkillLoadOptions {
   browserProvider?: BrowserAutomationProvider
   /** Whether team mode built-in docs should be exposed */
   teamModeEnabled?: boolean
+  /** ECC skill profiles to enable (e.g. ["core", "all"]). Empty/undefined = no ECC skills loaded. */
+  eccProfiles?: string[]
   /** Include Claude marketplace plugin commands in discovery (default: true) */
   pluginsEnabled?: boolean
   /** Override plugin enablement from Claude settings by plugin key */

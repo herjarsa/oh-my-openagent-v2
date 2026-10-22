@@ -15,6 +15,7 @@ import {
   discoverProjectAgentsSkills,
   discoverGlobalAgentsSkills,
   discoverSharedSkills,
+  discoverEccSkills,
   collectDisabledSkillAliases,
   isDisabledSkillAlias,
   mergeSkills,
@@ -109,6 +110,7 @@ export async function createSkillContext(args: {
     agentsProjectSkills,
     agentsGlobalSkills,
     sharedSkills,
+    eccSkills,
   ] = await Promise.all([
     discoverConfigSourceSkills({
       config: pluginConfig.skills,
@@ -125,6 +127,7 @@ export async function createSkillContext(args: {
     discoverProjectAgentsSkills(directory),
     discoverGlobalAgentsSkills(),
     discoverSharedSkills(),
+    discoverEccSkills(pluginConfig.ecc_profiles, disabledSkills),
   ])
 
   // Host-config skills (read from opencode.jsonc skills.paths) take precedence
@@ -176,11 +179,15 @@ export async function createSkillContext(args: {
     filterProviderGatedSkills(sharedSkills, browserProvider),
     disabledSkills,
   )
+  const filteredEccSkills = filterDisabledSkills(
+    filterProviderGatedSkills(eccSkills, browserProvider),
+    disabledSkills,
+  )
   const mergedSkills = mergeSkills(
     builtinSkills,
     pluginConfig.skills,
     activeConfigSourceSkills,
-    [...activeUserSkills, ...activeAgentsGlobalSkills, ...filteredSharedSkills],
+    [...activeUserSkills, ...activeAgentsGlobalSkills, ...filteredSharedSkills, ...filteredEccSkills],
     activeGlobalSkills,
     [...activeProjectSkills, ...activeAgentsProjectSkills],
     activeOpencodeProjectSkills,
