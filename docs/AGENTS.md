@@ -4,7 +4,7 @@
 
 ## OVERVIEW
 
-30 tracked Markdown files across 6 subdirectories (guide 7, reference 18, examples 3 JSONC, legal 2, templates 1, troubleshooting 1) + root files. Categorized by audience: user-facing guides + reference, troubleshooting, legal. The web site at packages/web/ consumes some of these (via `web-deploy.yml` triggers).
+31 tracked Markdown files across 7 subdirectories (guide 7, reference 18, examples 3 JSONC, legal 2, templates 1, troubleshooting 1, superpowers/specs 1) + root files. Categorized by audience: user-facing guides + reference, troubleshooting, legal. The web site at packages/web/ consumes some of these (via `web-deploy.yml` triggers).
 
 ## WHERE TO LOOK
 
@@ -23,6 +23,7 @@
 | CLI command reference | docs/reference/cli.md |
 | Known issues & workarounds | docs/reference/known-issues.md |
 | `prompt_async_gate` deep-dive | docs/reference/prompt-async-gate-rfc.md |
+| Dated design specs (internal, pre-implementation) | docs/superpowers/specs/ |
 | Shared core multi-PR extraction QA | docs/reference/shared-core-multi-pr.md |
 | Re-export shim inventory | docs/reference/re-export-shim-inventory.md |
 | Release process | docs/reference/release-process.md |
@@ -46,6 +47,7 @@ docs/
 ├── model-capabilities-maintenance.md         # How model-capabilities cache is refreshed
 ├── guide/                                    # User-facing tutorial-style guides (7 files)
 ├── reference/                                # API / config / CLI reference (18 files)
+├── superpowers/specs/                        # Dated design specs (internal, pre-implementation)
 ├── examples/                                 # Sample JSONC configs (3 files)
 ├── legal/                                    # privacy-policy.md + terms-of-service.md
 ├── templates/
