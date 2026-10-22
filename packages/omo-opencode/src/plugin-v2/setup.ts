@@ -483,7 +483,24 @@ export function createV2SpikeSetup(): V2Plugin.Plugin {
               const result = registerV1Tools(
                 { add: (tool) => editor.add(tool as never) },
                 v1tools as never,
-                { directory },
+                {
+                  directory,
+                  ask: async (input, identity) => {
+                    const source =
+                      identity.messageID !== "" && identity.callID !== ""
+                        ? { type: "tool" as const, messageID: identity.messageID, id: identity.callID }
+                        : undefined
+                    await ctx.permission.assert({
+                      sessionID: identity.sessionID,
+                      action: input.permission,
+                      resources: [...input.patterns],
+                      ...(identity.agent === "" ? {} : { agent: identity.agent }),
+                      ...(input.always === undefined ? {} : { save: [...input.always] }),
+                      ...(input.metadata === undefined ? {} : { metadata: input.metadata }),
+                      ...(source === undefined ? {} : { source }),
+                    })
+                  },
+                },
               )
               spikeLog("v2_toolmap_registered", {
                 count: result.registered.length,

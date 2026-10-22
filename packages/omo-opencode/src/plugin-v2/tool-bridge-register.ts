@@ -35,6 +35,33 @@ export type RegisterToolsResult = {
   failed: { name: string; reason: string }[]
 }
 
+/** The permission request a V1 tool sends through `ctx.ask()`. */
+export type V1AskInput = {
+  readonly permission: string
+  readonly patterns: readonly string[]
+  readonly always?: readonly string[]
+  readonly metadata?: Record<string, unknown>
+}
+
+/** Who is asking, taken from the V2 execute context. */
+export type V1AskIdentity = {
+  readonly sessionID: string
+  readonly agent: string
+  readonly messageID: string
+  readonly callID: string
+}
+
+/**
+ * Adapts `ctx.ask()` onto the harness permission system. Without one, a tool
+ * that asks keeps failing with the historical "no V2 equivalent" error.
+ */
+export type AskBridge = (input: V1AskInput, identity: V1AskIdentity) => Promise<void>
+
+export type RegisterV1ToolsOptions = {
+  readonly directory: string
+  readonly ask?: AskBridge
+}
+
 /**
  * Convert a V1 zod raw shape to JSON Schema. Primary path is zod v4's
  * `toJSONSchema` (`$schema` stripped); total fallback is `{type:"object"}`.
@@ -80,18 +107,42 @@ function sessionIDOf(context: unknown): string {
   return ""
 }
 
+function stringFieldOf(record: Record<string, unknown>, key: string): string {
+  const value = record[key]
+  return typeof value === "string" ? value : ""
+}
+
+function readStringArray(value: unknown): readonly string[] | undefined {
+  if (!Array.isArray(value)) return undefined
+  return value.filter((entry): entry is string => typeof entry === "string")
+}
+
+function toAskInput(raw: unknown): V1AskInput {
+  const record = (raw !== null && typeof raw === "object" ? raw : {}) as Record<string, unknown>
+  const metadata = record["metadata"]
+  return {
+    permission: typeof record["permission"] === "string" ? record["permission"] : "unknown",
+    patterns: readStringArray(record["patterns"]) ?? [],
+    always: readStringArray(record["always"]),
+    metadata:
+      metadata !== null && typeof metadata === "object" && !Array.isArray(metadata)
+        ? (metadata as Record<string, unknown>)
+        : undefined,
+  }
+}
+
 /**
  * Register every V1 tool definition on the V2 tool editor.
  * Each tool is converted, adapted and added inside its own try/catch —
  * one bad tool never blocks the others. V1 execute() receives a minimal
  * context (sessionID from V2, directory/worktree from setup, abort from
- * V2 signal); `ask()` (interactive permission escalation) has no V2
- * equivalent and throws a descriptive error if a tool reaches it.
+ * V2 signal); `ask()` is forwarded to `opts.ask`, which the setup wires to
+ * the V2 permission domain, so tools like `skill` can load their body.
  */
 export function registerV1Tools(
   editor: V2ToolEditorLike,
   tools: Record<string, V1ToolDefinition>,
-  opts: { directory: string },
+  opts: RegisterV1ToolsOptions,
 ): RegisterToolsResult {
   const registered: string[] = []
   const failed: { name: string; reason: string }[] = []
@@ -112,16 +163,26 @@ export function registerV1Tools(
         input,
         execute: async (input: Record<string, unknown>, context: unknown) => {
           const rec = (context !== null && typeof context === "object" ? context : {}) as Record<string, unknown>
-          const v1context = {
+          const identity: V1AskIdentity = {
             sessionID: sessionIDOf(context),
-            messageID: typeof rec["messageID"] === "string" ? rec["messageID"] : "",
-            agent: typeof rec["agent"] === "string" ? rec["agent"] : "",
+            agent: stringFieldOf(rec, "agent"),
+            messageID: stringFieldOf(rec, "messageID"),
+            callID: stringFieldOf(rec, "id"),
+          }
+          const askBridge = opts.ask
+          const v1context = {
+            sessionID: identity.sessionID,
+            messageID: identity.messageID,
+            agent: identity.agent,
             directory: opts.directory,
             worktree: opts.directory,
             abort: rec["signal"] instanceof AbortSignal ? rec["signal"] : undefined,
             metadata: () => undefined,
-            ask: async () => {
-              throw new Error(`tool ${name}: interactive ask() has no V2 equivalent`)
+            ask: async (request: unknown) => {
+              if (askBridge === undefined) {
+                throw new Error(`tool ${name}: interactive ask() has no V2 equivalent`)
+              }
+              await askBridge(toAskInput(request), identity)
             },
           }
           try {
