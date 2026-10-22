@@ -1,4 +1,4 @@
-# Background Task Durability — Design
+# Background Task Durability: Design
 
 **Date:** 2026-10-22
 **Status:** Approved (design), pending spec review
@@ -21,13 +21,13 @@ A background task's result is not durable. Three concrete defects, all reproduce
    (`manager.ts:1079-1081`) has no disk fallback.
 3. **The completion notification lies about the batch.** `allComplete` and `remainingCount` are
    computed from `pendingByParent` and `completedTaskSummaries` (`manager.ts:2679-2702`), both
-   in-memory and cleared aggressively — `clearTaskHistoryWhenParentTasksGone` drops them as soon as
+   in-memory and cleared aggressively: `clearTaskHistoryWhenParentTasksGone` drops them as soon as
    no live task remains (`manager.ts:2357-2362`). A task removed from memory before its sibling
    finished silently disappears from the "ALL BACKGROUND TASKS COMPLETE" list, so the parent is
    told the batch is done while one of its results is already unreachable.
 
-A fourth, separate defect — `client.session.list is not a function` against the pinned
-`@opencode-ai/sdk@1.18.31` (`session-manager/sdk-storage.ts:47`) — breaks the `session_read` /
+A fourth, separate defect: `client.session.list is not a function` against the pinned
+`@opencode-ai/sdk@1.18.31` (`session-manager/sdk-storage.ts:47`) breaks the `session_read` /
 `session_info` / `session_search` fallback that the not-found message advertises. **The SDK
 upgrade is out of scope for this change** and stays a separate task.
 
@@ -38,7 +38,7 @@ upgrade is out of scope for this change** and stays a separate task.
 
 - Terminal tasks are pruned from `this.tasks` after 30 minutes regardless
   (`TERMINAL_TASK_TTL_MS`, `task-poller.ts:49-61`). The delayed-removal timer then finds no task
-  and returns early, so the child session is **never deleted** — the retention leak.
+  and returns early, so the child session is **never deleted**. That is the retention leak.
 - The task metadata still lives only in memory.
 - `background_output` still reads the output from the session, so a live-but-orphaned session is
   the only thing keeping the result reachable.
@@ -89,8 +89,8 @@ Raising the delay is a mitigation, not a fix, and it trades one defect for a lea
 
 **Location.** Two files per task under `getOmoDataDir()/delegations/<projectHash>/`:
 
-- `<taskId>.json` — the record: metadata and the extracted result text.
-- `<taskId>.transcript.json` — the raw transcript, read only when a full session is requested.
+- `<taskId>.json`: the record, with metadata and the extracted result text.
+- `<taskId>.transcript.json`: the raw transcript, read only when a full session is requested.
 
 The split is deliberate: the record is small and is read on every `getTask` miss, while the
 transcript can be tens of megabytes. Parsing a 20 MB JSON on every lookup would put the
@@ -169,7 +169,7 @@ neither re-scans the directory.
 
 ### 5.2 Lifecycle
 
-**`finalizeTerminalTask(task)`** — one helper, called from every terminal transition (completion,
+**`finalizeTerminalTask(task)`**: one helper, called from every terminal transition (completion,
 error, cancellation, interruption, stale-prune, crash):
 
 1. If persistence is disabled → schedule the legacy session deletion at `taskCleanupDelayMs` and
@@ -182,8 +182,8 @@ error, cancellation, interruption, stale-prune, crash):
 4. Derive `result` from the transcript with the shared extractor
    (`persistence/result-text.ts`) and write the transcript to the sidecar file. The tool layer
    formats the document, so the live path and the persisted path produce the same text.
-5. Write the record atomically. On failure: log it, set `persistenceError`, and **do not throw** —
-   the notification still goes out, and the task is reported as not recoverable.
+5. Write the record atomically. On failure: log it, set `persistenceError`, and **do not throw**.
+   The notification still goes out, and the task is reported as not recoverable.
 6. Set `task.result` so in-memory callers see the output.
 7. Schedule the session deletion.
 
@@ -221,7 +221,7 @@ this.tasks → this.completedTaskArchive → getRegisteredBackgroundTask → per
 
 The disk fallback reads the small record (never the transcript) and returns a `BackgroundTask` with
 `status`, `sessionId`, `description`, `agent`, `category`, `error`, `attempts`, timestamps, and
-`result` restored. `prompt` is empty — it was never persisted. The task is marked
+`result` restored. `prompt` is empty because it was never persisted. The task is marked
 `persisted: true`. The transcript is loaded separately, only when a full session is requested.
 
 **`background_output`.**
@@ -248,9 +248,9 @@ the SDK cannot serve it.
 **Ledger.** `buildTaskLedgerSummary(parentSessionId)` merges three sources, de-duplicated by task
 ID:
 
-- `live` — tasks in `this.tasks` for the parent with status `pending` or `running`.
-- `records` — the persisted records for that parent, read from the in-memory index.
-- `summaries` — `completedTaskSummaries`, the in-memory fallback for tasks whose persistence
+- `live`: tasks in `this.tasks` for the parent with status `pending` or `running`.
+- `records`: the persisted records for that parent, read from the in-memory index.
+- `summaries`: `completedTaskSummaries`, the in-memory fallback for tasks whose persistence
   failed.
 
 Derived values:
@@ -312,17 +312,19 @@ controlling session deletion. With `resultPersistence.enabled: false` the plugin
 legacy behaviour: the session is deleted at `taskCleanupDelayMs` and no record is written.
 ## 6. Module map
 
-**New — `packages/omo-opencode/src/features/background-agent/persistence/`**
+**New: `packages/omo-opencode/src/features/background-agent/persistence/`**
 
 | File | Purpose |
 |------|---------|
 | `paths.ts` | Root resolution, project hash, path building |
 | `record.ts` | `PersistedTaskRecord` type, (de)serialization, `toBackgroundTask` |
-| `store.ts` | `writeTaskRecord`, `readTaskRecord`, `writeTaskTranscript`, `readTaskTranscript`, `listTaskRecords`, `deleteTaskRecord`, `sweepExpiredRecords` |
+| `record-store.ts` | `writeTaskRecord`, `readTaskRecord`, `listTaskRecords`, `deleteTaskRecord`, `sweepExpiredRecords` |
+| `transcript-store.ts` | `writeTaskTranscript`, `readTaskTranscript` |
+| `task-ledger.ts` | The in-memory index of persisted records and the per-parent ledger summary |
 | `config.ts` | Resolved persistence config with defaults |
 | `result-text.ts` | Shared extraction of the final result text from a transcript |
 
-**New — shared**
+**New: shared**
 
 | File | Purpose |
 |------|---------|
@@ -358,10 +360,10 @@ legacy behaviour: the session is deleted at `taskCleanupDelayMs` and no record i
 
 1. A terminal task's record is written **before** the completion notification is built.
 2. A record's `result` is the same text the live path extracts from the same messages, and the
-   persisted path renders it with the same formatter — so the first `background_output` read
+   persisted path renders it with the same formatter, so the first `background_output` read
    returns the same document whether the session is alive or not.
 3. The child session is never deleted before `deleteAfter`, and never deleted earlier than
-   `completedSessionRetentionMs` after completion — regardless of what `taskCleanupDelayMs` is.
+   `completedSessionRetentionMs` after completion, regardless of what `taskCleanupDelayMs` is.
 4. A failed persistence write never breaks the completion path: the notification still goes out
    and the task is reported as `[unrecoverable]`.
 5. A corrupt or missing record never throws into the tool layer; it degrades to "not found".
@@ -370,7 +372,7 @@ legacy behaviour: the session is deleted at `taskCleanupDelayMs` and no record i
 
 ## 8. Test plan
 
-**Unit — `features/background-agent/persistence/store.test.ts`**
+**Unit: `features/background-agent/persistence/record-store.test.ts`**
 
 - The project hash is deterministic, case-insensitive on Windows, and contains no separators.
 - Write → read round trip; the record survives as valid JSON; no `.tmp` file is left behind.
@@ -381,7 +383,7 @@ legacy behaviour: the session is deleted at `taskCleanupDelayMs` and no record i
 - A transcript above `maxTranscriptBytes` is truncated and flagged; the truncated transcript lives
   in the sidecar file while the record stays small.
 
-**Manager — `features/background-agent/manager.persistence.test.ts`**
+**Manager: `features/background-agent/manager.persistence.test.ts`**
 
 - A terminal task writes a record; `getTask` returns it after `this.tasks`, the archive, and the
   global registry are cleared.
@@ -393,7 +395,7 @@ legacy behaviour: the session is deleted at `taskCleanupDelayMs` and no record i
 - `reconcilePersistedTasks` deletes expired records, deletes overdue sessions, and re-arms future
   timers.
 
-**Tool — `tools/background-task/background-output-persisted.test.ts`**
+**Tool: `tools/background-task/background-output-persisted.test.ts`**
 
 - `background_output` with `client.session.messages` rejecting returns the persisted result plus
   the recovery note.
@@ -401,14 +403,14 @@ legacy behaviour: the session is deleted at `taskCleanupDelayMs` and no record i
 - `block=true` on a persisted terminal task returns immediately.
 - With a live session, the cursor behaviour is unchanged (no regression).
 
-**Notification — extend `features/background-agent/background-task-notification-template.test.ts`**
+**Notification: extend `features/background-agent/background-task-notification-template.test.ts`**
 
 - The known-tasks line and the recoverable / unrecoverable markers.
 - Two tasks where one was evicted from memory before the other completed: both are listed, the
   evicted one is `[recoverable]`.
 - A failed persistence write yields `[unrecoverable]`.
 
-**Existing suites — update, do not delete**
+**Existing suites: update, do not delete**
 
 - `task-completion-cleanup.test.ts` asserts on the cleanup timer; the session deletion moves to its
   own timer, so the assertions are updated to the new split while keeping their intent.
@@ -438,7 +440,7 @@ legacy behaviour: the session is deleted at `taskCleanupDelayMs` and no record i
 | Disk growth from transcripts | 20 MB cap per task, 7-day retention, hourly sweep, configurable root and caps |
 | Transcripts can contain secrets or tool output | File mode `0600`, directories `0700`, no prompt persisted, retention bounded, config to disable |
 | `client.session.delete` may not exist in the OpenCode 2 contract | The session is not deleted; the output stays durable and the sweep retries. The plugin already guards the call with a `typeof === "function"` check |
-| 24-hour session retention increases OpenCode's own session storage | Configurable; the session is still deleted on schedule, just later than before |
+| 24-hour session retention increases OpenCode's own session storage | Configurable; the session is still deleted on schedule, only later than before |
 | A crash before the terminal write loses the output | Accepted: the ledger is terminal-only by decision. A future launch-time record would close this, at the cost of reconciling orphaned `running` records |
 | Cross-worktree lookups fail | Records are scoped to the launch directory by design; the not-found message states this |
 | The pinned SDK still lacks `session.list` | Out of scope; the not-found message stops advertising `session_read` as the primary path |
