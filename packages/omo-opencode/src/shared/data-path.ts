@@ -66,3 +66,11 @@ export function getOmoOpenCodeCacheDir(): string {
 export function getOpenCodeCacheDir(): string {
   return path.join(getCacheDir(), "opencode")
 }
+
+/**
+ * Returns the oh-my-opencode user-level data directory.
+ * Uses the same XDG base as OpenCode: XDG_DATA_HOME or ~/.local/share on every platform.
+ */
+export function getOmoDataDir(): string {
+  return path.join(getDataDir(), CACHE_DIR_NAME)
+}

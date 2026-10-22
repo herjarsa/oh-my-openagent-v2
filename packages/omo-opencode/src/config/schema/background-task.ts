@@ -16,6 +16,13 @@ export const BackgroundTaskConfigSchema = z.object({
   staleTimeoutMs: z.number().min(60000).optional(),
   /** Timeout for tasks that never received any progress update, falling back to startedAt (default: 1800000 = 30 minutes, minimum: 60000 = 1 minute) */
   messageStalenessTimeoutMs: z.number().min(60000).optional(),
+  resultPersistence: z.object({
+    enabled: z.boolean().optional(),
+    root: z.string().optional(),
+    retentionMs: z.number().min(3_600_000).optional(),
+    completedSessionRetentionMs: z.number().min(60_000).optional(),
+    maxTranscriptBytes: z.number().min(1_048_576).optional(),
+  }).optional(),
   /** Absolute TTL for non-terminal tasks in milliseconds (default: 1800000 = 30 minutes, minimum: 300000 = 5 minutes). Tasks exceeding this age from their last activity (or startedAt if no progress) are pruned. */
   taskTtlMs: z.number().min(300000).optional(),
   /** Timeout for tasks whose session has completely disappeared from the status registry (default: 60000 = 1 minute, minimum: 10000 = 10 seconds). When a session is gone (likely crashed), this shorter timeout is used instead of the normal stale timeout. */
