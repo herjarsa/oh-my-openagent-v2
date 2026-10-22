@@ -102,7 +102,7 @@
     "build:git-bash-mcp": "bun run --cwd packages/git-bash-mcp build",
     "build:ast-grep-mcp": "bun run --cwd packages/ast-grep-mcp build",
     "build:materialize-frontend": "node script/materialize-shared-upstreams.mjs --strict",
-    "build:shared-skills-assets": "bun run build:materialize-frontend && rm -rf dist/skills && cp -R packages/shared-skills/skills dist/skills"
+    "build:shared-skills-assets": "bun run build:materialize-frontend && bun run script/build-shared-skills-assets.ts"
   },
   "keywords": [
     "opencode",
