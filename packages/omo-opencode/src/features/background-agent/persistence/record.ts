@@ -37,6 +37,7 @@ export interface PersistedTaskRecord {
   attempts?: PersistedAttempt[]
   result?: string
   messagesTruncated?: boolean
+  hasTranscript?: boolean
   persistedAt: string
   deleteAfter: string
   expiresAt: string
@@ -49,6 +50,10 @@ export interface PersistedTaskTranscript {
   taskId: string
   messages: BackgroundOutputMessage[]
   messagesTruncated: boolean
+}
+
+export function isPersistedTaskStatus(status: string): status is PersistedTaskStatus {
+  return status === "completed" || status === "error" || status === "cancelled" || status === "interrupt"
 }
 
 export function isPersistedTaskRecord(value: unknown): value is PersistedTaskRecord {

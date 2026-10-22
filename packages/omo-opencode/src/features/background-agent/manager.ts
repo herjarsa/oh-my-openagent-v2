@@ -124,8 +124,30 @@ import type {
   LaunchInput,
   ResumeInput,
 } from "./types"
+import {
+  isPersistedTaskStatus,
+  toBackgroundTask,
+  toPersistedAttempts,
+  PERSISTED_TASK_RECORD_SCHEMA_VERSION,
+  type PersistedTaskRecord,
+  type PersistedTaskTranscript,
+} from "./persistence/record"
+import { resolveResultPersistenceConfig, type ResultPersistenceConfig } from "./persistence/config"
+import { readTaskRecord, writeTaskRecord } from "./persistence/record-store"
+import { readTaskTranscript, writeTaskTranscript } from "./persistence/transcript-store"
+import { extractTaskResultText } from "./persistence/result-text"
+import { TaskLedger } from "./persistence/task-ledger"
+import {
+  extractBackgroundOutputMessages,
+  type BackgroundOutputMessage,
+} from "../../shared/background-output-message"
+import { getSdkCallTimeoutMs, withSdkCallTimeout } from "../../shared/sdk-call-timeout"
 
 type OpencodeClient = PluginInput["client"]
+
+function toIso(value: Date | undefined): string | undefined {
+  return value ? value.toISOString() : undefined
+}
 
 type ResumeTaskSnapshot = {
   status: BackgroundTask["status"]
@@ -285,6 +307,8 @@ export class BackgroundManager {
   private loggedSessionStatusUnavailable = false
   readonly taskHistory = new TaskHistory()
   private cachedCircuitBreakerSettings?: CircuitBreakerSettings
+  private readonly taskLedger = new TaskLedger()
+  private cachedResultPersistence: ResultPersistenceConfig | undefined
   private readonly scheduledFlushSettledCounts = new Map<string, number>()
   private readonly scheduledFlushSettledWaiters = new Map<string, Array<() => void>>()
 
@@ -1077,7 +1101,137 @@ The fallback retry session is now created and can be inspected directly.
   }
 
   getTask(id: string): BackgroundTask | undefined {
-    return this.tasks.get(id) ?? this.completedTaskArchive.get(id) ?? getRegisteredBackgroundTask(id)
+    return (
+      this.tasks.get(id) ??
+      this.completedTaskArchive.get(id) ??
+      getRegisteredBackgroundTask(id) ??
+      this.getPersistedBackgroundTask(id)
+    )
+  }
+
+  private getPersistedBackgroundTask(id: string): BackgroundTask | undefined {
+    const record = this.getRecordFromLedgerOrDisk(id)
+    return record ? toBackgroundTask(record) : undefined
+  }
+
+  private getRecordFromLedgerOrDisk(taskId: string): PersistedTaskRecord | undefined {
+    const fromLedger = this.taskLedger.get(taskId)
+    if (fromLedger) return fromLedger
+    const persistence = this.resolveResultPersistence()
+    if (!persistence.enabled) return undefined
+    const record = readTaskRecord(taskId, persistence.root, this.directory)
+    if (record) this.taskLedger.upsert(record)
+    return record
+  }
+
+  getPersistedTaskRecord(taskId: string): PersistedTaskRecord | undefined {
+    return this.getRecordFromLedgerOrDisk(taskId)
+  }
+
+  getPersistedTaskTranscript(taskId: string): PersistedTaskTranscript | undefined {
+    const persistence = this.resolveResultPersistence()
+    if (!persistence.enabled) return undefined
+    return readTaskTranscript(taskId, persistence.root, this.directory)
+  }
+
+  private resolveResultPersistence(): ResultPersistenceConfig {
+    this.cachedResultPersistence ??= resolveResultPersistenceConfig(this.config)
+    return this.cachedResultPersistence
+  }
+
+  private async fetchTaskMessages(task: BackgroundTask): Promise<BackgroundOutputMessage[] | undefined> {
+    if (!task.sessionId) return undefined
+    try {
+      const response = await withSdkCallTimeout(
+        this.client.session.messages({ path: { id: task.sessionId } }),
+        getSdkCallTimeoutMs(),
+      )
+      return extractBackgroundOutputMessages(response)
+    } catch (error) {
+      log("[background-agent] Failed to read the child session transcript:", {
+        taskId: task.id,
+        error: String(error),
+      })
+      return undefined
+    }
+  }
+
+  private async finalizeTerminalTask(task: BackgroundTask): Promise<void> {
+    try {
+      await this.persistTerminalTaskRecord(task)
+    } catch (error) {
+      log("[background-agent] Failed to finalize the background task record:", {
+        taskId: task.id,
+        error: String(error),
+      })
+    }
+  }
+
+  private async persistTerminalTaskRecord(task: BackgroundTask): Promise<void> {
+    const status = task.status
+    if (!isPersistedTaskStatus(status)) return
+    const persistence = this.resolveResultPersistence()
+    if (!persistence.enabled) return
+
+    const existing = this.taskLedger.get(task.id)
+    const completedIso = toIso(task.completedAt)
+    if (existing && existing.status === status && existing.completedAt === completedIso) {
+      return
+    }
+
+    const completedAt = task.completedAt ?? new Date()
+    const now = new Date().toISOString()
+    const messages = await this.fetchTaskMessages(task)
+    const record: PersistedTaskRecord = {
+      schemaVersion: PERSISTED_TASK_RECORD_SCHEMA_VERSION,
+      taskId: task.id,
+      parentSessionId: task.parentSessionId,
+      ...(task.parentMessageId ? { parentMessageId: task.parentMessageId } : {}),
+      ...(task.sessionId ? { sessionId: task.sessionId } : {}),
+      projectDirectory: this.directory,
+      description: task.description,
+      agent: task.agent,
+      ...(task.category ? { category: task.category } : {}),
+      status,
+      createdAt: (task.queuedAt ?? completedAt).toISOString(),
+      ...(task.startedAt ? { startedAt: task.startedAt.toISOString() } : {}),
+      completedAt: completedAt.toISOString(),
+      updatedAt: now,
+      ...(task.error ? { error: task.error } : {}),
+      attempts: toPersistedAttempts(task.attempts),
+      ...(messages ? { result: extractTaskResultText(messages) } : {}),
+      persistedAt: now,
+      deleteAfter: new Date(completedAt.getTime() + persistence.completedSessionRetentionMs).toISOString(),
+      expiresAt: new Date(completedAt.getTime() + persistence.retentionMs).toISOString(),
+    }
+
+    if (messages) {
+      try {
+        record.hasTranscript = true
+        record.messagesTruncated = writeTaskTranscript(
+          task.id,
+          messages,
+          persistence.maxTranscriptBytes,
+          persistence.root,
+          this.directory,
+        )
+      } catch (error) {
+        record.persistenceError = String(error)
+      }
+    }
+
+    try {
+      writeTaskRecord(record, persistence.root, this.directory)
+      if (record.result) task.result = record.result
+    } catch (error) {
+      log("[background-agent] Failed to persist the background task record:", {
+        taskId: task.id,
+        error: String(error),
+      })
+      record.persistenceError = String(error)
+    }
+
+    this.taskLedger.upsert(record)
   }
 
   getTasksSnapshot(): BackgroundTaskSnapshot[] { return toBackgroundTaskSnapshots(this.tasks.values()) }
@@ -2488,6 +2642,7 @@ The task was re-queued on a fallback model after a retryable failure.
 
     if (options?.skipNotification) {
       this.cleanupPendingByParent(task)
+      void this.finalizeTerminalTask(task)
       this.scheduleTaskRemoval(task.id)
       log(`[background-agent] Task cancelled via ${source} (notification skipped):`, task.id)
       return true
@@ -2653,6 +2808,7 @@ The task was re-queued on a fallback model after a retryable failure.
     const duration = formatDuration(task.startedAt ?? new Date(), task.completedAt)
 
     log("[background-agent] notifyParentSession called for task:", task.id)
+    await this.finalizeTerminalTask(task)
 
     // Show toast notification
     const toastManager = getTaskToastManager()

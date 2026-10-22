@@ -158,6 +158,13 @@ describe("BackgroundManager verifySessionExists", () => {
   })
 })
 
+async function flushBackgroundNotifications(): Promise<void> {
+  for (let i = 0; i < 40; i++) {
+    await Promise.resolve()
+  }
+  await new Promise((resolve) => setImmediate(resolve))
+}
+
 describe("BackgroundManager pollRunningTasks", () => {
   describe("#given a running task whose session is no longer in status response", () => {
     test("#when pollRunningTasks runs #then completes the task instead of leaving it running", async () => {
@@ -276,7 +283,7 @@ describe("BackgroundManager pollRunningTasks", () => {
       expect(task.status).toBe("completed")
     })
 
-    test("#when output was already observed from events #then it completes without fetching messages", async () => {
+    test("#when output was already observed from events #then the poll completes it and only the persistence fetch reads messages", async () => {
       //#given
       let messagesCallCount = 0
       const manager = createManagerWithClient({
@@ -302,11 +309,12 @@ describe("BackgroundManager pollRunningTasks", () => {
       //#when
       const poll = manager["pollRunningTasks"]
       await poll.call(manager)
-      manager.shutdown()
+      await flushBackgroundNotifications()
+      await manager.shutdown()
 
       //#then
       expect(task.status).toBe("completed")
-      expect(messagesCallCount).toBe(0)
+      expect(messagesCallCount).toBe(1)
     })
 
     test("#when todo state was already observed from events #then it completes without fetching todos", async () => {
