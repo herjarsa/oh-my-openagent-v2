@@ -183,6 +183,73 @@ describe("buildBackgroundTaskNotificationText", () => {
     })
   })
 
+  describe("#given two completed tasks with the ledger counts", () => {
+    test("#when the notification text is built #then the known-tasks line lists the recoverable total", () => {
+      // given
+      const notification = buildBackgroundTaskNotificationText({
+        task: { id: "bg_done11111", description: "first task", status: "completed" },
+        duration: "5s",
+        statusText: "COMPLETED",
+        allComplete: true,
+        remainingCount: 0,
+        completedTasks: [
+          { id: "bg_done11111", description: "first task", status: "completed", recoverable: true },
+          { id: "bg_done22222", description: "second task", status: "completed", recoverable: true },
+        ],
+        knownCount: 2,
+        recoverableCount: 2,
+        unrecoverableCount: 0,
+        inProgressCount: 0,
+      })
+
+      // then
+      expect(notification).toContain("**Known tasks:** 2 (2 completed, 2 recoverable)")
+    })
+
+    test("#given one task marked unrecoverable #when the notification text is built #then the marker appears on that task only", () => {
+      // given
+      const notification = buildBackgroundTaskNotificationText({
+        task: { id: "bg_done11111", description: "first task", status: "completed" },
+        duration: "5s",
+        statusText: "COMPLETED",
+        allComplete: true,
+        remainingCount: 0,
+        completedTasks: [
+          { id: "bg_done11111", description: "first task", status: "completed", recoverable: true },
+          { id: "bg_lost11111", description: "second task", status: "completed", recoverable: false },
+        ],
+        knownCount: 2,
+        recoverableCount: 1,
+        unrecoverableCount: 1,
+        inProgressCount: 0,
+      })
+
+      // then
+      expect(notification).toContain("- `bg_lost11111`: second task [unrecoverable]")
+      expect(notification).not.toContain("- `bg_done11111`: first task [unrecoverable]")
+      expect(notification).toContain("**Known tasks:** 2 (2 completed, 1 recoverable)")
+    })
+
+    test("#given the partial case #when the notification text is built #then the known-tasks line includes the in-progress count", () => {
+      // given
+      const notification = buildBackgroundTaskNotificationText({
+        task: { id: "bg_done11111", description: "first task", status: "completed" },
+        duration: "5s",
+        statusText: "COMPLETED",
+        allComplete: false,
+        remainingCount: 1,
+        completedTasks: [],
+        knownCount: 3,
+        recoverableCount: 1,
+        unrecoverableCount: 0,
+        inProgressCount: 1,
+      })
+
+      // then
+      expect(notification).toContain("**Known tasks:** 3 (2 completed, 1 recoverable, 1 in progress)")
+    })
+  })
+
   describe("#given a single task notification with undefined description", () => {
     test("#when building the partial notification #then it uses task ID as fallback", () => {
       // given

@@ -136,7 +136,7 @@ import { resolveResultPersistenceConfig, type ResultPersistenceConfig } from "./
 import { listTaskRecords, readTaskRecord, sweepExpiredTaskRecords, writeTaskRecord } from "./persistence/record-store"
 import { readTaskTranscript, writeTaskTranscript } from "./persistence/transcript-store"
 import { extractTaskResultText } from "./persistence/result-text"
-import { TaskLedger } from "./persistence/task-ledger"
+import { TaskLedger, buildTaskLedgerSummary } from "./persistence/task-ledger"
 import {
   extractBackgroundOutputMessages,
   type BackgroundOutputMessage,
@@ -2930,24 +2930,55 @@ The task was re-queued on a fallback model after a retryable failure.
 
     // Update pending tracking and check if all tasks complete
     const pendingSet = this.pendingByParent.get(task.parentSessionId)
-    let allComplete = false
+    let allPendingComplete = false
     let remainingCount = 0
     if (pendingSet) {
       pendingSet.delete(task.id)
       remainingCount = pendingSet.size
-      allComplete = remainingCount === 0
-      if (allComplete) {
+      allPendingComplete = remainingCount === 0
+      if (allPendingComplete) {
         this.pendingByParent.delete(task.parentSessionId)
       }
     } else {
       remainingCount = Array.from(this.tasks.values())
         .filter(t => t.parentSessionId === task.parentSessionId && t.id !== task.id && (t.status === "running" || t.status === "pending"))
         .length
-      allComplete = remainingCount === 0
+      allPendingComplete = remainingCount === 0
     }
 
+    const liveTaskIds = Array.from(this.tasks.values())
+      .filter((candidate) => candidate.parentSessionId === task.parentSessionId)
+      .filter((candidate) => candidate.status === "pending" || candidate.status === "running")
+      .map((candidate) => candidate.id)
+    const persistedRecords = this.taskLedger.getByParentSession(task.parentSessionId)
+    const summaryTaskIds = (this.completedTaskSummaries.get(task.parentSessionId) ?? []).map((entry) => entry.id)
+    const summary = buildTaskLedgerSummary({ liveTaskIds, persistedRecords, summaryTaskIds })
+    const allComplete = allPendingComplete && summary.inProgressTaskIds.length === 0
+
+    const recoverableFor = (taskId: string): boolean | undefined =>
+      summary.recoverableTaskIds.includes(taskId)
+        ? true
+        : summary.unrecoverableTaskIds.includes(taskId)
+          ? false
+          : undefined
+
+    const summarizedTasks = this.completedTaskSummaries.get(task.parentSessionId)
+      ?? [{ id: task.id, description: task.description, status: task.status, error: task.error, attempts: cloneAttempts(task) }]
+    const summarizedTaskIds = new Set(summarizedTasks.map((entry) => entry.id))
+    const persistedOnlyTasks = persistedRecords
+      .filter((record) => !summarizedTaskIds.has(record.taskId))
+      .sort((a, b) => (a.completedAt ?? "").localeCompare(b.completedAt ?? ""))
+      .map((record) => ({
+        id: record.taskId,
+        description: record.description,
+        status: record.status,
+        error: record.error,
+      }))
     const completedTasks = allComplete
-      ? (this.completedTaskSummaries.get(task.parentSessionId) ?? [{ id: task.id, description: task.description, status: task.status, error: task.error, attempts: cloneAttempts(task) }])
+      ? [...summarizedTasks, ...persistedOnlyTasks].map((entry) => ({
+          ...entry,
+          recoverable: recoverableFor(entry.id),
+        }))
       : []
 
     if (allComplete) {
@@ -2962,12 +2993,16 @@ The task was re-queued on a fallback model after a retryable failure.
           ? "ERROR"
           : "CANCELLED"
     const notification = buildBackgroundTaskNotificationText({
-      task,
+      task: { ...task, recoverable: recoverableFor(task.id) },
       duration,
       statusText,
       allComplete,
       remainingCount,
       completedTasks,
+      knownCount: summary.knownTaskIds.length,
+      recoverableCount: summary.recoverableTaskIds.length,
+      unrecoverableCount: summary.unrecoverableTaskIds.length,
+      inProgressCount: summary.inProgressTaskIds.length,
     })
 
       if (this.enableParentSessionNotifications) {

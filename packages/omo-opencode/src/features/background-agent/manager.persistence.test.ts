@@ -9,6 +9,7 @@ import type { BackgroundTask } from "./types"
 
 type ManagerInternals = {
   finalizeTerminalTask: (task: BackgroundTask) => Promise<void>
+  notifyParentSession: (task: BackgroundTask) => Promise<void>
   deleteChildSessionIfExpired: (taskId: string) => Promise<void>
   reconcilePersistedTasks: () => Promise<void>
   scheduleTaskRemoval: (taskId: string) => void
@@ -226,6 +227,43 @@ describe("BackgroundManager session retention", () => {
     expect(internals(manager).tasks.has(task.id)).toBe(false)
     expect(deleteCalls).toBe(0)
     expect(internals(manager).sessionDeletionTimers.has(task.id)).toBe(true)
+  })
+
+  test("#given an evicted task and a finishing sibling #when the sibling is notified #then the evicted task is listed as recoverable", async () => {
+    // given
+    const notifications: string[] = []
+    const manager = createManager()
+    const stampedNotificationManager = manager as unknown as {
+      queuePendingParentWake: (sessionId: string, notification: string) => void
+    }
+    stampedNotificationManager.queuePendingParentWake = (_sessionId: string, notification: string) => {
+      notifications.push(notification)
+    }
+    const evicted: BackgroundTask = {
+      ...createCompletedTask(),
+      id: "bg_bbb22222",
+      sessionId: "ses_child_two",
+      description: "the evicted task",
+    }
+    await internals(manager).finalizeTerminalTask(evicted)
+    internals(manager).tasks.clear()
+    internals(manager).completedTaskArchive.clear()
+    Reflect.set(globalThis, "__omoBackgroundTaskRegistry", {
+      activeTasks: new Map(),
+      completedTasks: new Map(),
+    })
+    const finished = createCompletedTask()
+    internals(manager).tasks.set(finished.id, finished)
+
+    // when
+    await internals(manager).notifyParentSession(finished)
+
+    // then
+    expect(notifications).toHaveLength(1)
+    expect(notifications[0]).toContain("bg_bbb22222")
+    expect(notifications[0]).toContain("the evicted task")
+    expect(notifications[0]).toContain("[recoverable]")
+    expect(notifications[0]).toContain("**Known tasks:** 2 (2 completed, 2 recoverable)")
   })
 
   test("#given a record whose deleteAfter has passed #when the session timer fires #then the child session is deleted and the deletion is stamped", async () => {
