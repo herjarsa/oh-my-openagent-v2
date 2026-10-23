@@ -16,11 +16,17 @@ export const BackgroundTaskConfigSchema = z.object({
   staleTimeoutMs: z.number().min(60000).optional(),
   /** Timeout for tasks that never received any progress update, falling back to startedAt (default: 1800000 = 30 minutes, minimum: 60000 = 1 minute) */
   messageStalenessTimeoutMs: z.number().min(60000).optional(),
+  /** Durable store for terminal background task results. Survives restarts and session deletion. */
   resultPersistence: z.object({
+    /** Whether results are written to the durable store (default: true) */
     enabled: z.boolean().optional(),
+    /** Store root override. Default: ~/.local/share/oh-my-opencode/delegations */
     root: z.string().optional(),
+    /** How long a persisted record and its transcript are kept, in milliseconds (default: 604800000 = 7 days, minimum: 3600000 = 1 hour) */
     retentionMs: z.number().min(3_600_000).optional(),
+    /** How long the child session is kept after completion, in milliseconds (default: 86400000 = 24 hours, minimum: 60000 = 1 minute) */
     completedSessionRetentionMs: z.number().min(60_000).optional(),
+    /** Size cap for the persisted transcript, in bytes. Oldest messages are dropped first (default: 20971520 = 20 MB, minimum: 1048576 = 1 MB) */
     maxTranscriptBytes: z.number().min(1_048_576).optional(),
   }).optional(),
   /** Absolute TTL for non-terminal tasks in milliseconds (default: 1800000 = 30 minutes, minimum: 300000 = 5 minutes). Tasks exceeding this age from their last activity (or startedAt if no progress) are pruned. */

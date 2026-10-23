@@ -35,7 +35,8 @@ LaunchInput → pending → [ConcurrencyManager queue] → running → polling �
 | `session-existence.ts` | Cheap existence check used by recovery code. |
 | `abort-with-timeout.ts` | Force-abort tasks past `syncPollTimeoutMs`. |
 | `remove-task-toast-tracking.ts` | Strips lingering toast tracker entries on task end. |
-| `background-task-notification-template.ts` | Template for parent-session result injection. |
+| `background-task-notification-template.ts` | Template for parent-session result injection, including the per-task recoverable marker and the known-task counts. |
+| `persistence/` | Durable result store: `record.ts` (record and transcript shape), `record-store.ts` and `transcript-store.ts` (atomic writes, sweep), `task-ledger.ts` (in-memory index), `result-text.ts` (result extraction), `paths.ts`, `config.ts`. |
 
 ## SPAWNER SUBDIRECTORY
 

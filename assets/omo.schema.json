@@ -11580,6 +11580,30 @@
               "type": "number",
               "minimum": 60000
             },
+            "resultPersistence": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "root": {
+                  "type": "string"
+                },
+                "retentionMs": {
+                  "type": "number",
+                  "minimum": 3600000
+                },
+                "completedSessionRetentionMs": {
+                  "type": "number",
+                  "minimum": 60000
+                },
+                "maxTranscriptBytes": {
+                  "type": "number",
+                  "minimum": 1048576
+                }
+              },
+              "additionalProperties": false
+            },
             "taskTtlMs": {
               "type": "number",
               "minimum": 300000
@@ -29558,6 +29582,30 @@
                   "messageStalenessTimeoutMs": {
                     "type": "number",
                     "minimum": 60000
+                  },
+                  "resultPersistence": {
+                    "type": "object",
+                    "properties": {
+                      "enabled": {
+                        "type": "boolean"
+                      },
+                      "root": {
+                        "type": "string"
+                      },
+                      "retentionMs": {
+                        "type": "number",
+                        "minimum": 3600000
+                      },
+                      "completedSessionRetentionMs": {
+                        "type": "number",
+                        "minimum": 60000
+                      },
+                      "maxTranscriptBytes": {
+                        "type": "number",
+                        "minimum": 1048576
+                      }
+                    },
+                    "additionalProperties": false
                   },
                   "taskTtlMs": {
                     "type": "number",
