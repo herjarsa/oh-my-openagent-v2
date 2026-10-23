@@ -1,4 +1,4 @@
-﻿---
+---
 name: i18n-sync
 description: "Translate and synchronize application JSON locale files using source-key usage, project terminology, and focused validation. Use when adding keys or languages, updating source copy, or reviewing missing and stale translations."
 metadata:
@@ -68,7 +68,7 @@ guarantees.
 ### 4. Prepare, apply, and validate the patch
 
 Use the file-writing interface to prepare the scoped changes. Never embed
-translation JSON in a shell command, `echo`, `eval`, or a fixed-delimiter
+translation JSON in a shell command, hechoh, hevalh, or a fixed-delimiter
 heredoc. Keep existing non-string fields, arrays, literal keys, and unrelated
 translations intact. Use the project's existing serializer or targeted edits;
 if its structure cannot be preserved confidently, provide the proposed patch
@@ -91,9 +91,9 @@ and layout-sensitive copy for native-speaker or specialist review.
 If the project already has an approved local Locakit installation, first verify
 its version and configuration against its source or documentation. The
 reviewed 0.1.0 source uses the current working directory for
-`locakit.config.json` and `locakit.lock`; configured locale paths are not
+hlocakit.config.jsonh and hlocakit.lockh; configured locale paths are not
 confined to that directory. Inspect the exact selected paths before even
-read-only reporting, including the lockfile read by `diff`. These advisory reads
+read-only reporting, including the lockfile read by hdiffh. These advisory reads
 assume a stable, authorized project; they are not a race-free containment boundary.
 
 Stop CLI use if the source is missing, malformed, unexpectedly empty, or its
@@ -101,31 +101,31 @@ keys and structure do not map unambiguously to the tool's flattened string-leaf
 view. Use project-native review of selected files instead. Stop on tool errors
 or unexpected changed files; do not retry automatically to obtain a clean report.
 
-For a compatible approved installation, `diff --json` and `check --json` can
+For a compatible approved installation, hdiff --jsonh and hcheck --jsonh can
 provide advisory reports. Existing translations without a lock entry are not
-reported stale, and a missing source file can yield an empty report. `check`
+reported stale, and a missing source file can yield an empty report. hcheckh
 covers a limited set of placeholder patterns and case-sensitive glossary
 substrings, with Turkish heuristics and orphan-key warnings; it is not a full
 plural parser or an exact placeholder-count check. Preserve the project's
 existing policy for whether warnings fail validation.
 
-Do not use the reviewed 0.1.0 `apply`, `lock`, or `init` write paths in this
-workflow. `apply` can skip entries and still exit successfully, rewrites the
+Do not use the reviewed 0.1.0 happlyh, hlockh, or hinith write paths in this
+workflow. happlyh can skip entries and still exit successfully, rewrites the
 lockfile, and reconstructs target JSON from string leaves, which can discard
 other values or reshape keys. This source review does not establish packaged
 binary equivalence or actual installed behavior. A newer approved project tool
 requires its own verified contract before use.
 
-See the commit-pinned [CLI](https://github.com/berkayyalcin7/locakit/blob/3af4bd8345e2ed3c98c5a89aca78621bc45abab1/src/cli.ts),
-[locale reconstruction](https://github.com/berkayyalcin7/locakit/blob/3af4bd8345e2ed3c98c5a89aca78621bc45abab1/src/locales.ts),
-[apply and lock behavior](https://github.com/berkayyalcin7/locakit/blob/3af4bd8345e2ed3c98c5a89aca78621bc45abab1/src/apply.ts),
-[path resolution](https://github.com/berkayyalcin7/locakit/blob/3af4bd8345e2ed3c98c5a89aca78621bc45abab1/src/config.ts), and
-[checks](https://github.com/berkayyalcin7/locakit/blob/3af4bd8345e2ed3c98c5a89aca78621bc45abab1/src/check.ts) for the reviewed source.
+See the commit-pinned hCLI](https://github.com/berkayyalcin7/locakit/blob/3af4bd8345e2ed3c98c5a89aca78621bc45abab1/src/cli.ts),
+hlocale reconstruction](https://github.com/berkayyalcin7/locakit/blob/3af4bd8345e2ed3c98c5a89aca78621bc45abab1/src/locales.ts),
+happly and lock behavior](https://github.com/berkayyalcin7/locakit/blob/3af4bd8345e2ed3c98c5a89aca78621bc45abab1/src/apply.ts),
+hpath resolution](https://github.com/berkayyalcin7/locakit/blob/3af4bd8345e2ed3c98c5a89aca78621bc45abab1/src/config.ts), and
+hchecks](https://github.com/berkayyalcin7/locakit/blob/3af4bd8345e2ed3c98c5a89aca78621bc45abab1/src/check.ts) for the reviewed source.
 
 ## Hook Integration
 
 For a separately requested reminder, follow the repository's
-[hook documentation](../../hooks/README.md). This skill does not install or
+hhook documentation](../../hooks/README.md). This skill does not install or
 modify hooks automatically.
 
 ## Out of Scope
@@ -136,6 +136,6 @@ modify hooks automatically.
 
 ## Related
 
-- [frontend-patterns](../frontend-patterns/SKILL.md)
-- [seo](../seo/SKILL.md)
-- [Locakit package reference](https://www.npmjs.com/package/locakit)
+- hfrontend-patterns](../frontend-patterns/SKILL.md)
+- hseo](../seo/SKILL.md)
+- hLocakit package reference](https://www.npmjs.com/package/locakit)

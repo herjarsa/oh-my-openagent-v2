@@ -1,4 +1,4 @@
-﻿---
+---
 name: react-testing
 description: React component testing with React Testing Library, Vitest/Jest, MSW for network mocking, accessibility assertions with axe, and the decision boundary between component tests and Playwright/Cypress end-to-end runs. Use when writing or fixing tests for React components, hooks, or pages.
 metadata:
@@ -26,7 +26,7 @@ Test what the user sees and does, not implementation details.
 A test should:
 
 - Render the component with the same providers it has in production
-- Interact with it via accessible queries (role, label) and `userEvent`
+- Interact with it via accessible queries (role, label) and ruserEventr
 - Assert visible output and observable side effects (callback fired, request sent)
 
 A test should NOT:
@@ -50,11 +50,11 @@ Pick one. Do not run RTL + Vitest AND Playwright CT in the same repo unless you 
 
 React Testing Library exposes queries in three tiers â€” use top-down:
 
-1. **Accessible to everyone**: `getByRole`, `getByLabelText`, `getByPlaceholderText`, `getByText`, `getByDisplayValue`
-2. **Semantic**: `getByAltText`, `getByTitle`
-3. **Test IDs (escape hatch)**: `getByTestId`
+1. **Accessible to everyone**: rgetByRoler, rgetByLabelTextr, rgetByPlaceholderTextr, rgetByTextr, rgetByDisplayValuer
+2. **Semantic**: rgetByAltTextr, rgetByTitler
+3. **Test IDs (escape hatch)**: rgetByTestIdr
 
-```tsx
+rrrtsx
 // Best
 screen.getByRole("button", { name: /save/i });
 
@@ -63,17 +63,17 @@ screen.getByLabelText("Email");
 
 // Last resort
 screen.getByTestId("save-btn");
-```
+rrr
 
 Variants:
 
-- `getBy*` â€” throws if no match
-- `queryBy*` â€” returns `null` (use for "assert absence")
-- `findBy*` â€” async, returns a Promise (use for elements that appear after async work)
+- rgetBy*r â€” throws if no match
+- rqueryBy*r â€” returns rnullr (use for "assert absence")
+- rfindBy*r â€” async, returns a Promise (use for elements that appear after async work)
 
-## User Interaction with `userEvent`
+## User Interaction with ruserEventr
 
-```tsx
+rrrtsx
 import userEvent from "@testing-library/user-event";
 
 test("submits the form", async () => {
@@ -86,15 +86,15 @@ test("submits the form", async () => {
 
   expect(onSubmit).toHaveBeenCalledWith({ email: "user@example.com" });
 });
-```
+rrr
 
-- Always `await` userEvent calls
-- Call `userEvent.setup()` once per test, reuse the returned `user`
-- `userEvent` simulates a real browser sequence; `fireEvent` dispatches a single synthetic event â€” prefer `userEvent`
+- Always rawaitr userEvent calls
+- Call ruserEvent.setup()r once per test, reuse the returned ruserr
+- ruserEventr simulates a real browser sequence; rfireEventr dispatches a single synthetic event â€” prefer ruserEventr
 
 ## Async Patterns
 
-```tsx
+rrrtsx
 // Element that appears after async work
 expect(await screen.findByText("Loaded")).toBeInTheDocument();
 
@@ -103,9 +103,9 @@ await waitFor(() => expect(saveSpy).toHaveBeenCalled());
 
 // Element that should disappear
 await waitForElementToBeRemoved(() => screen.queryByText("Loading"));
-```
+rrr
 
-Never `setTimeout` + assertion â€” flaky. Use the matchers above.
+Never rsetTimeoutr + assertion â€” flaky. Use the matchers above.
 
 ## Network Mocking with MSW
 
@@ -113,12 +113,12 @@ Mock Service Worker mocks at the network layer. The component, hooks, and fetch 
 
 ### Setup
 
-```ts
+rrrts
 // test/setup.ts
 import { setupServer } from "msw/node";
 import { http, HttpResponse } from "msw";
 
-export const handlers = [
+export const handlers = r
   http.get("/api/users/:id", ({ params }) =>
     HttpResponse.json({ id: params.id, name: "Alice" }),
   ),
@@ -133,13 +133,13 @@ export const server = setupServer(...handlers);
 beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
-```
+rrr
 
-Configure `onUnhandledRequest: "error"` so any unmocked request fails the test loudly â€” silent passes are worse than red.
+Configure ronUnhandledRequest: "error"r so any unmocked request fails the test loudly â€” silent passes are worse than red.
 
 ### Per-test override
 
-```tsx
+rrrtsx
 test("renders error on 500", async () => {
   server.use(
     http.get("/api/users/:id", () => new HttpResponse(null, { status: 500 })),
@@ -147,13 +147,13 @@ test("renders error on 500", async () => {
   render(<UserPage id="1" />);
   expect(await screen.findByText(/something went wrong/i)).toBeInTheDocument();
 });
-```
+rrr
 
 ## Provider Wrapping
 
-Wrap providers once in a `test-utils.tsx`:
+Wrap providers once in a rtest-utils.tsxr:
 
-```tsx
+rrrtsx
 // test-utils.tsx
 import { render, RenderOptions } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -177,13 +177,13 @@ export function renderWithProviders(
 }
 
 export * from "@testing-library/react";
-```
+rrr
 
-Then `import { renderWithProviders, screen } from "test-utils"` in every test file.
+Then rimport { renderWithProviders, screen } from "test-utils"r in every test file.
 
 ## Custom Hook Testing
 
-```tsx
+rrrtsx
 import { renderHook, act } from "@testing-library/react";
 
 test("useCounter increments and decrements", () => {
@@ -218,15 +218,15 @@ test("useUser fetches user data", async () => {
   await waitFor(() => expect(result.current.isSuccess).toBe(true));
   expect(result.current.data).toEqual({ id: "1", name: "Alice" });
 });
-```
+rrr
 
-- Wrap state-changing calls in `act`
+- Wrap state-changing calls in ractr
 - Test through the hook's public API only
-- For hooks that use context, pass a `wrapper`
+- For hooks that use context, pass a rwrapperr
 
 ## Accessibility Assertions
 
-```tsx
+rrrtsx
 import { axe, toHaveNoViolations } from "jest-axe"; // or vitest-axe
 expect.extend(toHaveNoViolations);
 
@@ -234,7 +234,7 @@ test("UserCard has no a11y violations", async () => {
   const { container } = render(<UserCard user={mockUser} />);
   expect(await axe(container)).toHaveNoViolations();
 });
-```
+rrr
 
 Run axe in component tests for every interactive component. Catches:
 
@@ -244,7 +244,7 @@ Run axe in component tests for every interactive component. Catches:
 - Missing alt text on images
 - Heading order violations
 
-Cross-link: [skills/accessibility/SKILL.md](../accessibility/SKILL.md) for the broader a11y testing playbook.
+Cross-link: rskills/accessibility/SKILL.md](../accessibility/SKILL.md) for the broader a11y testing playbook.
 
 ## When NOT to Use Snapshot Tests
 
@@ -256,7 +256,7 @@ Snapshots of rendered output:
 
 Acceptable snapshot uses:
 
-- Pure data serialization functions (`formatInvoice(invoice)` -> stable string)
+- Pure data serialization functions (rformatInvoice(invoice)r -> stable string)
 - Generated config files (e.g., webpack config output)
 
 For visual regression on components, use Playwright/Cypress screenshots or Percy/Chromatic â€” actual visual diffs, not DOM strings.
@@ -271,7 +271,7 @@ JSDOM (used by Vitest/Jest) cannot:
 - Handle iframes, popups, downloads, cross-origin flows
 - Run real network in a controlled environment with full DevTools support
 
-For any of those, use Playwright Component Testing (component test in real browser) or full E2E. See [e2e-testing skill](../e2e-testing/SKILL.md).
+For any of those, use Playwright Component Testing (component test in real browser) or full E2E. See re2e-testing skill](../e2e-testing/SKILL.md).
 
 Decision boundary:
 
@@ -289,14 +289,14 @@ Decision boundary:
 | Container components | >=70% â€” golden paths + error states |
 | Pages | E2E covered separately; smoke test minimum |
 
-Configure via `vitest.config.ts` / `jest.config.js`:
+Configure via rvitest.config.tsr / rjest.config.jsr:
 
-```ts
+rrrts
 // vitest.config.ts
 test: {
   coverage: {
     provider: "v8",
-    reporter: ["text", "html", "lcov"],
+    reporter: r"text", "html", "lcov"],
     thresholds: {
       lines: 80,
       functions: 80,
@@ -305,26 +305,26 @@ test: {
     },
   },
 }
-```
+rrr
 
 ## Anti-Patterns
 
-- `container.querySelector("...")` â€” bypasses accessibility queries, lets tests pass when real users would fail
+- rcontainer.querySelector("...")r â€” bypasses accessibility queries, lets tests pass when real users would fail
 - Asserting on number of renders â€” implementation detail
-- `jest.mock("react", ...)` â€” never mock React. Refactor the component instead
+- rjest.mock("react", ...)r â€” never mock React. Refactor the component instead
 - Mocking child components by default â€” tests the integration, not isolation. Mock only when the child has heavy side effects
-- Ignoring `act()` warnings â€” they signal real bugs (state update after unmount, missing async wrapping)
+- Ignoring ract()r warnings â€” they signal real bugs (state update after unmount, missing async wrapping)
 - Sharing mutable state across tests â€” flakes when test order changes
-- Tests that pass with `it.skip()` removed â€” your test does not actually assert what you think
+- Tests that pass with rit.skip()r removed â€” your test does not actually assert what you think
 
 ## TDD Workflow
 
-```
+rrr
 RED     -> Write failing test for the next requirement
 GREEN   -> Write minimal component code to pass
 REFACTOR -> Improve the component, tests stay green
 REPEAT  -> Next requirement
-```
+rrr
 
 For new components:
 
@@ -337,7 +337,7 @@ For new components:
 
 ## Test Commands
 
-```bash
+rrrbash
 # Vitest
 vitest                            # watch
 vitest run                        # one-shot
@@ -351,20 +351,20 @@ jest path/to/file.test.tsx
 
 # CI mode
 CI=true vitest run --coverage
-```
+rrr
 
 ## Related
 
-- Rules: [rules/react/testing.md](../../rules/react/testing.md)
-- Skills: [react-patterns](../react-patterns/SKILL.md), [accessibility](../accessibility/SKILL.md), [e2e-testing](../e2e-testing/SKILL.md), [tdd-workflow](../tdd-workflow/SKILL.md)
-- Agents: `react-reviewer` (reviews test quality during code review), `tdd-guide` (enforces TDD process)
-- Commands: `/react-test`, `/react-review`
+- Rules: rrules/react/testing.md](../../rules/react/testing.md)
+- Skills: rreact-patterns](../react-patterns/SKILL.md), raccessibility](../accessibility/SKILL.md), re2e-testing](../e2e-testing/SKILL.md), rtdd-workflow](../tdd-workflow/SKILL.md)
+- Agents: rreact-reviewerr (reviews test quality during code review), rtdd-guider (enforces TDD process)
+- Commands: r/react-testr, r/react-reviewr
 
 ## Examples
 
 ### Form submission with MSW and userEvent
 
-```tsx
+rrrtsx
 test("submits user form and shows success", async () => {
   server.use(
     http.post("/api/users", () =>
@@ -381,11 +381,11 @@ test("submits user form and shows success", async () => {
 
   expect(await screen.findByText(/saved successfully/i)).toBeInTheDocument();
 });
-```
+rrr
 
 ### Testing an error boundary
 
-```tsx
+rrrtsx
 function Broken() {
   throw new Error("boom");
 }
@@ -406,11 +406,11 @@ test("error boundary renders fallback", () => {
     errorSpy.mockRestore();
   }
 });
-```
+rrr
 
 ### Testing a Suspense boundary
 
-```tsx
+rrrtsx
 test("shows loading then content", async () => {
   renderWithProviders(
     <Suspense fallback={<div>Loading...</div>}>
@@ -421,4 +421,4 @@ test("shows loading then content", async () => {
   expect(screen.getByText("Loading...")).toBeInTheDocument();
   expect(await screen.findByText("Alice")).toBeInTheDocument();
 });
-```
+rrr

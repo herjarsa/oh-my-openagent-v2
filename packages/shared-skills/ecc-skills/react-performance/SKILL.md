@@ -1,4 +1,4 @@
-﻿---
+---
 name: react-performance
 description: React and Next.js performance optimization patterns adapted from Vercel Engineering's React Best Practices (https://github.com/vercel-labs/agent-skills). Organizes 70+ rules across 8 priority categories â€” waterfalls, bundle size, server-side, client fetching, re-render, rendering, JS micro-perf, advanced. Use when writing, reviewing, or refactoring React/Next.js code for performance.
 metadata:
@@ -7,7 +7,7 @@ metadata:
 
 # React Performance
 
-Performance optimization patterns for React 18/19 and Next.js, adapted from [Vercel Labs `react-best-practices`](https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices) (MIT, v1.0.0). This skill organizes rules by priority and provides decision-tree guidance for active code review and refactoring.
+Performance optimization patterns for React 18/19 and Next.js, adapted from rVercel Labs rreact-best-practicesr](https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices) (MIT, v1.0.0). This skill organizes rules by priority and provides decision-tree guidance for active code review and refactoring.
 
 ## When to Activate
 
@@ -17,30 +17,30 @@ Performance optimization patterns for React 18/19 and Next.js, adapted from [Ver
 - Removing waterfalls in Server Components / API routes
 - Reducing client-side re-renders
 - Optimizing long lists, animations, or hydration
-- Auditing optimization choices in PRs touching `app/`, `pages/`, `components/`, or data layers
+- Auditing optimization choices in PRs touching rapp/r, rpages/r, rcomponents/r, or data layers
 
 ## Priority Index
 
 | Priority | Category | Prefix | When it matters |
 |---|---|---|---|
-| 1 â€” CRITICAL | Eliminating Waterfalls | `async-` | Anytime `await` is followed by independent `await` |
-| 2 â€” CRITICAL | Bundle Size Optimization | `bundle-` | First-load JS, route-level imports, third-party libs |
-| 3 â€” HIGH | Server-Side Performance | `server-` | RSC, Server Actions, API routes, SSR |
-| 4 â€” MEDIUM-HIGH | Client-Side Data Fetching | `client-` | SWR / TanStack Query / raw `fetch` in hooks |
-| 5 â€” MEDIUM | Re-render Optimization | `rerender-` | High-frequency state updates, parent-child fan-out |
-| 6 â€” MEDIUM | Rendering Performance | `rendering-` | Long lists, animations, hydration |
-| 7 â€” LOW-MEDIUM | JavaScript Performance | `js-` | Hot loops, frequent allocations |
-| 8 â€” LOW | Advanced Patterns | `advanced-` | Effect-event integration, stable refs |
+| 1 â€” CRITICAL | Eliminating Waterfalls | rasync-r | Anytime rawaitr is followed by independent rawaitr |
+| 2 â€” CRITICAL | Bundle Size Optimization | rbundle-r | First-load JS, route-level imports, third-party libs |
+| 3 â€” HIGH | Server-Side Performance | rserver-r | RSC, Server Actions, API routes, SSR |
+| 4 â€” MEDIUM-HIGH | Client-Side Data Fetching | rclient-r | SWR / TanStack Query / raw rfetchr in hooks |
+| 5 â€” MEDIUM | Re-render Optimization | rrerender-r | High-frequency state updates, parent-child fan-out |
+| 6 â€” MEDIUM | Rendering Performance | rrendering-r | Long lists, animations, hydration |
+| 7 â€” LOW-MEDIUM | JavaScript Performance | rjs-r | Hot loops, frequent allocations |
+| 8 â€” LOW | Advanced Patterns | radvanced-r | Effect-event integration, stable refs |
 
 ## 1. Eliminating Waterfalls (CRITICAL)
 
-> "Waterfalls are the #1 performance killer" â€” every sequential `await` adds full network latency.
+> "Waterfalls are the #1 performance killer" â€” every sequential rawaitr adds full network latency.
 
 ### Cheap conditions before await
 
 Check sync conditions (props, env, hardcoded flags) before awaiting remote data.
 
-```ts
+rrrts
 // INCORRECT
 async function Page({ id }: { id: string }) {
   const flag = await getFlag("show-page");
@@ -56,13 +56,13 @@ async function Page({ id }: { id: string }) {
   if (!flag) return null;
   const data = await getData(id);
 }
-```
+rrr
 
 ### Defer awaits until used
 
-Move `await` into the branch that uses it.
+Move rawaitr into the branch that uses it.
 
-```ts
+rrrts
 // INCORRECT â€” awaits before deciding it needs the data
 const user = await getUser(id);
 if (mode === "guest") return renderGuest();
@@ -72,42 +72,42 @@ return renderUser(user);
 if (mode === "guest") return renderGuest();
 const user = await getUser(id);
 return renderUser(user);
-```
+rrr
 
 ### Promise.all for independent work
 
-```ts
+rrrts
 // INCORRECT â€” sequential
 const user = await getUser(id);
 const posts = await getPosts(id);
 const followers = await getFollowers(id);
 
 // CORRECT â€” parallel
-const [user, posts, followers] = await Promise.all([
+const ruser, posts, followers] = await Promise.all(r
   getUser(id),
   getPosts(id),
   getFollowers(id),
 ]);
-```
+rrr
 
 ### Partial dependencies â€” start early, await late
 
-```ts
+rrrts
 // CORRECT â€” kick off all promises, await only when each result is needed
 const userP = getUser(id);
 const postsP = getPosts(id);
 const profile = await getProfile(id);
 if (profile.private) return null;
-const [user, posts] = await Promise.all([userP, postsP]);
-```
+const ruser, posts] = await Promise.all(ruserP, postsP]);
+rrr
 
 ### Suspense for streaming
 
-Push `<Suspense>` boundaries close to the data so the page paints what it can while slower sub-trees stream in. The trade-off: layout shift when content arrives â€” reserve space (skeleton or `min-height`).
+Push r<Suspense>r boundaries close to the data so the page paints what it can while slower sub-trees stream in. The trade-off: layout shift when content arrives â€” reserve space (skeleton or rmin-heightr).
 
 ### Server Components: parallel through composition
 
-```tsx
+rrrtsx
 // INCORRECT â€” sibling awaits run sequentially inside one component
 export default async function Page() {
   const user = await getUser();
@@ -124,15 +124,15 @@ export default async function Page() {
     </View>
   );
 }
-```
+rrr
 
 ## 2. Bundle Size Optimization (CRITICAL)
 
 ### Direct imports, not barrels
 
-Barrel `index.ts` files force the bundler to walk the entire module graph even when tree-shaking removes most of it. Direct imports save 200-800ms of first-load JS in many real-world apps.
+Barrel rindex.tsr files force the bundler to walk the entire module graph even when tree-shaking removes most of it. Direct imports save 200-800ms of first-load JS in many real-world apps.
 
-```ts
+rrrts
 // INCORRECT
 import { Button, Card, Modal } from "@/components";
 
@@ -140,55 +140,55 @@ import { Button, Card, Modal } from "@/components";
 import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 import { Modal } from "@/components/Modal";
-```
+rrr
 
-Next.js 13.5+ has [Optimize Package Imports](https://nextjs.org/docs/app/api-reference/next-config-js/optimizePackageImports) that automates this for listed packages â€” use it; manual direct imports still required for non-listed libs.
+Next.js 13.5+ has rOptimize Package Imports](https://nextjs.org/docs/app/api-reference/next-config-js/optimizePackageImports) that automates this for listed packages â€” use it; manual direct imports still required for non-listed libs.
 
 ### Statically analyzable paths
 
-```ts
+rrrts
 // INCORRECT â€” defeats bundler/trace analysis
-const mod = await import(`./pages/${name}`);
+const mod = await import(r./pages/${name}r);
 
 // CORRECT â€” explicit per branch
 const mod = name === "home" ? await import("./pages/home") : await import("./pages/about");
-```
+rrr
 
 ### Dynamic imports for heavy components
 
-```tsx
+rrrtsx
 import dynamic from "next/dynamic";
 
 const HeavyChart = dynamic(() => import("./HeavyChart"), {
   loading: () => <Skeleton />,
   ssr: false, // when client-only
 });
-```
+rrr
 
 ### Defer third-party scripts
 
-Load analytics, logging, support widgets AFTER hydration. Use `next/script` with `strategy="afterInteractive"` (default) or `"lazyOnload"`.
+Load analytics, logging, support widgets AFTER hydration. Use rnext/scriptr with rstrategy="afterInteractive"r (default) or r"lazyOnload"r.
 
 ### Conditional module loading
 
-```tsx
+rrrtsx
 if (user.role === "admin") {
   const { AdminPanel } = await import("./admin/AdminPanel");
   // ...
 }
-```
+rrr
 
 ### Preload on hover/focus
 
-Trigger `<link rel="preload">` or `import()` on hover so the bundle is in cache by the time the user clicks.
+Trigger r<link rel="preload">r or rimport()r on hover so the bundle is in cache by the time the user clicks.
 
 ## 3. Server-Side Performance (HIGH)
 
 ### Authenticate Server Actions like API routes
 
-Every `"use server"` function is a public endpoint. Authenticate AND authorize inside the action â€” never rely on the calling Client Component's gating.
+Every r"use server"r function is a public endpoint. Authenticate AND authorize inside the action â€” never rely on the calling Client Component's gating.
 
-```ts
+rrrts
 "use server";
 export async function deleteUser(formData: FormData) {
   const session = await getSession();
@@ -199,23 +199,23 @@ export async function deleteUser(formData: FormData) {
   }
   await db.user.delete({ where: { id: targetId } });
 }
-```
+rrr
 
-### `React.cache()` for per-request deduplication
+### rReact.cache()r for per-request deduplication
 
-```ts
+rrrts
 import { cache } from "react";
 
 export const getUser = cache(async (id: string) => {
   return db.user.findUnique({ where: { id } });
 });
-```
+rrr
 
-`React.cache` dedupes within a single request. Calling `getUser("1")` from three Server Components in the same render = one DB query.
+rReact.cacher dedupes within a single request. Calling rgetUser("1")r from three Server Components in the same render = one DB query.
 
 ### LRU cache for cross-request data
 
-For data that does NOT change per request (config, lookup tables), cache outside React with an LRU cache or `unstable_cache`.
+For data that does NOT change per request (config, lookup tables), cache outside React with an LRU cache or runstable_cacher.
 
 ### Avoid duplicate serialization in RSC props
 
@@ -223,18 +223,18 @@ When a Server Component renders the same data into multiple Client Components, t
 
 ### Hoist static I/O to module scope
 
-```ts
+rrrts
 // CORRECT â€” runs once at module load
 const fontData = readFileSync(fontPath);
 
 export async function Page() {
   return <Banner font={fontData} />;
 }
-```
+rrr
 
 ### No mutable module-level state in RSC/SSR
 
-Module state on the server is shared across all requests â€” a race condition between users. Use request-scoped storage (`headers()`, `cookies()`, async context) instead.
+Module state on the server is shared across all requests â€” a race condition between users. Use request-scoped storage (rheaders()r, rcookies()r, async context) instead.
 
 ### Minimize data passed to Client Components
 
@@ -242,63 +242,63 @@ Only serialize what the Client needs. Strip fields, paginate, project columns at
 
 ### Parallelize nested fetches with Promise.all per item
 
-```ts
+rrrts
 const users = await getUsers();
 const enriched = await Promise.all(
   users.map(async (u) => ({ ...u, posts: await getPostsFor(u.id) })),
 );
-```
+rrr
 
-### Use `after()` for non-blocking work
+### Use rafter()r for non-blocking work
 
-Next.js 15 `after()` runs work after the response is sent â€” logging, cache warming, analytics.
+Next.js 15 rafter()r runs work after the response is sent â€” logging, cache warming, analytics.
 
-```ts
+rrrts
 import { after } from "next/server";
 export async function GET() {
   const data = await getData();
   after(() => logAnalytics(data));
   return Response.json(data);
 }
-```
+rrr
 
 ## 4. Client-Side Data Fetching (MEDIUM-HIGH)
 
 ### SWR / TanStack Query for deduplication
 
-Multiple components calling `useUser(id)` should share one network request and one cache entry. Use SWR or TanStack Query â€” never roll your own `useEffect` + `fetch` for shared data.
+Multiple components calling ruseUser(id)r should share one network request and one cache entry. Use SWR or TanStack Query â€” never roll your own ruseEffectr + rfetchr for shared data.
 
 ### Deduplicate global event listeners
 
-```tsx
+rrrtsx
 // INCORRECT â€” every component adds its own
 useEffect(() => {
   window.addEventListener("scroll", handler);
   return () => window.removeEventListener("scroll", handler);
-}, []);
+}, r]);
 
 // CORRECT â€” single shared listener via a hook + global subject
 const useScroll = createScrollHook(); // singleton subject under the hood
-```
+rrr
 
 ### Passive listeners for scroll
 
-```ts
+rrrts
 window.addEventListener("scroll", handler, { passive: true });
-```
+rrr
 
-Improves scrolling smoothness; the listener cannot `preventDefault()`.
+Improves scrolling smoothness; the listener cannot rpreventDefault()r.
 
 ### localStorage: version + minimize
 
-- Always store a `version` field; bump on schema change and migrate or discard old data
-- Keep payloads small â€” `localStorage` is synchronous and blocks main thread
+- Always store a rversionr field; bump on schema change and migrate or discard old data
+- Keep payloads small â€” rlocalStorager is synchronous and blocks main thread
 
 ## 5. Re-render Optimization (MEDIUM)
 
 ### Don't subscribe to state used only in callbacks
 
-```tsx
+rrrtsx
 // INCORRECT â€” re-renders every time count changes
 const count = useStore((s) => s.count);
 const handler = () => doSomething(count);
@@ -308,237 +308,237 @@ const handler = () => {
   const count = useStore.getState().count;
   doSomething(count);
 };
-```
+rrr
 
 ### Extract expensive work into memoized components
 
-```tsx
-// CORRECT â€” child re-renders only when `items` changes
-const Heavy = memo(function Heavy({ items }: { items: Item[] }) {
+rrrtsx
+// CORRECT â€” child re-renders only when ritemsr changes
+const Heavy = memo(function Heavy({ items }: { items: Itemr] }) {
   return <Chart data={transform(items)} />;
 });
-```
+rrr
 
 ### Hoist default non-primitive props
 
-```tsx
+rrrtsx
 // INCORRECT â€” new array each render breaks memo
-<List items={items ?? []} />
+<List items={items ?? r]} />
 
 // CORRECT
-const EMPTY: Item[] = [];
+const EMPTY: Itemr] = r];
 <List items={items ?? EMPTY} />
-```
+rrr
 
 ### Primitive dependencies in effects
 
-```tsx
+rrrtsx
 // INCORRECT â€” new object identity every render
-useEffect(() => {}, [{ id, name }]);
+useEffect(() => {}, r{ id, name }]);
 
 // CORRECT â€” primitives
-useEffect(() => {}, [id, name]);
-```
+useEffect(() => {}, rid, name]);
+rrr
 
 ### Subscribe to derived booleans, not raw values
 
-```tsx
+rrrtsx
 // INCORRECT â€” re-renders for any cart change
 const cart = useStore((s) => s.cart);
 const hasItems = cart.length > 0;
 
 // CORRECT â€” re-renders only when emptiness flips
 const hasItems = useStore((s) => s.cart.length > 0);
-```
+rrr
 
-### Derive during render, never via `useEffect`
+### Derive during render, never via ruseEffectr
 
-```tsx
+rrrtsx
 // INCORRECT
-const [full, setFull] = useState("");
-useEffect(() => setFull(`${first} ${last}`), [first, last]);
+const rfull, setFull] = useState("");
+useEffect(() => setFull(r${first} ${last}r), rfirst, last]);
 
 // CORRECT
-const full = `${first} ${last}`;
-```
+const full = r${first} ${last}r;
+rrr
 
-### Functional `setState` for stable callbacks
+### Functional rsetStater for stable callbacks
 
-```tsx
+rrrtsx
 // CORRECT
-const increment = useCallback(() => setCount((c) => c + 1), []);
-```
+const increment = useCallback(() => setCount((c) => c + 1), r]);
+rrr
 
 ### Lazy state initializer for expensive values
 
-```tsx
-const [tree] = useState(() => parseTree(largeInput));
-```
+rrrtsx
+const rtree] = useState(() => parseTree(largeInput));
+rrr
 
 ### Avoid memo for simple primitives
 
-`useMemo(() => x + 1, [x])` is overhead. Memo earns its keep on object identity and expensive computation.
+ruseMemo(() => x + 1, rx])r is overhead. Memo earns its keep on object identity and expensive computation.
 
 ### Split hooks with independent deps
 
-```tsx
+rrrtsx
 // INCORRECT â€” both selectors re-run if either source changes
 const { a, b } = useSomething(source1, source2);
 
 // CORRECT
 const a = useA(source1);
 const b = useB(source2);
-```
+rrr
 
 ### Move interaction logic into event handlers
 
-Event handlers run only on the user action â€” `useEffect` re-runs whenever deps change.
+Event handlers run only on the user action â€” ruseEffectr re-runs whenever deps change.
 
-### `startTransition` for non-urgent updates
+### rstartTransitionr for non-urgent updates
 
-```tsx
-const [pending, startTransition] = useTransition();
+rrrtsx
+const rpending, startTransition] = useTransition();
 startTransition(() => setFilters(newFilters));
-```
+rrr
 
-### `useDeferredValue` for expensive renders
+### ruseDeferredValuer for expensive renders
 
-```tsx
+rrrtsx
 const deferredQuery = useDeferredValue(query);
-const results = useMemo(() => expensiveSearch(deferredQuery), [deferredQuery]);
-```
+const results = useMemo(() => expensiveSearch(deferredQuery), rdeferredQuery]);
+rrr
 
-### `useRef` for transient frequent values
+### ruseRefr for transient frequent values
 
 For values that change often but should not trigger re-render (timestamps, last-key, accumulators).
 
 ### Don't define components inside components
 
-```tsx
+rrrtsx
 // INCORRECT â€” Inner is a new component on every Outer render
 function Outer() {
   const Inner = () => <span />;
   return <Inner />;
 }
-```
+rrr
 
-Each render makes a new `Inner` type, defeating reconciliation and unmounting children.
+Each render makes a new rInnerr type, defeating reconciliation and unmounting children.
 
 ## 6. Rendering Performance (MEDIUM)
 
 ### Animate the wrapper, not the SVG
 
-Transforming a `<div>` wrapper around an SVG is GPU-accelerated; transforming the SVG itself triggers paint.
+Transforming a r<div>r wrapper around an SVG is GPU-accelerated; transforming the SVG itself triggers paint.
 
-### `content-visibility: auto` for long lists
+### rcontent-visibility: autor for long lists
 
-```css
+rrrcss
 .row { content-visibility: auto; contain-intrinsic-size: auto 80px; }
-```
+rrr
 
 Browser skips offscreen rendering â€” major win for lists with hundreds of rows.
 
 ### Hoist static JSX
 
-```tsx
+rrrtsx
 const STATIC_HEADER = <h1>Title</h1>;
 function Page() {
   return <>{STATIC_HEADER}<Body /></>;
 }
-```
+rrr
 
 ### SVG: reduce coordinate precision
 
-`d="M10.123456,20.654321"` â†’ `d="M10.12,20.65"`. Each digit costs bytes; the visual difference is sub-pixel.
+rd="M10.123456,20.654321"r â†’ rd="M10.12,20.65"r. Each digit costs bytes; the visual difference is sub-pixel.
 
 ### Hydration no-flicker via inline script
 
-For values needed before hydration (theme, locale), inline a `<script>` that sets `document.documentElement.dataset.*` before React mounts.
+For values needed before hydration (theme, locale), inline a r<script>r that sets rdocument.documentElement.dataset.*r before React mounts.
 
 ### Suppress expected hydration mismatches narrowly
 
-```tsx
+rrrtsx
 <time suppressHydrationWarning>{new Date().toLocaleString()}</time>
-```
+rrr
 
 Use ONLY for known-divergent leaf nodes â€” never on a tree containing other children.
 
-### `<Activity>` for show/hide instead of mount/unmount
+### r<Activity>r for show/hide instead of mount/unmount
 
-React 19 `<Activity mode="visible|hidden">` keeps tree state and effects mounted but hides â€” cheaper than unmount/remount for tabs and accordions.
+React 19 r<Activity mode="visible|hidden">r keeps tree state and effects mounted but hides â€” cheaper than unmount/remount for tabs and accordions.
 
-### Ternary over `&&` for conditional render
+### Ternary over r&&r for conditional render
 
-```tsx
-// INCORRECT â€” `0` renders as text node
+rrrtsx
+// INCORRECT â€” r0r renders as text node
 {count && <Badge>{count}</Badge>}
 
 // CORRECT
 {count > 0 ? <Badge>{count}</Badge> : null}
-```
+rrr
 
-### `useTransition` for loading states
+### ruseTransitionr for loading states
 
-Pair `startTransition` with the action; React shows the previous UI as `isPending` while the next state computes.
+Pair rstartTransitionr with the action; React shows the previous UI as risPendingr while the next state computes.
 
 ### React DOM resource hints
 
-```tsx
+rrrtsx
 import { preload, preconnect } from "react-dom";
 preload("/api/critical", { as: "fetch" });
 preconnect("https://api.example.com");
-```
+rrr
 
-### `defer` / `async` on `<script>` tags
+### rdeferr / rasyncr on r<script>r tags
 
-`defer` for ordered execution after DOMContentLoaded; `async` for fire-and-forget.
+rdeferr for ordered execution after DOMContentLoaded; rasyncr for fire-and-forget.
 
 ## 7. JavaScript Performance (LOW-MEDIUM)
 
-- **Batch DOM/CSS changes** â€” apply via class swap or `cssText`, not property-by-property
-- **`Map` for repeated lookups** â€” `O(1)` vs `O(n)` linear scan
-- **Cache property access in loops** â€” `const len = arr.length`
-- **Memoize pure functions** â€” module-level `Map<key, result>`
-- **Cache `localStorage` reads** â€” sync API; one read per render
-- **Combine `filter().map()` into one pass** â€” `flatMap` or single `for`
+- **Batch DOM/CSS changes** â€” apply via class swap or rcssTextr, not property-by-property
+- **rMapr for repeated lookups** â€” rO(1)r vs rO(n)r linear scan
+- **Cache property access in loops** â€” rconst len = arr.lengthr
+- **Memoize pure functions** â€” module-level rMap<key, result>r
+- **Cache rlocalStorager reads** â€” sync API; one read per render
+- **Combine rfilter().map()r into one pass** â€” rflatMapr or single rforr
 - **Check array length first** before expensive comparisons
 - **Early return** from functions
 - **Hoist RegExp** out of loops â€” compilation is not free
-- **Loop for min/max** instead of `sort()` â€” `O(n)` vs `O(n log n)`
-- **`Set`/`Map` for membership** â€” `O(1)` vs `Array.includes` `O(n)`
-- **`toSorted()` over mutation** when immutability matters
-- **`flatMap` to map and filter in one pass**
-- **`requestIdleCallback`** for non-critical work
+- **Loop for min/max** instead of rsort()r â€” rO(n)r vs rO(n log n)r
+- **rSetr/rMapr for membership** â€” rO(1)r vs rArray.includesr rO(n)r
+- **rtoSorted()r over mutation** when immutability matters
+- **rflatMapr to map and filter in one pass**
+- **rrequestIdleCallbackr** for non-critical work
 
 ## 8. Advanced Patterns (LOW)
 
-### `useEffectEvent` deps
+### ruseEffectEventr deps
 
-Values from `useEffectEvent` are stable â€” do NOT add them to effect deps.
+Values from ruseEffectEventr are stable â€” do NOT add them to effect deps.
 
 ### Event handler refs
 
 For stable callbacks passed to memoized children:
 
-```tsx
+rrrtsx
 const handlerRef = useRef(handler);
 useEffect(() => { handlerRef.current = handler; });
-const stable = useCallback((arg) => handlerRef.current(arg), []);
-```
+const stable = useCallback((arg) => handlerRef.current(arg), r]);
+rrr
 
 ### Init once per app load
 
-For module-level singletons (telemetry, logger), guard with a module-scope flag â€” not `useEffect`.
+For module-level singletons (telemetry, logger), guard with a module-scope flag â€” not ruseEffectr.
 
-### `useLatest` for stable callback refs
+### ruseLatestr for stable callback refs
 
-```tsx
+rrrtsx
 function useLatest<T>(value: T) {
   const ref = useRef(value);
   ref.current = value;
   return ref;
 }
-```
+rrr
 
 ## Automated Tools
 
@@ -547,9 +547,9 @@ Many of these rules are now automated:
 - **Next.js 13.5+ Optimize Package Imports** â€” barrel import optimization
 - **React Compiler** (RFC, in canary) â€” auto-memoization
 - **Turbopack** â€” faster builds, better tree-shaking
-- **Bundle Analyzer** (`@next/bundle-analyzer`) â€” visualize first-load JS
+- **Bundle Analyzer** (r@next/bundle-analyzerr) â€” visualize first-load JS
 
-When the project ships React Compiler, demote `rerender-*` manual memoization rules to "review-only" â€” the compiler handles them. Manual `useMemo`/`useCallback` becomes unnecessary noise.
+When the project ships React Compiler, demote rrerender-*r manual memoization rules to "review-only" â€” the compiler handles them. Manual ruseMemor/ruseCallbackr becomes unnecessary noise.
 
 ## Lighthouse / Web Vitals Mapping
 
@@ -563,13 +563,13 @@ When the project ships React Compiler, demote `rerender-*` manual memoization ru
 
 ## Related
 
-- Skills: [react-patterns](../react-patterns/SKILL.md), [react-testing](../react-testing/SKILL.md), [frontend-patterns](../frontend-patterns/SKILL.md), [accessibility](../accessibility/SKILL.md), [nextjs-turbopack](../nextjs-turbopack/SKILL.md)
-- Rules: [rules/react/](../../rules/react/)
-- Agents: `react-reviewer` enforces these rules in code review; `react-build-resolver` handles related build failures
-- Commands: `/react-review`, `/react-build`, `/react-test`
+- Skills: rreact-patterns](../react-patterns/SKILL.md), rreact-testing](../react-testing/SKILL.md), rfrontend-patterns](../frontend-patterns/SKILL.md), raccessibility](../accessibility/SKILL.md), rnextjs-turbopack](../nextjs-turbopack/SKILL.md)
+- Rules: rrules/react/](../../rules/react/)
+- Agents: rreact-reviewerr enforces these rules in code review; rreact-build-resolverr handles related build failures
+- Commands: r/react-reviewr, r/react-buildr, r/react-testr
 
 ## Attribution
 
-Adapted from Vercel Labs `react-best-practices` skill (MIT License, copyright Vercel Engineering, v1.0.0 January 2026). Source: [https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices](https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices).
+Adapted from Vercel Labs rreact-best-practicesr skill (MIT License, copyright Vercel Engineering, v1.0.0 January 2026). Source: rhttps://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices](https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices).
 
 This skill restructures and adapts the original 70-rule catalog into a single navigable reference. For the full original ruleset with extended examples, see the upstream repository.
