@@ -14,7 +14,11 @@ export function getProjectHash(directory: string): string {
 }
 
 export function getPersistenceRoot(rootOverride?: string): string {
-  return rootOverride ?? path.join(getOmoDataDir(), PERSISTENCE_ROOT_DIRNAME)
+  return (
+    rootOverride ??
+    process.env.OMO_RESULT_PERSISTENCE_ROOT ??
+    path.join(getOmoDataDir(), PERSISTENCE_ROOT_DIRNAME)
+  )
 }
 
 export function getProjectStoreDir(root: string, projectDirectory: string): string {

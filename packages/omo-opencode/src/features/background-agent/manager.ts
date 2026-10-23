@@ -133,7 +133,7 @@ import {
   type PersistedTaskTranscript,
 } from "./persistence/record"
 import { resolveResultPersistenceConfig, type ResultPersistenceConfig } from "./persistence/config"
-import { readTaskRecord, writeTaskRecord } from "./persistence/record-store"
+import { listTaskRecords, readTaskRecord, sweepExpiredTaskRecords, writeTaskRecord } from "./persistence/record-store"
 import { readTaskTranscript, writeTaskTranscript } from "./persistence/transcript-store"
 import { extractTaskResultText } from "./persistence/result-text"
 import { TaskLedger } from "./persistence/task-ledger"
@@ -309,6 +309,8 @@ export class BackgroundManager {
   private cachedCircuitBreakerSettings?: CircuitBreakerSettings
   private readonly taskLedger = new TaskLedger()
   private cachedResultPersistence: ResultPersistenceConfig | undefined
+  private readonly sessionDeletionTimers = new Map<string, ReturnType<typeof setTimeout>>()
+  private lastStoreSweepAt = 0
   private readonly scheduledFlushSettledCounts = new Map<string, number>()
   private readonly scheduledFlushSettledWaiters = new Map<string, Array<() => void>>()
 
@@ -323,6 +325,9 @@ export class BackgroundManager {
     this.directory = pluginContext.directory
     this.concurrencyManager = new ConcurrencyManager(options.config)
     this.config = options.config
+    void this.reconcilePersistedTasks().catch((error: unknown) => {
+      log("[background-agent] Failed to reconcile the persisted task store:", { error: String(error) })
+    })
     this.tmuxEnabled = options?.tmuxConfig?.enabled ?? false
     this.onSubagentSessionCreated = options?.onSubagentSessionCreated
     this.onSubagentSessionDeleted = options?.onSubagentSessionDeleted
@@ -1165,6 +1170,102 @@ The fallback retry session is now created and can be inspected directly.
         error: String(error),
       })
     }
+    this.scheduleSessionDeletion(task)
+  }
+
+  private armSessionDeletionTimer(taskId: string, delayMs: number): void {
+    const existing = this.sessionDeletionTimers.get(taskId)
+    if (existing) {
+      clearTimeout(existing)
+      this.sessionDeletionTimers.delete(taskId)
+    }
+    const timer = setTimeout(() => {
+      this.sessionDeletionTimers.delete(taskId)
+      void this.deleteChildSessionIfExpired(taskId).catch((error: unknown) => {
+        log("[background-agent] Failed to delete the expired child session:", { taskId, error: String(error) })
+      })
+    }, Math.max(0, delayMs))
+    this.sessionDeletionTimers.set(taskId, timer)
+  }
+
+  private scheduleSessionDeletion(task: BackgroundTask): void {
+    const persistence = this.resolveResultPersistence()
+    const delayMs = persistence.enabled
+      ? (task.completedAt?.getTime() ?? Date.now()) + persistence.completedSessionRetentionMs - Date.now()
+      : (this.config?.taskCleanupDelayMs ?? TASK_CLEANUP_DELAY_MS)
+    this.armSessionDeletionTimer(task.id, delayMs)
+  }
+
+  private async deleteChildSessionIfExpired(taskId: string): Promise<void> {
+    const persistence = this.resolveResultPersistence()
+    const record = this.getRecordFromLedgerOrDisk(taskId)
+    const deleteAfter = record ? Date.parse(record.deleteAfter) : Date.now()
+    if (Number.isFinite(deleteAfter) && Date.now() < deleteAfter) {
+      this.armSessionDeletionTimer(taskId, deleteAfter - Date.now())
+      return
+    }
+    const sessionId = record?.sessionId
+    if (!sessionId) return
+    const deleteSession = this.client.session.delete?.bind(this.client.session)
+    if (typeof deleteSession !== "function") {
+      log("[background-agent] The OpenCode SDK has no session.delete; the child session is retained:", {
+        taskId,
+        sessionId,
+      })
+      return
+    }
+    await deleteSession({ path: { id: sessionId } }).catch((error: unknown) => {
+      log("[background-agent] Failed to delete the expired child session:", {
+        taskId,
+        sessionId,
+        error: String(error),
+      })
+    })
+    if (record && persistence.enabled) {
+      const updated: PersistedTaskRecord = {
+        ...record,
+        updatedAt: new Date().toISOString(),
+        sessionDeletedAt: new Date().toISOString(),
+      }
+      try {
+        writeTaskRecord(updated, persistence.root, this.directory)
+        this.taskLedger.upsert(updated)
+      } catch (error) {
+        log("[background-agent] Failed to record the child session deletion:", {
+          taskId,
+          error: String(error),
+        })
+      }
+    }
+  }
+
+  private async reconcilePersistedTasks(): Promise<void> {
+    const persistence = this.resolveResultPersistence()
+    if (!persistence.enabled) return
+    const now = Date.now()
+    for (const taskId of sweepExpiredTaskRecords(persistence.root, this.directory, now)) {
+      this.taskLedger.remove(taskId)
+    }
+    const records = listTaskRecords(persistence.root, this.directory)
+    this.taskLedger.populateFrom(records)
+    for (const record of records) {
+      if (record.sessionDeletedAt) continue
+      const deleteAfter = Date.parse(record.deleteAfter)
+      if (!Number.isFinite(deleteAfter)) continue
+      if (deleteAfter <= now) {
+        await this.deleteChildSessionIfExpired(record.taskId)
+        continue
+      }
+      this.armSessionDeletionTimer(record.taskId, deleteAfter - now)
+    }
+  }
+
+  private maybeSweepPersistedStore(): void {
+    if (Date.now() - this.lastStoreSweepAt < 3_600_000) return
+    this.lastStoreSweepAt = Date.now()
+    void this.reconcilePersistedTasks().catch((error: unknown) => {
+      log("[background-agent] Failed to sweep the persisted task store:", { error: String(error) })
+    })
   }
 
   private async persistTerminalTaskRecord(task: BackgroundTask): Promise<void> {
@@ -2550,12 +2651,8 @@ The task was re-queued on a fallback model after a retryable failure.
         subagentSessions.delete(task.sessionId)
         clearDelegatedChildSessionBootstrap(task.sessionId)
         SessionCategoryRegistry.remove(task.sessionId)
-        const deleteSession = this.client.session.delete?.bind(this.client.session)
-        if (typeof deleteSession === "function") {
-          await deleteSession({ path: { id: task.sessionId } }).catch((error: unknown) => {
-            log("[background-agent] Failed to delete completed subagent session:", { sessionID: task.sessionId, error: String(error) })
-          })
-        }
+        // The child session is NOT deleted here: it is kept until its own
+        // retention timer fires (see scheduleSessionDeletion).
       }
       log("[background-agent] Removed completed task from memory:", taskId)
     }, this.config?.taskCleanupDelayMs ?? TASK_CLEANUP_DELAY_MS)
@@ -3188,6 +3285,7 @@ The task was re-queued on a fallback model after a retryable failure.
   }
 
   private async pollRunningTasks(): Promise<void> {
+    this.maybeSweepPersistedStore()
     if (this.pollingInFlight) return
     this.pollingInFlight = true
     try {
@@ -3320,6 +3418,8 @@ The task was re-queued on a fallback model after a retryable failure.
     this.shutdownTriggered = true
     log("[background-agent] Shutting down BackgroundManager")
     this.stopPolling()
+    for (const timer of this.sessionDeletionTimers.values()) clearTimeout(timer)
+    this.sessionDeletionTimers.clear()
     const trackedSessionIDs = new Set<string>()
     const abortRequests: Array<{ sessionID: string; promise: Promise<unknown> }> = []
 
