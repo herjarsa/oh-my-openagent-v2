@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "taskId": "bg_qaone111",
+  "parentSessionId": "ses-qa-parent",
+  "parentMessageId": "msg-qa-parent",
+  "sessionId": "ses-child-qaone",
+  "projectDirectory": "C:\\Users\\herna\\AppData\\Local\\Temp\\omo-qa-durability-a6erlx\\project",
+  "description": "qa child bg_qaone111",
+  "agent": "explore",
+  "status": "completed",
+  "createdAt": "2026-10-23T14:43:40.063Z",
+  "startedAt": "2026-10-23T14:44:40.063Z",
+  "completedAt": "2026-10-23T14:45:40.063Z",
+  "updatedAt": "2026-10-23T14:45:40.063Z",
+  "result": "CHILD_ANSWER_ONE from the durable store",
+  "persistedAt": "2026-10-23T14:45:40.063Z",
+  "deleteAfter": "2026-10-23T14:46:40.063Z",
+  "expiresAt": "2026-10-23T15:45:40.063Z"
+}
