@@ -1,4 +1,6 @@
+import { mkdtempSync, rmSync } from "node:fs"
 import { tmpdir } from "node:os"
+import { join } from "node:path"
 import { afterEach, describe, expect, test } from "bun:test"
 import type { PluginInput } from "@opencode-ai/plugin"
 import { unsafeTestValue } from "../../../../../test-support/unsafe-test-value"
@@ -11,11 +13,17 @@ type PromptAsyncCall = {
   readonly body: { readonly parts?: readonly unknown[] }
 }
 
+const createdRoots: string[] = []
+
 let managerUnderTest: BackgroundManager | undefined
 
 afterEach(() => {
   managerUnderTest?.shutdown()
   managerUnderTest = undefined
+  while (createdRoots.length > 0) {
+    const root = createdRoots.pop();
+    if (root) rmSync(root, { recursive: true, force: true })
+  }
   releaseAllPromptAsyncReservationsForTesting()
 })
 
@@ -50,6 +58,8 @@ function createManager(): {
       abort: async () => ({}),
     },
   })
+  const root = mkdtempSync(join(tmpdir(), "omo-parent-wake-"))
+  createdRoots.push(root)
   const manager = new BackgroundManager({
     pluginContext: {
       client,
@@ -59,7 +69,7 @@ function createManager(): {
       serverUrl: new URL("http://localhost"),
       $: {},
     },
-    config: undefined,
+    config: { resultPersistence: { root } },
     enableParentSessionNotifications: true,
   })
   return { manager, promptAsyncCalls }
