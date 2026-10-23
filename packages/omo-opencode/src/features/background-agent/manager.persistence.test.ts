@@ -70,6 +70,8 @@ function createManager(
   })
 }
 
+// Relative to now: fixed dates turned these tests into time bombs once the wall
+// clock passed deleteAfter (completedAt + 24h retention).
 function createCompletedTask(): BackgroundTask {
   return {
     id: "bg_aaa11111",
@@ -80,9 +82,9 @@ function createCompletedTask(): BackgroundTask {
     prompt: "do the work",
     agent: "explore",
     status: "completed",
-    queuedAt: new Date("2026-10-22T10:00:00.000Z"),
-    startedAt: new Date("2026-10-22T10:00:01.000Z"),
-    completedAt: new Date("2026-10-22T10:05:00.000Z"),
+    queuedAt: new Date(Date.now() - 360_000),
+    startedAt: new Date(Date.now() - 359_000),
+    completedAt: new Date(Date.now() - 60_000),
   }
 }
 

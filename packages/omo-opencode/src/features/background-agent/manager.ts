@@ -1193,12 +1193,18 @@ The fallback retry session is now created and can be inspected directly.
       clearTimeout(existing)
       this.sessionDeletionTimers.delete(taskId)
     }
+    // Clamp to the 32-bit setTimeout range: reconcile can read records written
+    // under a shifted clock (tests mock Date.now), and an overflow would fire
+    // the timer immediately. The remaining wait is re-checked on fire.
+    const clampedDelayMs = Number.isFinite(delayMs)
+      ? Math.min(Math.max(0, delayMs), 2_147_483_647)
+      : 0
     const timer = setTimeout(() => {
       this.sessionDeletionTimers.delete(taskId)
       void this.deleteChildSessionIfExpired(taskId).catch((error: unknown) => {
         log("[background-agent] Failed to delete the expired child session:", { taskId, error: String(error) })
       })
-    }, Math.max(0, delayMs))
+    }, clampedDelayMs)
     this.sessionDeletionTimers.set(taskId, timer)
   }
 
