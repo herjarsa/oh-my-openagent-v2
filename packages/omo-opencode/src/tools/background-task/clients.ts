@@ -1,5 +1,9 @@
 import type { BackgroundManager } from "../../features/background-agent"
 import type {
+  PersistedTaskRecord,
+  PersistedTaskTranscript,
+} from "../../features/background-agent/persistence/record"
+import type {
   BackgroundOutputMessage,
   BackgroundOutputMessagesResult,
 } from "../../shared/background-output-message"
@@ -21,4 +25,8 @@ export type BackgroundCancelClient = {
   }
 }
 
-export type BackgroundOutputManager = Pick<BackgroundManager, "getTask">
+export type BackgroundOutputManager = Pick<BackgroundManager, "getTask"> & {
+  getPersistedTaskRecord?: (taskId: string) => PersistedTaskRecord | undefined
+  getPersistedTaskTranscript?: (taskId: string) => PersistedTaskTranscript | undefined
+  persistTaskRecord?: (record: PersistedTaskRecord) => void
+}

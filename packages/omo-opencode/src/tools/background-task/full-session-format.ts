@@ -1,5 +1,6 @@
 import type { BackgroundTask } from "../../features/background-agent"
-import type { BackgroundOutputClient, BackgroundOutputMessagesResult, BackgroundOutputMessage } from "./clients"
+import type { PersistedTaskTranscript } from "../../features/background-agent/persistence/record"
+import type { BackgroundOutputClient, BackgroundOutputMessage } from "./clients"
 import { extractMessages, getErrorMessage } from "./session-messages"
 import { formatMessageTime } from "./time-format"
 import { truncateText } from "./truncate-text"
@@ -31,6 +32,46 @@ function extractToolResultText(part: NonNullable<BackgroundOutputMessage["parts"
   return []
 }
 
+const PERSISTED_TRANSCRIPT_NOTE = "\n\nSource: persisted transcript (the child session is gone)"
+
+type SessionMessagesSource = {
+  messages: BackgroundOutputMessage[]
+  sourceNote: string
+}
+
+async function loadSessionMessages(
+  sessionId: string,
+  client: BackgroundOutputClient,
+  persisted?: PersistedTaskTranscript,
+): Promise<SessionMessagesSource | { error: string }> {
+  const fallback = (): SessionMessagesSource | undefined =>
+    persisted && persisted.messages.length > 0
+      ? { messages: persisted.messages, sourceNote: PERSISTED_TRANSCRIPT_NOTE }
+      : undefined
+
+  try {
+    const messagesResult = await withSdkCallTimeout(
+      client.session.messages({ path: { id: sessionId } }),
+      getBackgroundOutputFetchTimeoutMs(),
+    )
+    const errorMessage = getErrorMessage(messagesResult)
+    if (errorMessage) {
+      return fallback() ?? { error: `Error fetching messages: ${errorMessage}` }
+    }
+    const rawMessages = extractMessages(messagesResult)
+    if (!Array.isArray(rawMessages)) {
+      return fallback() ?? { error: "Error fetching messages: invalid response" }
+    }
+    return { messages: rawMessages, sourceNote: "" }
+  } catch (error) {
+    return (
+      fallback() ?? {
+        error: `Error fetching messages: ${error instanceof Error ? error.message : String(error)}`,
+      }
+    )
+  }
+}
+
 export async function formatFullSession(
   task: BackgroundTask,
   client: BackgroundOutputClient,
@@ -41,32 +82,19 @@ export async function formatFullSession(
     includeToolResults: boolean
     thinkingMaxChars?: number
     fromEnd?: boolean
-  }
+  },
+  persisted?: PersistedTaskTranscript,
 ): Promise<string> {
   if (!task.sessionId) {
     return formatTaskStatus(task)
   }
 
-  let messagesResult: BackgroundOutputMessagesResult
-  try {
-    messagesResult = await withSdkCallTimeout(
-      client.session.messages({ path: { id: task.sessionId } }),
-      getBackgroundOutputFetchTimeoutMs(),
-    )
-  } catch (error) {
-    return `Error fetching messages: ${error instanceof Error ? error.message : String(error)}`
+  const source = await loadSessionMessages(task.sessionId, client, persisted)
+  if ("error" in source) {
+    return source.error
   }
 
-  const errorMessage = getErrorMessage(messagesResult)
-  if (errorMessage) {
-    return `Error fetching messages: ${errorMessage}`
-  }
-
-  const rawMessages = extractMessages(messagesResult)
-  if (!Array.isArray(rawMessages)) {
-    return "Error fetching messages: invalid response"
-  }
-
+  const rawMessages = source.messages
   const sortedMessages = [...rawMessages].sort((a, b) => {
     const timeA = String(a.info?.time ?? "")
     const timeB = String(b.info?.time ?? "")
@@ -135,7 +163,7 @@ export async function formatFullSession(
   if (visibleMessages.length === 0) {
     lines.push("")
     lines.push("(No messages found)")
-    return lines.join("\n")
+    return lines.join("\n") + source.sourceNote
   }
 
   for (const message of visibleMessages) {
@@ -165,5 +193,5 @@ export async function formatFullSession(
     }
   }
 
-  return lines.join("\n")
+  return lines.join("\n") + source.sourceNote
 }

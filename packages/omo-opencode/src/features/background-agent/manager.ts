@@ -1139,6 +1139,20 @@ The fallback retry session is now created and can be inspected directly.
     return readTaskTranscript(taskId, persistence.root, this.directory)
   }
 
+  persistTaskRecord(record: PersistedTaskRecord): void {
+    try {
+      const persistence = this.resolveResultPersistence()
+      if (!persistence.enabled) return
+      writeTaskRecord(record, persistence.root, this.directory)
+      this.taskLedger.upsert(record)
+    } catch (error) {
+      log("[background-agent] Failed to persist the background task record:", {
+        taskId: record.taskId,
+        error: String(error),
+      })
+    }
+  }
+
   private resolveResultPersistence(): ResultPersistenceConfig {
     this.cachedResultPersistence ??= resolveResultPersistenceConfig(this.config)
     return this.cachedResultPersistence

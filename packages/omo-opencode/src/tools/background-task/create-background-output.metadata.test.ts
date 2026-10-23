@@ -137,8 +137,9 @@ describe("createBackgroundOutput metadata", () => {
     const output = await tool.execute({ task_id: "ses-child-task" }, context)
 
     // #then
-    expect(output).toContain("background_output expects a background task ID")
-    expect(output).toContain("bg_")
-    expect(output).toContain('session_read(session_id="ses-child-task")')
+    expect(output).toContain("background_output with the background task id (bg_...) instead")
+    expect(output).toContain("client.session.list")
+    expect(output).toContain("cannot resolve sessions in this build")
+    expect(output).not.toContain('session_read(session_id="ses-child-task")')
   })
 })
