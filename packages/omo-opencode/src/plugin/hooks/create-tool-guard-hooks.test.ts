@@ -1,8 +1,8 @@
-import { beforeEach, describe, expect, it, spyOn } from "bun:test"
+import { describe, expect, test } from "bun:test"
 import type { OhMyOpenCodeConfig } from "../../config"
 import type { ModelCacheState } from "../../plugin-state"
 import type { PluginContext } from "../types"
-import * as hooks from "../../hooks"
+import { buildRulesInjectorOptions, createToolGuardHooks } from "./create-tool-guard-hooks"
 
 const mockContext = {
   directory: "/tmp",
@@ -13,38 +13,52 @@ const mockModelCacheState = {
   modelContextLimitsCache: new Map(),
 } satisfies ModelCacheState
 
-describe("createToolGuardHooks", () => {
-  let capturedOptions: { skipClaudeUserRules?: boolean } | undefined
+describe("buildRulesInjectorOptions", () => {
+  test("passes the skip flag through and omits an absent ECC root", () => {
+    // given hooks disabled for Claude user rules and no ECC rules vendored
+    // when
+    const options = buildRulesInjectorOptions({ skipClaudeUserRules: true, eccRulesRoot: null })
 
-  beforeEach(() => {
-    capturedOptions = undefined
-    spyOn(hooks, "createRulesInjectorHook").mockImplementation(
-      (_ctx: unknown, _state: unknown, options?: { skipClaudeUserRules?: boolean; eccRulesRoot?: string | null }) => {
-        capturedOptions = options
-        return { name: "rules-injector" } as never
-      },
-    )
+    // then only the skip flag is forwarded
+    expect(options).toEqual({ skipClaudeUserRules: true })
   })
 
-  it("skips Claude user rules when claude_code.hooks is false", () => {
+  test("forwards the vendored ECC rules root when ECC is enabled", () => {
+    // given
+    // when
+    const options = buildRulesInjectorOptions({ skipClaudeUserRules: false, eccRulesRoot: "/repo/ecc-rules" })
+
+    // then
+    expect(options).toEqual({ eccRulesRoot: "/repo/ecc-rules" })
+  })
+
+  test("omits both flags when neither applies", () => {
+    // given
+    // when
+    const options = buildRulesInjectorOptions({ skipClaudeUserRules: false, eccRulesRoot: null })
+
+    // then
+    expect(options).toEqual({})
+  })
+})
+
+describe("createToolGuardHooks", () => {
+  test("builds the hook set without throwing on a minimal config", () => {
     // given
     const pluginConfig = {
       claude_code: {
         hooks: false,
       },
     } as OhMyOpenCodeConfig
-    const { createToolGuardHooks } = require("./create-tool-guard-hooks")
 
-    // when
-    createToolGuardHooks({
+    // when then it assembles without throwing and exposes the injector slot
+    const hooks = createToolGuardHooks({
       ctx: mockContext,
       pluginConfig,
       modelCacheState: mockModelCacheState,
       isHookEnabled: (hookName: string) => hookName === "rules-injector",
       safeHookEnabled: true,
     })
-
-    // then (eccRulesRoot rides along based on workspace state; only the skip flag matters here)
-    expect(capturedOptions).toMatchObject({ skipClaudeUserRules: true })
+    expect(hooks).toHaveProperty("rulesInjector")
   })
 })

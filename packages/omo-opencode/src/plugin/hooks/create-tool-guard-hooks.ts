@@ -60,6 +60,20 @@ export type ToolGuardHooks = {
   destructiveBashGuard: ReturnType<typeof createDestructiveBashGuardHook> | null
 }
 
+/**
+ * Pure options builder for the rules injector (kept side-effect free so the
+ * flag threading is unit-testable without module mocking).
+ */
+export function buildRulesInjectorOptions(args: {
+  skipClaudeUserRules: boolean
+  eccRulesRoot: string | null
+}): { skipClaudeUserRules?: boolean; eccRulesRoot?: string | null } {
+  return {
+    ...(args.skipClaudeUserRules ? { skipClaudeUserRules: true as const } : {}),
+    ...(args.eccRulesRoot ? { eccRulesRoot: args.eccRulesRoot } : {}),
+  }
+}
+
 export function createToolGuardHooks(args: {
   ctx: PluginContext
   pluginConfig: OhMyOpenCodeConfig
@@ -112,10 +126,7 @@ export function createToolGuardHooks(args: {
   const skipClaudeUserRules = cc?.hooks === false
   const rulesInjector = isHookEnabled("rules-injector")
     ? safeHook("rules-injector", () =>
-        createRulesInjectorHook(ctx, modelCacheState, {
-          skipClaudeUserRules,
-          eccRulesRoot,
-        }))
+        createRulesInjectorHook(ctx, modelCacheState, buildRulesInjectorOptions({ skipClaudeUserRules, eccRulesRoot })))
     : null
 
   const tasksTodowriteDisabler = isHookEnabled("tasks-todowrite-disabler")
