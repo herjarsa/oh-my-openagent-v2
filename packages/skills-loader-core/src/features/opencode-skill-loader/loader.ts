@@ -118,6 +118,16 @@ export function eccAgentsRootPath(): string | undefined {
   }
 }
 
+export function eccRulesRootPath(): string | undefined {
+  try {
+    const parent = dirname(sharedSkillsRootPath())
+    const candidate = join(parent, "ecc-rules")
+    return existsSync(candidate) ? candidate : undefined
+  } catch {
+    return undefined
+  }
+}
+
 export function eccCommandsRootPath(): string | undefined {
   try {
     const parent = dirname(sharedSkillsRootPath())

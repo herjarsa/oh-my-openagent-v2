@@ -26,7 +26,7 @@ import {
   createDocFileWarningHook,
   createDestructiveBashGuardHook,
 } from "../../hooks"
-import { resolveEccProfiles } from "@oh-my-opencode/skills-loader-core"
+import { eccRulesRootPath, resolveEccProfiles } from "@oh-my-opencode/skills-loader-core"
 import {
   getOpenCodeVersion,
   isOpenCodeVersionAtLeast,
@@ -114,6 +114,7 @@ export function createToolGuardHooks(args: {
     ? safeHook("rules-injector", () =>
         createRulesInjectorHook(ctx, modelCacheState, {
           skipClaudeUserRules,
+          eccRulesRoot,
         }))
     : null
 
@@ -167,6 +168,7 @@ export function createToolGuardHooks(args: {
     : null
 
   const hasEccProfiles = resolveEccProfiles(pluginConfig.ecc_profiles).length > 0
+  const eccRulesRoot = hasEccProfiles ? (eccRulesRootPath() ?? null) : null
   const commitQualityGuard = isHookEnabled("commit-quality-guard") && hasEccProfiles
     ? safeHook("commit-quality-guard", () => createCommitQualityGuardHook(ctx))
     : null

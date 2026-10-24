@@ -4,6 +4,7 @@ import {
   DEFAULT_ECC_PROFILES,
   ECC_PROFILES,
   discoverEccSkills,
+  eccRulesRootPath,
   resolveEccProfiles,
 } from "./loader"
 
@@ -47,5 +48,16 @@ describe("discoverEccSkills default", () => {
 
     // then
     expect(skills).toEqual([])
+  })
+})
+describe("eccRulesRootPath", () => {
+  test("resolves the vendored ECC rules root when present", () => {
+    // given the vendored packages/shared-skills/ecc-rules tree
+    // when
+    const root = eccRulesRootPath()
+
+    // then
+    expect(root).toBeDefined()
+    expect(root as string).toMatch(/ecc-rules$/)
   })
 })

@@ -31,7 +31,8 @@ export type RuleSource =
   | "~/.omo/rules"
   | "~/.opencode/rules"
   | "~/.claude/rules"
-  | "~/.sisyphus/rules";
+  | "~/.sisyphus/rules"
+  | "plugin-bundled-ecc";
 
 export interface MatchResult {
   readonly applies: boolean;
@@ -59,6 +60,8 @@ export interface RuleScanCache {
 }
 
 export interface FindRuleFilesOptions {
+  /** Vendored ECC rules root (packages/shared-skills/ecc-rules). null/undefined = skip. */
+  readonly eccRulesRoot?: string | null;
   readonly skipClaudeUserRules?: boolean;
   readonly workspaceDirectory?: string;
 }
