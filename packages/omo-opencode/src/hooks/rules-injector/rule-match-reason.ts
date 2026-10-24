@@ -5,8 +5,11 @@ import {
 	type MatchDecisionCache,
 } from "./match-decision-cache";
 
+export const ECC_BUNDLED_RULE_SOURCE = "plugin-bundled-ecc"
+
 export function getRuleMatchReason(input: {
 	matchDecisionCache: MatchDecisionCache;
+	source?: string;
 	isSingleFile: boolean | undefined;
 	projectRoot: string | null;
 	resolved: string;
@@ -17,6 +20,10 @@ export function getRuleMatchReason(input: {
 }): string | null {
 	if (input.isSingleFile) {
 		return "copilot-instructions (always apply)";
+	}
+
+	if (input.source === ECC_BUNDLED_RULE_SOURCE) {
+		return "ecc-bundled (always apply)";
 	}
 
 	const cachedMatchReason = getCachedMatchReason(

@@ -119,6 +119,7 @@ export function createRuleInjectionProcessor(
 				const matchReason = getRuleMatchReason({
 					matchDecisionCache,
 					isSingleFile: candidate.isSingleFile,
+					source: candidate.source,
 					projectRoot,
 					resolved,
 					realPath: candidate.realPath,

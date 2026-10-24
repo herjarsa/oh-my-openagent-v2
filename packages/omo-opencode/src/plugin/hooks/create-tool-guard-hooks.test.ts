@@ -19,7 +19,7 @@ describe("createToolGuardHooks", () => {
   beforeEach(() => {
     capturedOptions = undefined
     spyOn(hooks, "createRulesInjectorHook").mockImplementation(
-      (_ctx: unknown, _state: unknown, options?: { skipClaudeUserRules?: boolean }) => {
+      (_ctx: unknown, _state: unknown, options?: { skipClaudeUserRules?: boolean; eccRulesRoot?: string | null }) => {
         capturedOptions = options
         return { name: "rules-injector" } as never
       },
@@ -44,7 +44,7 @@ describe("createToolGuardHooks", () => {
       safeHookEnabled: true,
     })
 
-    // then
-    expect(capturedOptions).toEqual({ skipClaudeUserRules: true })
+    // then (eccRulesRoot rides along based on workspace state; only the skip flag matters here)
+    expect(capturedOptions).toMatchObject({ skipClaudeUserRules: true })
   })
 })
