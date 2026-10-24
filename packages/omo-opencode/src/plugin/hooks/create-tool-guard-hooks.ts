@@ -21,6 +21,7 @@ import {
   createFsyncSkipWarningHook,
   createNotepadWriteGuardHook,
   createPlanFormatValidatorHook,
+  createCommitQualityGuardHook,
 } from "../../hooks"
 import {
   getOpenCodeVersion,
@@ -49,6 +50,7 @@ export type ToolGuardHooks = {
   teamToolGating: ReturnType<typeof createTeamToolGating> | null
   notepadWriteGuard: ReturnType<typeof createNotepadWriteGuardHook> | null
   planFormatValidator: ReturnType<typeof createPlanFormatValidatorHook> | null
+  commitQualityGuard: ReturnType<typeof createCommitQualityGuardHook> | null
 }
 
 export function createToolGuardHooks(args: {
@@ -157,6 +159,11 @@ export function createToolGuardHooks(args: {
     ? safeHook("notepad-write-guard", () => createNotepadWriteGuardHook())
     : null
 
+  const hasEccProfiles = (pluginConfig.ecc_profiles?.length ?? 0) > 0
+  const commitQualityGuard = isHookEnabled("commit-quality-guard") && hasEccProfiles
+    ? safeHook("commit-quality-guard", () => createCommitQualityGuardHook(ctx))
+    : null
+
   return {
     commentChecker,
     toolOutputTruncator,
@@ -176,5 +183,6 @@ export function createToolGuardHooks(args: {
     teamToolGating,
     notepadWriteGuard,
     planFormatValidator,
+    commitQualityGuard,
   }
 }
