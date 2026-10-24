@@ -26,6 +26,7 @@ import {
   createDocFileWarningHook,
   createDestructiveBashGuardHook,
 } from "../../hooks"
+import { resolveEccProfiles } from "@oh-my-opencode/skills-loader-core"
 import {
   getOpenCodeVersion,
   isOpenCodeVersionAtLeast,
@@ -165,7 +166,7 @@ export function createToolGuardHooks(args: {
     ? safeHook("notepad-write-guard", () => createNotepadWriteGuardHook())
     : null
 
-  const hasEccProfiles = (pluginConfig.ecc_profiles?.length ?? 0) > 0
+  const hasEccProfiles = resolveEccProfiles(pluginConfig.ecc_profiles).length > 0
   const commitQualityGuard = isHookEnabled("commit-quality-guard") && hasEccProfiles
     ? safeHook("commit-quality-guard", () => createCommitQualityGuardHook(ctx))
     : null

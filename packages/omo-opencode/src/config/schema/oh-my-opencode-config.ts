@@ -42,8 +42,8 @@ export const OhMyOpenCodeConfigSchema = z.object({
   disabled_mcps: z.array(AnyMcpNameSchema).optional(),
   disabled_agents: z.array(z.string()).optional(),
   disabled_skills: z.array(z.string()).optional(),
-  /** ECC skill profiles to enable (e.g. ["core", "all"]). Empty/undefined = no ECC skills loaded. */
-  ecc_profiles: z.array(z.string()).optional(),
+  /** ECC skill profiles to enable (e.g. ["core", "all"]). Undefined = core profile (agent sees the curated set). Explicit [] disables ECC skills entirely. */
+  ecc_profiles: z.array(z.string()).default(["core"]),
   disabled_hooks: z.array(z.string()).optional(),
   disabled_commands: z.array(BuiltinCommandNameSchema).optional(),
   /** Disable specific tools by name (e.g., ["todowrite", "todoread"]) */

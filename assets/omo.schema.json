@@ -2371,6 +2371,9 @@
           }
         },
         "ecc_profiles": {
+          "default": [
+            "core"
+          ],
           "type": "array",
           "items": {
             "type": "string"
@@ -12238,6 +12241,7 @@
         }
       },
       "required": [
+        "ecc_profiles",
         "git_master"
       ],
       "additionalProperties": false
@@ -20356,6 +20360,9 @@
                 }
               },
               "ecc_profiles": {
+                "default": [
+                  "core"
+                ],
                 "type": "array",
                 "items": {
                   "type": "string"
@@ -30223,6 +30230,7 @@
               }
             },
             "required": [
+              "ecc_profiles",
               "git_master"
             ],
             "additionalProperties": false

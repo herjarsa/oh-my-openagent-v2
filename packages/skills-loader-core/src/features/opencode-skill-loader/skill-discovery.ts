@@ -1,5 +1,5 @@
 import { createBuiltinSkills } from "../builtin-skills/skills"
-import { discoverSkills } from "./loader"
+import { discoverSkills, resolveEccProfiles } from "./loader"
 import type { LoadedSkill } from "./types"
 import type { SkillResolutionOptions } from "./skill-resolution-options"
 
@@ -28,7 +28,7 @@ export async function getAllSkills(options?: SkillResolutionOptions): Promise<Lo
 	const browserProvider = options?.browserProvider ?? "playwright"
 	const teamModeEnabled = options?.teamModeEnabled ?? false
 	const directory = options?.directory ?? ""
-	const cacheKey = `${directory}:${browserProvider}:${teamModeEnabled ? "team-on" : "team-off"}:${(options?.eccProfiles ?? []).join(",")}`
+	const cacheKey = `${directory}:${browserProvider}:${teamModeEnabled ? "team-on" : "team-off"}:${resolveEccProfiles(options?.eccProfiles).join(",")}`
 	const hasDisabledSkills = options?.disabledSkills && options.disabledSkills.size > 0
 
 	// Skip cache if disabledSkills is provided (varies between calls)

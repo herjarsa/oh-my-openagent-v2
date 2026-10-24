@@ -129,13 +129,14 @@ export function eccCommandsRootPath(): string | undefined {
 }
 
 export const ECC_PROFILES: Record<string, string[] | null> = {
+  // NOTE: upstream ECC restructured debugging/code-review/refactor-clean out of
+  // existence; those capabilities stay covered by OMO shared skills
+  // (debugging, review-work, refactor), which load unconditionally. This list
+  // only names skills present under packages/shared-skills/ecc-skills.
   core: [
     "tdd-workflow",
     "verification-loop",
-    "debugging",
     "security-review",
-    "code-review",
-    "refactor-clean",
     "e2e-testing",
     "eval-harness",
     "deep-research",
@@ -154,18 +155,31 @@ export const ECC_PROFILES: Record<string, string[] | null> = {
   all: null,
 }
 
+export const DEFAULT_ECC_PROFILES: readonly string[] = ["core"]
+
+/**
+ * Resolve the effective ECC profiles. undefined means "not configured" and
+ * falls back to the core profile so the agent sees the curated set without
+ * any config. An explicit empty array disables ECC skills entirely.
+ */
+export function resolveEccProfiles(profiles?: readonly string[]): string[] {
+  if (profiles === undefined) return [...DEFAULT_ECC_PROFILES]
+  return [...profiles]
+}
+
 export async function discoverEccSkills(
   profiles?: string[],
   disabledSkills?: Set<string>,
 ): Promise<LoadedSkill[]> {
   const root = eccSkillsRootPath()
   if (!root) return []
-  if (!profiles || profiles.length === 0) return []
+  const effective = resolveEccProfiles(profiles)
+  if (effective.length === 0) return []
 
   const allSkills = await loadSkillsFromDir({ skillsDir: root, scope: "shared" })
   const allowed = new Set<string>()
   let includeAll = false
-  for (const profile of profiles) {
+  for (const profile of effective) {
     const spec = ECC_PROFILES[profile]
     if (spec === null) {
       includeAll = true

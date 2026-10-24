@@ -33,6 +33,7 @@ export const parseAnthropicTokenLimitErrorMock = mock<ParseAnthropicTokenLimitEr
 }))
 
 const pluginConfig = {
+  ecc_profiles: ["core"],
   git_master: {
     commit_footer: false,
     include_co_authored_by: false,
