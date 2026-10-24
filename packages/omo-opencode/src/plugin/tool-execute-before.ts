@@ -90,6 +90,7 @@ export function createToolExecuteBeforeHandler(args: {
       }
     }
 
+    await hooks.destructiveBashGuard?.["tool.execute.before"]?.(input, output)
     await hooks.writeExistingFileGuard?.["tool.execute.before"]?.(input, output)
     await hooks.notepadWriteGuard?.["tool.execute.before"]?.(input, output)
     await hooks.questionLabelTruncator?.["tool.execute.before"]?.(input, output)
@@ -98,6 +99,7 @@ export function createToolExecuteBeforeHandler(args: {
     await hooks.bashFileReadGuard?.["tool.execute.before"]?.(input, output)
     await hooks.commentChecker?.["tool.execute.before"]?.(input, output)
     await hooks.commitQualityGuard?.["tool.execute.before"]?.(input, output)
+    await hooks.configProtectionGuard?.["tool.execute.before"]?.(input, output)
     await hooks.directoryAgentsInjector?.["tool.execute.before"]?.(input, output)
     await hooks.directoryReadmeInjector?.["tool.execute.before"]?.(input, output)
     await hooks.rulesInjector?.["tool.execute.before"]?.(input, output)

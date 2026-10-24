@@ -22,6 +22,9 @@ import {
   createNotepadWriteGuardHook,
   createPlanFormatValidatorHook,
   createCommitQualityGuardHook,
+  createConfigProtectionGuardHook,
+  createDocFileWarningHook,
+  createDestructiveBashGuardHook,
 } from "../../hooks"
 import {
   getOpenCodeVersion,
@@ -51,6 +54,9 @@ export type ToolGuardHooks = {
   notepadWriteGuard: ReturnType<typeof createNotepadWriteGuardHook> | null
   planFormatValidator: ReturnType<typeof createPlanFormatValidatorHook> | null
   commitQualityGuard: ReturnType<typeof createCommitQualityGuardHook> | null
+  configProtectionGuard: ReturnType<typeof createConfigProtectionGuardHook> | null
+  docFileWarning: ReturnType<typeof createDocFileWarningHook> | null
+  destructiveBashGuard: ReturnType<typeof createDestructiveBashGuardHook> | null
 }
 
 export function createToolGuardHooks(args: {
@@ -163,6 +169,15 @@ export function createToolGuardHooks(args: {
   const commitQualityGuard = isHookEnabled("commit-quality-guard") && hasEccProfiles
     ? safeHook("commit-quality-guard", () => createCommitQualityGuardHook(ctx))
     : null
+  const configProtectionGuard = isHookEnabled("config-protection-guard") && hasEccProfiles
+    ? safeHook("config-protection-guard", () => createConfigProtectionGuardHook(ctx))
+    : null
+  const docFileWarning = isHookEnabled("doc-file-warning") && hasEccProfiles
+    ? safeHook("doc-file-warning", () => createDocFileWarningHook())
+    : null
+  const destructiveBashGuard = isHookEnabled("destructive-bash-guard") && hasEccProfiles
+    ? safeHook("destructive-bash-guard", () => createDestructiveBashGuardHook(ctx))
+    : null
 
   return {
     commentChecker,
@@ -184,5 +199,8 @@ export function createToolGuardHooks(args: {
     notepadWriteGuard,
     planFormatValidator,
     commitQualityGuard,
+    configProtectionGuard,
+    docFileWarning,
+    destructiveBashGuard,
   }
 }

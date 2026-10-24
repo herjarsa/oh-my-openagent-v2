@@ -60,6 +60,9 @@ export const HookNameSchema = z.enum([
   "legacy-plugin-toast",
   "native-edition-nudge",
   "commit-quality-guard",
+  "config-protection-guard",
+  "doc-file-warning",
+  "destructive-bash-guard",
 ])
 
 export type HookName = z.infer<typeof HookNameSchema>
