@@ -86,7 +86,7 @@ jobs:
           BUN_INSTALL_ALLOW_SCRIPTS: "@ast-grep/cli @ast-grep/napi"
 
       - name: Type check
-        run: grep -A2 'ask' node_modules/@opencode-ai/plugin/dist/tool.d.ts | head -n 6; npm ls effect 2>/dev/null | head -n 8; bun run typecheck
+        run: bun run typecheck
 
       - name: Type check script tooling
         run: bun run typecheck:script
