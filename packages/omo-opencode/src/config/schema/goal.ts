@@ -3,8 +3,8 @@ import { z } from "zod"
 export const GoalConfigSchema = z.object({
   /** Enable the Goal subsystem (default: false) */
   enabled: z.boolean().default(false),
-  /** Master switch for automatic goal creation on the first main-session message. Requires default_mode.goal. */
-  auto_start: z.boolean().default(false),
+  /** Automatically create a goal from the first main-session message (default: true). default_mode.goal is a legacy alias. */
+  auto_start: z.boolean().default(true),
   /** Default continuation iteration cap, preserved for Ralph Loop behavioral parity (default: 100) */
   default_max_iterations: z.number().min(1).max(1000).default(100),
   /** Resume active goals when the plugin starts after a crash or restart (default: true). */

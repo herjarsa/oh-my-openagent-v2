@@ -9145,7 +9145,7 @@
           "type": "boolean"
         },
         "auto_start": {
-          "default": false,
+          "default": true,
           "type": "boolean"
         },
         "default_max_iterations": {
