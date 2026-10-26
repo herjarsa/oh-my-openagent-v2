@@ -1,0 +1,12 @@
+name: diag-lsp
+on: workflow_dispatch
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 1
+      - name: List lsp-tools-mcp
+        run: pwd; ls -la; ls -la packages/lsp-tools-mcp | head -n 25; git submodule status; git status --short | head -n 10
