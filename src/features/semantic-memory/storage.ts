@@ -1,13 +1,19 @@
-import { Database } from "bun:sqlite"
+type BunDatabase = import("bun:sqlite").Database;
+
+function loadBunSqlite(): typeof import("bun:sqlite") {
+  const metaRequire = (import.meta as { require?: (id: string) => typeof import("bun:sqlite") }).require;
+  if (typeof metaRequire !== "function") throw new Error("bun:sqlite requires the Bun runtime");
+  return metaRequire("bun:sqlite");
+}
 import { join, dirname } from "path"
 import { tmpdir } from "os"
 import { mkdirSync } from "fs"
 
 const DB_PATH = process.env.SEMANTIC_MEMORY_DB_PATH ?? join(tmpdir(), "oh-my-opencode", "semantic-memory.db")
 
-let db: Database | null = null
+let db: BunDatabase | null = null
 
-export function getMemoryDb(): Database {
+export function getMemoryDb(): BunDatabase {
   if (db) return db
 
   const dbDir = dirname(DB_PATH)
@@ -17,7 +23,7 @@ export function getMemoryDb(): Database {
     // Directory may already exist
   }
 
-  db = new Database(DB_PATH)
+  db = new (loadBunSqlite().Database)(DB_PATH)
   db.run("PRAGMA journal_mode = WAL")
 
   db.run(`

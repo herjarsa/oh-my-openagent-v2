@@ -124,6 +124,7 @@ jobs:
         run: |
           bun run build:lsp-tools-mcp
           bun build src/index.ts --outdir dist --target bun --format esm --external zod
+          bun run script/patch-node-require-shim.ts
           bunx tsc --project tsconfig.json --declaration --emitDeclarationOnly --outDir dist
 
       - name: Verify build output
