@@ -128,8 +128,8 @@ export function createGoalHook(ctx: PluginInput, options: GoalHookOptions): Goal
     )
   }
 
-  async function dispatchContinuation(goal: Goal, source: string): Promise<boolean> {
-    const promptText = buildContinuationPrompt(goal)
+  async function dispatchContinuation(goal: Goal, source: string, extraPrompt?: string): Promise<boolean> {
+    const promptText = buildContinuationPrompt(goal) + (extraPrompt ?? "")
     const promptResult = await dispatchInternalPrompt({
       mode: "async",
       client: ctx.client,
@@ -183,10 +183,23 @@ export function createGoalHook(ctx: PluginInput, options: GoalHookOptions): Goal
         console.warn(`[${HOOK_NAME}] usage accounting failed`, { sessionID, error })
       }
       const current = controller.getGoal(sessionID) ?? goal
-      await dispatchContinuation(current, "idle-continuation")
+      await dispatchContinuation(current, "idle-continuation", buildChildWatchdogSection(sessionID, current))
     } finally {
       inFlightContinuations.delete(sessionID)
     }
+  }
+
+  function buildChildWatchdogSection(sessionID: string, goal: Goal): string {
+    if (goal.childSessionIDs.length === 0) return ""
+    const lines = goal.childSessionIDs.map((childID) => {
+      const child = controller.getGoal(childID)
+      if (child === null) return `- ${childID}: no goal record (finished or cleared)`
+      return `- ${childID}: ${child.status} (iteration ${child.iteration}/${child.maxIterations}, stalls ${child.stallCount}${child.pauseReason ? `, paused: ${child.pauseReason}` : ""})`
+    })
+    return ""
+      + "\n\nDelegated child sessions:\n"
+      + lines.join("\n")
+      + "\nYou may pause, resume, or redirect a child via update_goal with its session_id.";
   }
 
   function handleSessionCreated(sessionID: string, firstMessage: string): void {

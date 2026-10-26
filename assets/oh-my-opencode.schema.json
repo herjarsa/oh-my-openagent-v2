@@ -9164,6 +9164,14 @@
           "minimum": 1,
           "maximum": 10080
         },
+        "require_completion_evidence": {
+          "default": true,
+          "type": "boolean"
+        },
+        "inherit_to_children": {
+          "default": true,
+          "type": "boolean"
+        },
         "max_stalls": {
           "default": 3,
           "type": "number",
@@ -9177,6 +9185,8 @@
         "default_max_iterations",
         "resume_on_start",
         "resume_window_minutes",
+        "require_completion_evidence",
+        "inherit_to_children",
         "max_stalls"
       ],
       "additionalProperties": false

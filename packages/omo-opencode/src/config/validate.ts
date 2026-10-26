@@ -176,6 +176,9 @@ function migrateRalphLoopConfig(config: OhMyOpenCodeConfig): OhMyOpenCodeConfig 
       default_max_iterations: existingGoal?.default_max_iterations ?? defaultMaxIterations ?? 100,
       resume_on_start: existingGoal?.resume_on_start ?? true,
       resume_window_minutes: existingGoal?.resume_window_minutes ?? 30,
+      require_completion_evidence: existingGoal?.require_completion_evidence ?? true,
+      inherit_to_children: existingGoal?.inherit_to_children ?? true,
+      max_stalls: existingGoal?.max_stalls ?? 3,
     },
   }
 }
