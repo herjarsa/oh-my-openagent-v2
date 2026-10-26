@@ -40,6 +40,7 @@ import {
 } from "../../shared"
 import { safeCreateHook } from "../../shared/safe-create-hook"
 import { sessionExists } from "../../tools"
+import { createGoalHook } from "../../hooks/goal"
 import { isTmuxIntegrationEnabled } from "../../create-runtime-tmux-config"
 
 export type SessionHooks = {
@@ -55,6 +56,7 @@ export type SessionHooks = {
   nonInteractiveEnv: ReturnType<typeof createNonInteractiveEnvHook> | null
   interactiveBashSession: ReturnType<typeof createInteractiveBashSessionHook> | null
   ralphLoop: ReturnType<typeof createRalphLoopHook> | null
+  goal: ReturnType<typeof createGoalHook> | null
   editErrorRecovery: ReturnType<typeof createEditErrorRecoveryHook> | null
   delegateTaskRetry: ReturnType<typeof createDelegateTaskRetryHook> | null
   startWork: ReturnType<typeof createStartWorkHook> | null
@@ -212,6 +214,18 @@ export function createSessionHooks(args: {
     ? safeHook("interactive-bash-session", () => createInteractiveBashSessionHook(ctx))
     : null
 
+  const goal = isHookEnabled("goal") && pluginConfig.goal?.enabled
+    ? safeHook("goal", () =>
+        createGoalHook(ctx, {
+          projectDir: ctx.directory,
+          autoStart: pluginConfig.goal?.auto_start ?? true,
+          maxIterations: pluginConfig.goal?.default_max_iterations,
+          maxStalls: pluginConfig.goal?.max_stalls,
+          ultrawork: pluginConfig.default_mode?.ultrawork ?? false,
+          getSessionExists: async (sessionId) => await sessionExists(sessionId),
+        }))
+    : null
+
   const ralphLoop = isHookEnabled("ralph-loop")
     ? safeHook("ralph-loop", () =>
         createRalphLoopHook(ctx, {
@@ -301,6 +315,7 @@ export function createSessionHooks(args: {
     nonInteractiveEnv,
     interactiveBashSession,
     ralphLoop,
+    goal,
     editErrorRecovery,
     delegateTaskRetry,
     startWork,

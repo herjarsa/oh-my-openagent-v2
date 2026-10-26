@@ -11,6 +11,7 @@ import { QUESTION_DENIED_SESSION_PERMISSION } from "../../shared/question-denied
 import { stripAgentListSortPrefix } from "../../shared/agent-display-names"
 import { buildTaskMetadataBlock } from "../../features/tool-metadata-store/task-metadata-contract"
 import { resolveMetadataModel } from "./resolve-metadata-model"
+import { inheritGoalToChild } from "./goal-inheritance"
 
 function registerBackgroundSessionContext(args: {
   sessionId: string
@@ -170,6 +171,9 @@ export async function executeBackgroundTask(
     }
 
     if (sessionId) {
+      if (args.inherit_goal !== false) {
+        inheritGoalToChild({ projectDir: executorCtx.directory, parentSessionID: parentContext.sessionID, childSessionID: sessionId })
+      }
       registerBackgroundSessionContext({
         sessionId,
         fallbackChain,

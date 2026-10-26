@@ -13,6 +13,11 @@ export const DefaultModeConfigSchema = z.object({
    * When ultrawork is also enabled, the loop starts in ultrawork mode.
    */
   ralph_loop: z.boolean().default(false),
+  /**
+   * Automatically create a goal from the first main-session message
+   * without requiring the /goal command.
+   */
+  goal: z.boolean().default(false),
 })
 
 export type DefaultModeConfig = z.infer<typeof DefaultModeConfigSchema>

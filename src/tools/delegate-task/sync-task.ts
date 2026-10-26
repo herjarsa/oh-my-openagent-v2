@@ -17,6 +17,7 @@ import { buildTaskPrompt } from "./prompt-builder"
 import { resolveMetadataModel } from "./resolve-metadata-model"
 import { buildSyncPromptTools } from "./sync-prompt-sender"
 import { type SyncTaskDeps, syncTaskDeps } from "./sync-task-deps"
+import { inheritGoalToChild } from "./goal-inheritance"
 import { getNextSyncFallbackModel, retrySyncPromptWithFallbacks } from "./sync-task-fallback"
 import { formatDuration } from "./time-formatter"
 import type { DelegatedModelConfig, DelegateTaskArgs, ToolContextWithMetadata } from "./types"
@@ -164,6 +165,10 @@ export async function executeSyncTask(
     }
 
     await registerSyncSession(sessionID)
+
+    if (args.inherit_goal !== false) {
+      inheritGoalToChild({ projectDir: directory, parentSessionID: parentContext.sessionID, childSessionID: sessionID })
+    }
 
     taskId = `sync_${sessionID.slice(0, 8)}`
     const startTime = new Date()

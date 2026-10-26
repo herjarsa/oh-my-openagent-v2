@@ -18,6 +18,7 @@ import { KeywordDetectorConfigSchema } from "./keyword-detector"
 import { NotificationConfigSchema } from "./notification"
 import { OpenClawConfigSchema } from "./openclaw"
 import { ModelCapabilitiesConfigSchema } from "./model-capabilities"
+import { GoalConfigSchema } from "./goal"
 import { RalphLoopConfigSchema } from "./ralph-loop"
 import { RuntimeFallbackConfigSchema } from "./runtime-fallback"
 import { TeamModeConfigSchema } from "./team-mode"
@@ -69,6 +70,7 @@ export const OhMyOpenCodeConfigSchema = z.object({
   experimental: ExperimentalConfigSchema.optional(),
   auto_update: z.boolean().optional(),
   skills: SkillsConfigSchema.optional(),
+  goal: GoalConfigSchema.optional(),
   ralph_loop: RalphLoopConfigSchema.optional(),
   /**
    * Enable runtime fallback (default: false)
