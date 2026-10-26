@@ -11485,6 +11485,12 @@
               "type": "integer",
               "minimum": 1,
               "maximum": 10080
+            },
+            "max_stalls": {
+              "default": 3,
+              "type": "number",
+              "minimum": 1,
+              "maximum": 10
             }
           },
           "required": [
@@ -11492,7 +11498,8 @@
             "auto_start",
             "default_max_iterations",
             "resume_on_start",
-            "resume_window_minutes"
+            "resume_window_minutes",
+            "max_stalls"
           ],
           "additionalProperties": false
         },
@@ -29474,6 +29481,12 @@
                     "type": "integer",
                     "minimum": 1,
                     "maximum": 10080
+                  },
+                  "max_stalls": {
+                    "default": 3,
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 10
                   }
                 },
                 "required": [
@@ -29481,7 +29494,8 @@
                   "auto_start",
                   "default_max_iterations",
                   "resume_on_start",
-                  "resume_window_minutes"
+                  "resume_window_minutes",
+                  "max_stalls"
                 ],
                 "additionalProperties": false
               },

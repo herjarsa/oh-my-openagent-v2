@@ -11,6 +11,8 @@ export const GoalConfigSchema = z.object({
   resume_on_start: z.boolean().default(true),
   /** Only resume active goals updated within this many minutes (default: 30, max: 10080 = 7 days). */
   resume_window_minutes: z.number().int().min(1).max(10080).default(30),
+  /** Consecutive error stalls before a goal auto-pauses (default: 3) */
+  max_stalls: z.number().min(1).max(10).default(3),
 })
 
 export type GoalConfig = z.infer<typeof GoalConfigSchema>

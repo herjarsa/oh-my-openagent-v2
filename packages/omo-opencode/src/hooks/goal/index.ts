@@ -7,6 +7,8 @@ import type { Goal } from "./types"
 export type GoalHookOptions = {
   readonly projectDir: string
   readonly autoStart?: boolean
+  readonly maxIterations?: number
+  readonly maxStalls?: number
   readonly ultrawork?: boolean
   readonly getSessionExists?: (sessionID: string) => Promise<boolean>
   /** Resume active goals when the plugin starts after a crash or restart (default: true). */
@@ -163,9 +165,16 @@ export function createGoalHook(ctx: PluginInput, options: GoalHookOptions): Goal
     if (goal === null || goal.status !== "active") {
       return
     }
+    const maxIterations = options.maxIterations ?? goal.maxIterations
+    if (goal.iteration >= maxIterations) {
+      controller.pauseGoal(sessionID)
+      controller.updateProgress(sessionID, { pauseReason: "budget" })
+      return
+    }
     if (inFlightContinuations.has(sessionID)) {
       return
     }
+    controller.updateProgress(sessionID, { iteration: goal.iteration + 1, ...(goal.stallCount > 0 ? { stallCount: 0 } : {}) })
     inFlightContinuations.add(sessionID)
     try {
       try {
@@ -186,6 +195,19 @@ export function createGoalHook(ctx: PluginInput, options: GoalHookOptions): Goal
     const objective = firstMessage.trim().slice(0, 2000)
     if (!objective) return
     controller.setGoal(sessionID, objective)
+  }
+
+  async function handleSessionError(sessionID: string): Promise<void> {
+    const goal = controller.getGoal(sessionID)
+    if (goal === null || goal.status !== "active") return
+    const maxStalls = options.maxStalls ?? 3
+    const stallCount = goal.stallCount + 1
+    if (stallCount >= maxStalls) {
+      controller.pauseGoal(sessionID)
+      controller.updateProgress(sessionID, { stallCount, pauseReason: "stalled" })
+      return
+    }
+    controller.updateProgress(sessionID, { stallCount })
   }
 
   async function handleSessionDeleted(sessionID: string): Promise<void> {
@@ -314,6 +336,9 @@ export function createGoalHook(ctx: PluginInput, options: GoalHookOptions): Goal
           handleSessionCreated(sessionID, message)
           break
         }
+        case "session.error":
+          await handleSessionError(sessionID)
+          break
         case "session.deleted":
           await handleSessionDeleted(sessionID)
           break
