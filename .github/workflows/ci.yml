@@ -124,6 +124,7 @@ jobs:
         run: |
           bun run build:lsp-tools-mcp
           bun build src/index.ts --outdir dist --target bun --format esm --external zod
+          bunx tsc src/index.ts --declaration --emitDeclarationOnly --outDir dist --skipLibCheck --module esnext --target esnext --moduleResolution bundler --ignoreConfig
 
       - name: Verify build output
         run: |
