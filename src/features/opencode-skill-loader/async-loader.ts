@@ -1,7 +1,7 @@
 import { readFile, readdir } from "fs/promises"
 import type { Dirent } from "fs"
 import { join, basename } from "path"
-import yaml from "js-yaml"
+import { load as yamlLoad } from "js-yaml"
 import { parseFrontmatter } from "../../shared/frontmatter"
 import { sanitizeModelField } from "../../shared/model-sanitizer"
 import { resolveSymlink, isMarkdownFile } from "../../shared/file-utils"
@@ -36,7 +36,7 @@ function parseSkillMcpConfigFromFrontmatter(content: string): SkillMcpConfig | u
   if (!frontmatterMatch) return undefined
 
   try {
-    const parsed = yaml.load(frontmatterMatch[1]) as Record<string, unknown>
+    const parsed = yamlLoad(frontmatterMatch[1]) as Record<string, unknown>
     if (parsed && typeof parsed === "object" && "mcp" in parsed && parsed.mcp) {
       return parsed.mcp as SkillMcpConfig
     }
