@@ -40,7 +40,7 @@ jobs:
           submodules: recursive
 
       - name: Build lsp-tools-mcp submodule
-        run: ls -la; npm ci && npm run build
+        run: npm --version; node --version; head -c 200 package-lock.json; echo; npm ci && npm run build
         working-directory: packages/lsp-tools-mcp
 
       - uses: oven-sh/setup-bun@v2
@@ -68,7 +68,7 @@ jobs:
           submodules: recursive
 
       - name: Build lsp-tools-mcp submodule
-        run: ls -la; npm ci && npm run build
+        run: npm --version; node --version; head -c 200 package-lock.json; echo; npm ci && npm run build
         working-directory: packages/lsp-tools-mcp
 
       - uses: oven-sh/setup-bun@v2
@@ -103,7 +103,7 @@ jobs:
           submodules: recursive
 
       - name: Build lsp-tools-mcp submodule
-        run: ls -la; npm ci && npm run build
+        run: npm --version; node --version; head -c 200 package-lock.json; echo; npm ci && npm run build
         working-directory: packages/lsp-tools-mcp
 
       - uses: oven-sh/setup-bun@v2
