@@ -1,6 +1,6 @@
 import * as fs from "node:fs/promises"
 import { join } from "path"
-import yaml from "js-yaml"
+import { load as yamlLoad } from "js-yaml"
 import type { SkillMcpConfig } from "../skill-mcp-manager/types"
 
 export function parseSkillMcpConfigFromFrontmatter(content: string): SkillMcpConfig | undefined {
@@ -8,7 +8,7 @@ export function parseSkillMcpConfigFromFrontmatter(content: string): SkillMcpCon
   if (!frontmatterMatch) return undefined
 
   try {
-    const parsed = yaml.load(frontmatterMatch[1]) as Record<string, unknown>
+    const parsed = yamlLoad(frontmatterMatch[1]) as Record<string, unknown>
     if (parsed && typeof parsed === "object" && "mcp" in parsed && parsed.mcp) {
       return parsed.mcp as SkillMcpConfig
     }
