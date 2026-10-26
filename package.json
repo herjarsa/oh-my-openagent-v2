@@ -68,7 +68,7 @@
     "build:model-capabilities": "bun run script/build-model-capabilities.ts",
     "clean": "node script/clean-dist.mjs",
     "prepack": "node --eval \"process.exit(0)\"",
-    "prepare": "bun run build",
+    "prepare": "bun build src/index.ts --outdir dist --target bun --format esm --external zod",
     "postinstall": "node postinstall.mjs",
     "prepublishOnly": "bun run clean && bun run build:lsp-tools-mcp && bun run build:lsp-daemon && bun build src/index.ts --outdir dist --target bun --format esm --external zod",
     "test:model-capabilities": "bun test --timeout 20000 packages/model-core/src/model-capability-aliases.test.ts packages/model-core/src/model-capability-guardrails.test.ts packages/model-core/src/model-capabilities.test.ts packages/omo-opencode/src/cli/doctor/checks/model-resolution.test.ts --bail",
