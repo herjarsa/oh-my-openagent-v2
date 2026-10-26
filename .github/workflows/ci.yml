@@ -121,7 +121,9 @@ jobs:
           BUN_INSTALL_ALLOW_SCRIPTS: "@ast-grep/cli @ast-grep/napi"
 
       - name: Build
-        run: bun run build
+        run: |
+          bun run build:lsp-tools-mcp
+          bun build src/index.ts --outdir dist --target bun --format esm --external zod
 
       - name: Verify build output
         run: |
