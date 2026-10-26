@@ -325,6 +325,17 @@ export function createChatMessageHandler(args: {
       }
     }
 
+    if (hooks.goal) {
+      const goalPromptText = extractPromptText(output.parts)
+      const goalCommand = goalPromptText.trim().match(/^\/goal(?:\s+([\s\S]*))?$/i)
+      if (goalCommand && (goalCommand[1] ?? '').trim().length > 0) {
+        hooks.goal.setGoal(input.sessionID, (goalCommand[1] ?? '').trim())
+      } else if (isFirstMessage && (pluginConfig.default_mode?.goal || pluginConfig.goal?.auto_start)) {
+        const objective = goalPromptText.trim()
+        if (objective.length > 0 && objective.length <= 2000) hooks.goal.setGoal(input.sessionID, objective)
+      }
+    }
+
     await applyUltraworkModelOverrideOnMessage(
       pluginConfig,
       input.agent,

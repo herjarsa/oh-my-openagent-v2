@@ -22,6 +22,8 @@ import {
   createTeamTaskUpdateTool,
 } from "../features/team-mode/tools/tasks"
 import * as openclawRuntimeDispatch from "../openclaw/runtime-dispatch"
+import { createGoalController } from "../hooks/goal/controller"
+import { createGoalTools } from "../hooks/goal/tools"
 import type { PluginContext, ToolsRecord } from "./types"
 
 import {
@@ -334,6 +336,11 @@ export function createToolRegistry(args: {
       }
     : {}
 
+  const goalController = createGoalController({ projectDir: ctx.directory })
+  const goalToolsRecord: Record<string, ToolDefinition> = pluginConfig.goal?.enabled
+    ? createGoalTools({ controller: goalController, getSessionID: getMainSessionID, requireCompletionEvidence: pluginConfig.goal?.require_completion_evidence ?? true })
+    : {}
+
   const allTools: Record<string, ToolDefinition> = {
     ...factories.createGrepTools(ctx),
     ...factories.createGlobTools(ctx),
@@ -348,6 +355,7 @@ export function createToolRegistry(args: {
     ...teamModeToolsRecord,
     ...taskToolsRecord,
     ...hashlineToolsRecord,
+    ...goalToolsRecord,
   }
 
   const allToolNames = Object.keys(allTools)
