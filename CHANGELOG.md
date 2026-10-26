@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+**Goals no longer die silently: hierarchy, enforceable budget, and child inheritance.** Goals gain parent/root linkage with a v2 store (auto-migration), real `auto_start` (plus `default_mode.goal` as legacy alias), and `inherit_goal` propagation into sync and background child sessions with remaining-budget handoff. Idle iterations pause on budget, errors accumulate stalls and pause at `max_stalls` (default 3), and `session.error`/`session.compacted` reactivate active goals. Completing a goal requires evidence text (`require_completion_evidence`, default on), a `_index.json` tracks goal trees, and the parent continuation prompt includes a child-session status table.
+
 ## [5.0.0-beta.90] - 2026-09-24
 
 ### Changed
