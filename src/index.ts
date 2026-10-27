@@ -1,18 +1,9 @@
-import type { PluginModule } from "@opencode-ai/plugin"
-import { createPluginModule } from "./testing/create-plugin-module"
+import type { AgentName, AgentOverrideConfig, AgentOverrides, BuiltinCommandName, HookName, McpName, OhMyOpenCodeConfig } from "./config"
+import type { ConfigLoadError } from "./shared/config-errors"
+import { definition as v2Definition } from "./v2/definition"
 
-const pluginModule: PluginModule = createPluginModule()
+export default v2Definition
 
-export default pluginModule
+export type { AgentName, AgentOverrideConfig, AgentOverrides, BuiltinCommandName, HookName, McpName, OhMyOpenCodeConfig }
 
-export type {
-  AgentName,
-  AgentOverrideConfig,
-  AgentOverrides,
-  BuiltinCommandName,
-  HookName,
-  McpName,
-  OhMyOpenCodeConfig,
-} from "./config"
-
-export type { ConfigLoadError } from "./shared/config-errors"
+export type { ConfigLoadError }

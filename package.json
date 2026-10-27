@@ -1,6 +1,6 @@
 {
   "name": "@herjarsa/oh-my-openagent-v2",
-  "version": "0.2.4",
+  "version": "0.3.0",
   "description": "The Best AI Agent Harness - Batteries-Included OpenCode Plugin with Multi-Model Orchestration, Parallel Background Agents, and Crafted LSP/AST Tools (herjarsa fork for OpenCode 2 (oh-my-openagent-v2))",
   "main": "./dist/index.js",
   "types": "dist/index.d.ts",
@@ -106,6 +106,7 @@
     "@clack/prompts": "^1.8.1",
     "@modelcontextprotocol/sdk": "^1.30.0",
     "@opencode-ai/plugin": "1.18.31",
+    "@opencode/plugin": "2.1.4",
     "@opencode-ai/sdk": "1.18.31",
     "@opentui/core": "^0.5.11",
     "@opentui/keymap": "^0.5.11",
