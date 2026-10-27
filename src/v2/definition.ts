@@ -7,7 +7,7 @@ import { normalizeEvent } from "./event-bridge"
 import { handleGoalPromptText } from "./session"
 import { registerGoalTools } from "./tools"
 import { registerGoalCommand } from "./commands"
-import { buildContinuationPrompt } from "../hooks/goal/prompt"
+import { buildStructuredContinuation } from "./continuation"
 
 export type BridgeContext = {
   readonly location: { readonly directory: string }
@@ -15,7 +15,36 @@ export type BridgeContext = {
     subscribe(options?: { readonly signal?: AbortSignal }): AsyncIterable<unknown>
   }
   readonly session?: { prompt: (input: { sessionID: string; text: string }) => Promise<unknown> }
-  readonly options?: { enabled?: boolean; maxIterations?: number; maxStalls?: number }
+  readonly options?: { enabled?: boolean; maxIterations?: number; maxStalls?: number; maxQuietCycles?: number; minDispatchIntervalMs?: number }
+}
+
+export const COMPLETION_PATTERNS: readonly string[] = [
+  "goal complete",
+  "goal achieved",
+  "task complete",
+  "task is complete",
+  "all done",
+  "work is complete",
+  "work complete",
+  "nothing left to do",
+  "no further action",
+  "objetivo cumplido",
+  "objetivo completado",
+  "tarea completa",
+  "tarea completada",
+  "trabajo completado",
+  "todo terminado",
+  "he terminado",
+  "completado",
+  "terminado",
+]
+
+// Limitation: plain lowercase substring matching, so negations ("no he terminado")
+// and quoted instructions can false-positive. The only consequence is that the
+// text does not reset the no-progress counter; no goal state changes on this path.
+export function looksLikeCompletionChatter(text: string): boolean {
+  const lowered = text.toLowerCase()
+  return COMPLETION_PATTERNS.some((pattern) => lowered.includes(pattern))
 }
 
 export async function runBridge(ctx: BridgeContext): Promise<() => void> {
@@ -29,6 +58,19 @@ export async function runBridge(ctx: BridgeContext): Promise<() => void> {
   }
   const abort = new AbortController()
   const inFlight = new Set<string>()
+  const loops = new Map<string, { progress: boolean; quietCycles: number; dispatched: boolean; lastDispatchAt: number }>()
+
+  function loopState(sessionID: string): { progress: boolean; quietCycles: number; dispatched: boolean; lastDispatchAt: number } {
+    const existing = loops.get(sessionID)
+    if (existing !== undefined) return existing
+    const fresh = { progress: false, quietCycles: 0, dispatched: false, lastDispatchAt: 0 }
+    loops.set(sessionID, fresh)
+    return fresh
+  }
+
+  function markProgress(sessionID: string): void {
+    loopState(sessionID).progress = true
+  }
 
   async function handleIdle(sessionID: string): Promise<void> {
     const goal = controller.getGoal(sessionID)
@@ -41,6 +83,24 @@ export async function runBridge(ctx: BridgeContext): Promise<() => void> {
       controller.updateProgress(sessionID, { pauseReason: "budget" })
       return
     }
+    const st = loopState(sessionID)
+    const minInterval = ctx.options?.minDispatchIntervalMs ?? 10000
+    if (st.dispatched && Date.now() - st.lastDispatchAt < minInterval) {
+      return
+    }
+    if (st.dispatched && !st.progress) {
+      st.quietCycles += 1
+      const maxQuiet = ctx.options?.maxQuietCycles ?? 3
+      if (st.quietCycles >= maxQuiet) {
+        controller.pauseGoal(sessionID)
+        controller.updateProgress(sessionID, { pauseReason: "stalled" })
+        // eslint-disable-next-line no-console
+        console.log(`[goal-bridge] pausing quiet goal session ${sessionID} after ${st.quietCycles} dispatches with no tool activity`)
+        return
+      }
+    } else {
+      st.quietCycles = 0
+    }
     if (inFlight.has(sessionID)) {
       return
     }
@@ -51,9 +111,12 @@ export async function runBridge(ctx: BridgeContext): Promise<() => void> {
     if (progressed === null) {
       return
     }
+    st.dispatched = true
+    st.lastDispatchAt = Date.now()
+    st.progress = false
     inFlight.add(sessionID)
     try {
-      const promptText = buildContinuationPrompt(progressed)
+      const promptText = buildStructuredContinuation(progressed)
       if (ctx.session !== undefined) {
         await ctx.session.prompt({ sessionID, text: promptText })
       } else {
@@ -103,14 +166,27 @@ export async function runBridge(ctx: BridgeContext): Promise<() => void> {
           switch (normalized.type) {
             case "session.idle":
             case "session.compacted":
+            case "session.compaction.ended":
               await handleIdle(sessionID)
               break
             case "session.error":
+            case "session.execution.failed":
               handleError(sessionID)
               break
             case "session.deleted":
               handleDeleted(sessionID)
               break
+            case "session.tool.called":
+            case "session.message.content.updated":
+              markProgress(sessionID)
+              break
+            case "session.text.ended": {
+              const text = normalized.properties.text
+              if (typeof text === "string" && !looksLikeCompletionChatter(text)) {
+                markProgress(sessionID)
+              }
+              break
+            }
             default:
               break
           }

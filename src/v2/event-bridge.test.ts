@@ -41,4 +41,13 @@ describe("normalizeEvent", () => {
     expect(normalizeEvent(42)).toBeUndefined()
     expect(normalizeEvent("session.idle")).toBeUndefined()
   })
+  test("given v2 wire envelope with data #when normalized #then keeps type and sessionID", () => {
+    // given
+    const event = { type: "session.idle", data: { sessionID: "ses_d" } }
+    // when
+    const result = normalizeEvent(event)
+    // then
+    expect(result?.type).toBe("session.idle")
+    expect(result?.properties.sessionID).toBe("ses_d")
+  })
 })

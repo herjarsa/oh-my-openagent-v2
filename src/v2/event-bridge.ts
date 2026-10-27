@@ -25,11 +25,10 @@ export function normalizeEvent(input: unknown): NormalizedEvent | undefined {
   const record = input as Record<string, unknown>
   const type = record["type"]
   if (typeof type !== "string" || type.length === 0) return undefined
+  const payload = record["data"] ?? record["properties"]
   const properties: Record<string, unknown> & { sessionID?: string } =
-    typeof record["properties"] === "object" && record["properties"] !== null
-      ? { ...(record["properties"] as Record<string, unknown>) }
-      : {}
-  const sessionID = readSessionID(record["properties"] ?? record["event"] ?? record)
+    typeof payload === "object" && payload !== null ? { ...(payload as Record<string, unknown>) } : {}
+  const sessionID = readSessionID(record["data"] ?? record["properties"] ?? record["event"] ?? record)
   if (sessionID !== undefined) properties.sessionID = sessionID
   return { type, properties }
 }
