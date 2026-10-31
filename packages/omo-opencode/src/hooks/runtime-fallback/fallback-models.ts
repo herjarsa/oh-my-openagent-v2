@@ -47,6 +47,9 @@ function getRawFallbackModelsForSession(
     if (categoryConfig?.fallback_models) {
       return normalizeFallbackModels(categoryConfig.fallback_models)
     }
+    if (Array.isArray(categoryConfig?.models)) {
+      return normalizeFallbackModels(categoryConfig.models.slice(1) as (string | FallbackModelObject)[])
+    }
   }
 
   const tryGetFallbackFromAgent = (agentName: string): (string | FallbackModelObject)[] | undefined => {
@@ -56,12 +59,18 @@ function getRawFallbackModelsForSession(
     if (agentConfig?.fallback_models) {
       return normalizeFallbackModels(agentConfig.fallback_models)
     }
+    if (Array.isArray(agentConfig?.models)) {
+      return normalizeFallbackModels(agentConfig.models.slice(1) as (string | FallbackModelObject)[])
+    }
 
     const agentCategory = agentConfig?.category
     if (agentCategory && pluginConfig.categories?.[agentCategory]) {
       const categoryConfig = pluginConfig.categories[agentCategory]
       if (categoryConfig?.fallback_models) {
         return normalizeFallbackModels(categoryConfig.fallback_models)
+      }
+      if (Array.isArray(categoryConfig?.models)) {
+        return normalizeFallbackModels(categoryConfig.models.slice(1) as (string | FallbackModelObject)[])
       }
     }
 
