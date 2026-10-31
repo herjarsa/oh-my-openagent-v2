@@ -43,7 +43,7 @@ export function buildAvailableSkills(
       name: skill.name,
       description: skill.definition.description ?? "",
       location: mapScopeToLocation(skill.scope),
-      ecc: isEccSkill(skill),
+      ...(isEccSkill(skill) ? { ecc: true as const } : {}),
     }))
 
   const skillMap = new Map<string, AvailableSkill>()

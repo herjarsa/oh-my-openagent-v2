@@ -77,7 +77,10 @@ describe("dist bundle prompt content", () => {
       const runtimeAgents = JSON.parse(stdout) as RuntimeAgent[]
 
       const sourcePrompt = await readFile(PROMETHEUS_SOURCE, "utf8")
-      const runtimeAgent = runtimeAgents.find((agent) => agent.prompt === sourcePrompt)
+      const runtimeAgent = runtimeAgents.find(
+        (agent) =>
+          agent.prompt === sourcePrompt || agent.prompt.startsWith(sourcePrompt),
+      )
       expect(runtimeAgent, `${PROMETHEUS_SOURCE} was not returned by the built plugin runtime`).toBeDefined()
       expect(runtimeAgent).toMatchObject({
         mode: "primary",

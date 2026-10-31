@@ -197,12 +197,13 @@ export async function createSkillContext(args: {
     },
   )
 
-  const eccSkillNames = new Set(filteredEccSkills.map((skill) => skill.name))
+  // Mark only skills that genuinely originate from the vendored ECC tree
+  // (path-based: a builtin skill sharing an ECC skill name must not be flagged).
   const availableSkills: AvailableSkill[] = mergedSkills.map((skill) => ({
     name: skill.name,
     description: skill.definition.description ?? "",
     location: mapScopeToLocation(skill.scope),
-    ecc: eccSkillNames.has(skill.name),
+    ...(((skill.path ?? skill.resolvedPath ?? "").includes("ecc-skills")) ? { ecc: true as const } : {}),
   }))
 
   return {
