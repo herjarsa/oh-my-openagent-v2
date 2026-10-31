@@ -10,6 +10,11 @@ function mapScopeToLocation(scope: SkillScope): AvailableSkill["location"] {
   return "plugin"
 }
 
+function isEccSkill(skill: LoadedSkill): boolean {
+  const path = skill.path ?? skill.resolvedPath ?? ""
+  return path.includes("ecc-skills") || path.includes("ecc_skills")
+}
+
 export function buildAvailableSkills(
   discoveredSkills: LoadedSkill[],
   browserProvider?: BrowserAutomationProvider,
@@ -38,10 +43,17 @@ export function buildAvailableSkills(
       name: skill.name,
       description: skill.definition.description ?? "",
       location: mapScopeToLocation(skill.scope),
+      ecc: isEccSkill(skill),
     }))
 
   const skillMap = new Map<string, AvailableSkill>()
   builtinAvailable.forEach(skill => skillMap.set(skill.name, skill))
-  discoveredAvailable.forEach(skill => skillMap.set(skill.name, skill))
-  return Array.from(skillMap.values())
+  discoveredAvailable.forEach(skill => {
+    const existing = skillMap.get(skill.name)
+    if (!existing || skill.location !== "plugin") {
+      skillMap.set(skill.name, skill)
+    }
+  })
+
+  return [...skillMap.values()]
 }

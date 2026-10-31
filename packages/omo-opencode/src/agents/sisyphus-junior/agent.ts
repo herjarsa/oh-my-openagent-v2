@@ -121,7 +121,19 @@ export function createSisyphusJuniorAgentWithOverrides(
   const temperature = override?.temperature ?? SISYPHUS_JUNIOR_DEFAULTS.temperature
 
   const promptAppend = override?.prompt_append
-  const prompt = buildSisyphusJuniorPrompt(model, useTaskSystem, promptAppend)
+  const eccNote = `
+
+### ECC Skill Usage (PROACTIVE - use, don't just list)
+
+The following Everything Claude Code (ECC) skills are available and relevant to execution. **Invoke them proactively** at the matching moment rather than waiting to be asked:
+
+- tdd-workflow - Implementing features/fixes - write tests first, then code.
+- verification-loop - Before claiming a task is complete - run verification.
+- conventional-commit-review - Before committing - commit quality check (also enforced by hook).
+- agent-self-evaluation - Reviewing your own work before reporting done.
+
+> These are capabilities, not suggestions. When a trigger matches, load the skill via the skill tool and follow it. ECC rules (common + typescript) are also auto-injected into context when reading/editing files.`
+  const prompt = buildSisyphusJuniorPrompt(model, useTaskSystem) + eccNote + (promptAppend ? "\n\n" + promptAppend : "")
   const blockedTools = BLOCKED_TOOLS
 
   const baseRestrictions = createAgentToolRestrictions(blockedTools)

@@ -138,7 +138,7 @@ describe("createSisyphusJuniorAgentWithOverrides", () => {
       const result = createSisyphusJuniorAgentWithOverrides(override)
 
       // then
-      expect(result.prompt).toBe(buildSisyphusJuniorPrompt(SISYPHUS_JUNIOR_DEFAULTS.model, false))
+      expect(result.prompt?.startsWith(buildSisyphusJuniorPrompt(SISYPHUS_JUNIOR_DEFAULTS.model, false))).toBe(true)
     })
   })
 

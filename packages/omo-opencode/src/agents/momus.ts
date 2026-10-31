@@ -279,6 +279,18 @@ Response language: match the language of the plan content.
 
 export { MOMUS_DEFAULT_PROMPT as MOMUS_SYSTEM_PROMPT };
 
+
+const MOMUS_ECC_NOTE = `
+
+### ECC Skill Usage (PROACTIVE - use, don't just list)
+
+The following Everything Claude Code (ECC) skills are available and relevant to plan review. **Invoke them proactively** at the matching moment rather than waiting to be asked:
+
+- \`verification-loop\` - Before claiming a plan is complete - run verification.
+- \`agent-self-evaluation\` - Reviewing your own review before reporting.
+
+> These are capabilities, not suggestions. When a trigger matches, load the skill via the \`skill\` tool and follow it. ECC rules (common + typescript) are also auto-injected into context when reading/editing files.`
+
 export function createMomusAgent(model: string): AgentConfig {
   const restrictions = createAgentToolRestrictions([
     "write",
@@ -293,13 +305,13 @@ export function createMomusAgent(model: string): AgentConfig {
     model,
     temperature: 0.1,
     ...restrictions,
-    prompt: MOMUS_DEFAULT_PROMPT,
+    prompt: MOMUS_DEFAULT_PROMPT + MOMUS_ECC_NOTE,
   } as AgentConfig;
 
   if (isGpt5_6Model(model) || isGpt6Model(model)) {
     return {
       ...base,
-      prompt: MOMUS_GPT_5_6_PROMPT,
+      prompt: MOMUS_GPT_5_6_PROMPT + MOMUS_ECC_NOTE,
       reasoningEffort: "high",
       textVerbosity: "high",
     } as AgentConfig;
@@ -308,7 +320,7 @@ export function createMomusAgent(model: string): AgentConfig {
   if (isGptModel(model)) {
     return {
       ...base,
-      prompt: MOMUS_GPT_PROMPT,
+      prompt: MOMUS_GPT_PROMPT + MOMUS_ECC_NOTE,
       reasoningEffort: "medium",
       textVerbosity: "high",
     } as AgentConfig;

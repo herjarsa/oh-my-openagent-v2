@@ -197,10 +197,12 @@ export async function createSkillContext(args: {
     },
   )
 
+  const eccSkillNames = new Set(filteredEccSkills.map((skill) => skill.name))
   const availableSkills: AvailableSkill[] = mergedSkills.map((skill) => ({
     name: skill.name,
     description: skill.definition.description ?? "",
     location: mapScopeToLocation(skill.scope),
+    ecc: eccSkillNames.has(skill.name),
   }))
 
   return {

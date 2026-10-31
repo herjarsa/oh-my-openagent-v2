@@ -15,6 +15,8 @@ export interface AvailableSkill {
   name: string
   description: string
   location: "user" | "project" | "plugin"
+  /** True when the skill originates from the vendored ECC (Everything Claude Code) content. */
+  ecc?: boolean
 }
 
 export interface AvailableCategory {
