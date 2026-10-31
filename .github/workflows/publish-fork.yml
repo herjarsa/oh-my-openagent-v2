@@ -90,7 +90,18 @@ jobs:
         # .npmrc pointing at the registry; npm exchanges the GitHub OIDC
         # token automatically. --provenance is required for trusted publishers
         # and adds Sigstore attestation gratis.
-        run: npm publish --access public --provenance
+        # Backport releases (e.g. ECC 0.2.x while latest is 0.4.x) cannot take
+        # the implicit "latest" tag: npm rejects them. Publish those under the
+        # explicit "ecc" dist-tag instead.
+        run: |
+          LATEST=$(npm view @herjarsa/oh-my-openagent-v2 version 2>/dev/null || echo "0.0.0")
+          HIGHEST=$(printf '%s\n%s' "$LATEST" "$PKG_VERSION" | sort -V | tail -n 1)
+          if [ "$HIGHEST" != "$PKG_VERSION" ]; then
+            echo "Publishing $PKG_VERSION under dist-tag 'ecc' (latest is $LATEST)"
+            npm publish --access public --provenance --tag ecc
+          else
+            npm publish --access public --provenance
+          fi
 
       - name: Write job summary
         if: always()
