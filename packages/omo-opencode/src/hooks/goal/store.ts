@@ -113,44 +113,6 @@ function writeGoalIndexEntry(baseDir: string, goal: Goal | null, sessionID: stri
   writeFileSync(path, JSON.stringify(index, null, 2), "utf-8")
 }
 
-/**
- * Read every goal file in a store directory. Unreadable or malformed files are
- * skipped (and logged) so one bad file cannot take the whole store down.
- */
-export function listGoals(baseDir: string): Goal[] {
-  let entries: string[]
-  try {
-    entries = readdirSync(baseDir)
-  } catch (error) {
-    if (isErrorWithCode(error) && error.code === "ENOENT") {
-      return []
-    }
-    log("[goal] failed to list goal store", {
-      baseDir,
-      error: error instanceof Error ? error.message : String(error),
-    })
-    return []
-  }
-
-  const goals: Goal[] = []
-  for (const entry of entries) {
-    if (!entry.endsWith(".json")) continue
-    const filePath = join(baseDir, entry)
-    try {
-      const parsed = parseGoalFile(readFileSync(filePath, "utf-8"))
-      if (parsed.goal !== null) {
-        goals.push(parsed.goal)
-      }
-    } catch (error) {
-      log("[goal] failed to read goal file", {
-        path: filePath,
-        error: error instanceof Error ? error.message : String(error),
-      })
-    }
-  }
-  return goals
-}
-
 export function writeGoal(ref: GoalStoreRef, goal: Goal | null): void {
   ensureGoalStoreDir(ref.baseDir)
   const filePath = goalFilePath(ref)
