@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-11-02
+
+Adapts the v2 port to fork invariants: goal message handling keeps the fork contract, v2 tool schemas use zod instead of effect, v2 host dispatch goes through a named host-session helper, and host packages resolve from the `omo-opencode` subpackage (no direct `effect` dependency).
+
 ## [0.5.0] - 2026-11-02
 
 **Goals no longer die silently: hierarchy, enforceable budget, and child inheritance.** Goals gain parent/root linkage with a v2 store (auto-migration), real `auto_start` (plus `default_mode.goal` as legacy alias), and `inherit_goal` propagation into sync and background child sessions with remaining-budget handoff. Idle iterations pause on budget, errors accumulate stalls and pause at `max_stalls` (default 3), and `session.error`/`session.compacted` reactivate active goals. Completing a goal requires evidence text (`require_completion_evidence`, default on), a `_index.json` tracks goal trees, and the parent continuation prompt includes a child-session status table.
