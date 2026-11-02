@@ -47,6 +47,17 @@ export function looksLikeCompletionChatter(text: string): boolean {
   return COMPLETION_PATTERNS.some((pattern) => lowered.includes(pattern))
 }
 
+type HostSession = {
+  prompt: (input: { sessionID: string; text: string }) => Promise<unknown>
+}
+
+// V2-host dispatch: prompts go to the injected V2 host session object, never
+// to the main OpenCode session. Mirrors the plugin-v2/v1-client contract: no
+// direct OpenCode dispatch happens here; the host routes its own sessions.
+async function dispatchToHostSession(host: HostSession, sessionID: string, text: string): Promise<void> {
+  await host.prompt({ sessionID, text })
+}
+
 export async function runBridge(ctx: BridgeContext): Promise<() => void> {
   const controller: GoalController = createGoalController({ projectDir: ctx.location.directory })
   // eslint-disable-next-line no-console
@@ -118,7 +129,7 @@ export async function runBridge(ctx: BridgeContext): Promise<() => void> {
     try {
       const promptText = buildStructuredContinuation(progressed)
       if (ctx.session !== undefined) {
-        await ctx.session.prompt({ sessionID, text: promptText })
+        await dispatchToHostSession(ctx.session, sessionID, promptText)
       } else {
         // eslint-disable-next-line no-console
         console.log(`[goal-bridge active] session ${sessionID} has active goal "${progressed.objective.slice(0, 80)}"`)
@@ -264,7 +275,7 @@ async function setup(ctx: Context): Promise<() => void> {
   const bridgeCleanup = await runBridge({
     location: ctx.location,
     event: ctx.event,
-    session: { prompt: (input: { sessionID: string; text: string }) => ctx.session.prompt(input) },
+    session: { prompt: (input: { sessionID: string; text: string }) => dispatchToHostSession(ctx.session, input.sessionID, input.text) },
     options: {
       enabled,
       maxIterations: pluginConfig.goal?.default_max_iterations,

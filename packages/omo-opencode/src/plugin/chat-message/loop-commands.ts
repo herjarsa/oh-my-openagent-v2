@@ -2,10 +2,14 @@ import type { OhMyOpenCodeConfig } from "../../config"
 
 import { AUTO_SLASH_COMMAND_TAG_OPEN } from "../../hooks/auto-slash-command/constants"
 import { parseGoalCommand } from "../../hooks/goal/command-arguments"
-import { MAX_OBJECTIVE_LENGTH } from "../../hooks/goal/validation"
 import { log } from "../../shared"
 import { extractPromptText } from "./prompt-text"
 import type { ChatMessageHooks, ChatMessageHandlerOutput, ChatMessageInput } from "./types"
+
+function explicitGoalArguments(promptText: string): string | undefined {
+  const match = /^\/goal(?:\s+([\s\S]*))?$/i.exec(promptText.trim())
+  return match === null ? undefined : (match[1] ?? "").trim()
+}
 
 export function handleGoalMessage(args: {
   readonly hooks: ChatMessageHooks
@@ -14,38 +18,36 @@ export function handleGoalMessage(args: {
   readonly isFirstMessage: boolean
   readonly pluginConfig: OhMyOpenCodeConfig
   readonly nativeGoalCommand: boolean
-  readonly originalPromptText?: string
 }): void {
   const { hooks, input, output, isFirstMessage, pluginConfig, nativeGoalCommand } = args
   if (!hooks.goal || nativeGoalCommand) {
     return
   }
 
-  const promptText = args.originalPromptText ?? extractPromptText(output.parts)
+  const promptText = extractPromptText(output.parts)
   if (promptText.includes(AUTO_SLASH_COMMAND_TAG_OPEN)) {
     return
   }
-  // The parser accepts bare arguments for native commands, not ordinary chat.
-  const goalCommand = promptText.trim().match(/^\/goal(?:\s+([\s\S]*))?$/i)
-  if (!goalCommand) {
-    const objective = promptText.trim()
-    if (
-      isFirstMessage
-      && (pluginConfig.default_mode?.goal || pluginConfig.goal?.auto_start)
-      && objective.length > 0
-      && objective.length <= MAX_OBJECTIVE_LENGTH
-    ) {
-      hooks.goal.setGoal(input.sessionID, objective)
-      log("[chat-message] Default goal auto-started", { sessionID: input.sessionID, objective })
-    }
-    return
-  }
-  const parsed = parseGoalCommand(goalCommand[1] ?? "")
+
+  const explicitArguments = explicitGoalArguments(promptText)
+  const parsed = parseGoalCommand(explicitArguments ?? promptText)
+  const autoStart = isFirstMessage
+    && pluginConfig.default_mode?.goal === true
+    && pluginConfig.goal?.auto_start === true
 
   switch (parsed.kind) {
     case "setObjective":
-      hooks.goal.setGoal(input.sessionID, parsed.objective)
-      log("[chat-message] Goal set", { sessionID: input.sessionID, objective: parsed.objective })
+      if (explicitArguments === undefined && !autoStart) {
+        break
+      }
+      if (parsed.objective.length > 0) {
+        hooks.goal.setGoal(input.sessionID, parsed.objective)
+        log("[chat-message] Goal set", {
+          sessionID: input.sessionID,
+          objective: parsed.objective,
+          source: explicitArguments === undefined ? "auto-start" : "explicit-command",
+        })
+      }
       break
     case "setStatus":
       if (parsed.status === "paused") {

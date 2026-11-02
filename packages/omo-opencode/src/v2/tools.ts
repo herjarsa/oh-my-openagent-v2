@@ -1,4 +1,4 @@
-﻿import { Schema } from "effect"
+﻿import { z } from "zod"
 import type { Info, ToolContext, ToolEditor } from "@opencode/plugin/promise/tool"
 import type { GoalController } from "../hooks/goal/controller"
 import { GoalToolResponseSchema } from "../hooks/goal/types"
@@ -19,9 +19,10 @@ function targetSessionID(inputSessionID: unknown, context: ToolContext): string 
   return typeof fromContext === "string" && fromContext.length > 0 ? fromContext : undefined
 }
 
-// Workspace effect (4.0.6) Codec is nominally incompatible with the plugin
-// effect (4.0.1) ValueSchema, so schemas cross the boundary via Info input
-// and execute bodies narrow the decoded payload with the Args types below.
+// Tool input schemas are descriptive zod objects: execute bodies narrow the
+// decoded payload with the Args types below, and the host validates through
+// its own input pipeline. First-party code must not import effect directly
+// (dependency-security audit), so no Effect Schema is constructed here.
 type CreateGoalArgs = {
   readonly objective: string
   readonly session_id?: string | undefined
@@ -38,20 +39,20 @@ type GetGoalArgs = {
   readonly session_id?: string | undefined
 }
 
-const CreateGoalInput = Schema.Struct({
-  objective: Schema.String,
-  session_id: Schema.optional(Schema.String),
+const CreateGoalInput = z.object({
+  objective: z.string(),
+  session_id: z.string().optional(),
 }) as unknown as Info["input"]
 
-const UpdateGoalInput = Schema.Struct({
-  status: Schema.optional(Schema.Literals(["active", "paused", "complete"])),
-  objective: Schema.optional(Schema.String),
-  session_id: Schema.optional(Schema.String),
-  evidence: Schema.optional(Schema.String),
+const UpdateGoalInput = z.object({
+  status: z.enum(["active", "paused", "complete"]).optional(),
+  objective: z.string().optional(),
+  session_id: z.string().optional(),
+  evidence: z.string().optional(),
 }) as unknown as Info["input"]
 
-const GetGoalInput = Schema.Struct({
-  session_id: Schema.optional(Schema.String),
+const GetGoalInput = z.object({
+  session_id: z.string().optional(),
 }) as unknown as Info["input"]
 
 export function registerGoalTools(editor: ToolEditor, deps: GoalToolsDeps): void {
