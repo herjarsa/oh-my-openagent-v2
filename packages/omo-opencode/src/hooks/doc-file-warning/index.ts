@@ -1,0 +1,1 @@
+export { createDocFileWarningHook, DOC_FILE_WARNING_TAG, isSuspiciousDocPath } from "./hook"

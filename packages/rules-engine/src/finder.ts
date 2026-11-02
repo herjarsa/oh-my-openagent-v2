@@ -36,7 +36,7 @@ export function findRuleFiles(
     options?.workspaceDirectory,
     startDir,
   );
-  const cacheKey = [projectRoot ?? "", effectiveProjectRoot, startDir, skipClaudeUserRules ? "1" : "0"].join(
+  const cacheKey = [projectRoot ?? "", effectiveProjectRoot, startDir, skipClaudeUserRules ? "1" : "0", options?.eccRulesRoot ?? ""].join(
     "\0",
   );
   const cached = cache?.get(cacheKey);
@@ -46,6 +46,7 @@ export function findRuleFiles(
   addProjectRuleCandidates(effectiveProjectRoot, startDir, candidates, seenRealPaths, cache);
   addProjectSingleFileCandidates(effectiveProjectRoot, candidates, seenRealPaths);
   addUserRuleCandidates(homeDir || homedir(), skipClaudeUserRules, candidates, seenRealPaths, cache);
+  addVendoredEccRuleCandidates(options?.eccRulesRoot, candidates, seenRealPaths, cache);
   const sorted = sortCandidates(candidates);
   cache?.set(cacheKey, sorted);
   return sorted;
@@ -144,6 +145,27 @@ function addUserRuleCandidates(
         relativePath: normalizePath(relative(homeDir, entry.path)),
       });
     }
+  }
+}
+
+function addVendoredEccRuleCandidates(
+  eccRulesRoot: string | null | undefined,
+  candidates: RuleFileCandidate[],
+  seenRealPaths: Set<string>,
+  cache: RuleScanCache | undefined,
+): void {
+  if (!eccRulesRoot) return;
+  for (const entry of scanDirectoryWithCache(eccRulesRoot, cache)) {
+    if (seenRealPaths.has(entry.realPath)) continue;
+    seenRealPaths.add(entry.realPath);
+    candidates.push({
+      path: entry.path,
+      realPath: entry.realPath,
+      source: "plugin-bundled-ecc",
+      isGlobal: true,
+      distance: GLOBAL_DISTANCE,
+      relativePath: normalizePath(relative(eccRulesRoot, entry.path)),
+    });
   }
 }
 

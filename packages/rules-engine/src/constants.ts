@@ -30,4 +30,5 @@ export const SOURCE_PRIORITY: ReadonlyMap<RuleSource, number> = new Map([
   ["~/.opencode/rules", 101],
   ["~/.claude/rules", 102],
   ["~/.sisyphus/rules", 103],
+  ["plugin-bundled-ecc", 200],
 ]);

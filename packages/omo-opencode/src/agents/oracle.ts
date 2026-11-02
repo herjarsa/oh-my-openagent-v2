@@ -408,6 +408,18 @@ If the follow-up contradicts what you recommended and you still believe the orig
 `;
 
 
+
+const ORACLE_ECC_NOTE = `
+
+### ECC Skill Usage (PROACTIVE - use, don't just list)
+
+The following Everything Claude Code (ECC) skills are available and relevant to consultation. **Invoke them proactively** at the matching moment rather than waiting to be asked:
+
+- \`architecture-decision-records\` - When an architecture decision is made.
+- \`agent-self-evaluation\` - Reviewing your own analysis before reporting.
+
+> These are capabilities, not suggestions. When a trigger matches, load the skill via the \`skill\` tool and follow it. ECC rules (common + typescript) are also auto-injected into context when reading/editing files.`
+
 export function createOracleAgent(model: string): AgentConfig {
   const restrictions = createAgentToolRestrictions([
     "write",
@@ -423,13 +435,13 @@ export function createOracleAgent(model: string): AgentConfig {
     model,
     temperature: 0.1,
     ...restrictions,
-    prompt: ORACLE_DEFAULT_PROMPT,
+    prompt: ORACLE_DEFAULT_PROMPT + ORACLE_ECC_NOTE,
   } as AgentConfig;
 
   if (isGpt5_6Model(model) || isGpt6Model(model)) {
     return {
       ...base,
-      prompt: ORACLE_GPT_5_5_PROMPT,
+      prompt: ORACLE_GPT_5_5_PROMPT + ORACLE_ECC_NOTE,
       reasoningEffort: "xhigh",
       textVerbosity: "high",
     } as AgentConfig;
@@ -438,7 +450,7 @@ export function createOracleAgent(model: string): AgentConfig {
   if (isGpt5_5Model(model)) {
     return {
       ...base,
-      prompt: ORACLE_GPT_5_5_PROMPT,
+      prompt: ORACLE_GPT_5_5_PROMPT + ORACLE_ECC_NOTE,
       reasoningEffort: "medium",
       textVerbosity: "high",
     } as AgentConfig;
@@ -447,7 +459,7 @@ export function createOracleAgent(model: string): AgentConfig {
   if (isGptModel(model)) {
     return {
       ...base,
-      prompt: ORACLE_GPT_PROMPT,
+      prompt: ORACLE_GPT_PROMPT + ORACLE_ECC_NOTE,
       reasoningEffort: "medium",
       textVerbosity: "high",
     } as AgentConfig;

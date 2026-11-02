@@ -23,6 +23,7 @@ import {
 } from "@oh-my-opencode/prompts-core"
 import type { AgentMode, AgentPromptMetadata } from "../types"
 import type { AvailableAgent, AvailableSkill, AvailableCategory } from "../dynamic-agent-prompt-builder"
+import { buildEccSkillUsageGuide } from "../ecc-skill-usage-guide"
 import { buildAgentIdentitySection, buildCategorySkillsDelegationGuide } from "../dynamic-agent-prompt-builder"
 import type { CategoryConfig } from "../../config/schema"
 import { mergeCategories } from "../../shared/merge-categories"
@@ -105,7 +106,8 @@ function buildDynamicOrchestratorPrompt(ctx?: OrchestratorContext): string {
     inject: runtimeInjections,
   }).body
 
-  return agentIdentity + "\n" + basePrompt
+  const eccGuide = buildEccSkillUsageGuide(ctx?.availableSkills ?? [], ["verification-loop", "delivery-gate", "production-audit", "agent-self-evaluation", "architecture-decision-records"])
+  return agentIdentity + "\n" + basePrompt + (eccGuide ? "\n\n" + eccGuide : "")
 }
 
 export function createAtlasAgent(ctx: OrchestratorContext): AgentConfig {

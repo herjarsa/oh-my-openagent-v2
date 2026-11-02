@@ -51,4 +51,24 @@ describe("getRuleMatchReason", () => {
 		expect(secondReason).toBe("typescript rule");
 		expect(matchCalls).toBe(1);
 	});
-});
+	test("#given a vendored ECC rule #when resolving match reason #then it always applies without glob matching", () => {
+		let matchCalls = 0;
+
+		const matchReason = getRuleMatchReason({
+			matchDecisionCache: createMatchDecisionCache(),
+			isSingleFile: false,
+			source: "plugin-bundled-ecc",
+			projectRoot: "/repo",
+			resolved: "/repo/src/index.ts",
+			realPath: "/repo/packages/shared-skills/ecc-rules/common/security.md",
+			statFingerprint: "100:20",
+			metadata,
+			shouldApplyRuleImpl: () => {
+				matchCalls += 1;
+				return { applies: false };
+			},
+		});
+
+		expect(matchReason).toBe("ecc-bundled (always apply)");
+		expect(matchCalls).toBe(0);
+	});});

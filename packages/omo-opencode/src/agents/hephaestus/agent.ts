@@ -8,6 +8,7 @@ import type {
   AvailableCategory,
 } from "../dynamic-agent-prompt-builder";
 import { categorizeTools, buildAgentIdentitySection } from "../dynamic-agent-prompt-builder";
+import { buildEccSkillUsageGuide } from "../ecc-skill-usage-guide";
 import { getFrontierToolSchemaPermission } from "../frontier-tool-schema-guard";
 
 import { buildHephaestusPrompt as buildGptPrompt } from "./gpt";
@@ -148,7 +149,8 @@ function buildDynamicHephaestusPrompt(ctx?: HephaestusContext): string {
     "Autonomous deep worker for software engineering from OhMyOpenCode",
   );
 
-  return `${agentIdentity}\n${basePrompt}`;
+  const eccGuide = buildEccSkillUsageGuide(skills, ["tdd-workflow", "verification-loop", "security-review", "conventional-commit-review", "production-audit", "e2e-testing", "eval-harness", "agent-self-evaluation"])
+  return `${agentIdentity}\n${basePrompt}${eccGuide ? "\n\n" + eccGuide : ""}`;
 }
 
 export function createHephaestusAgent(

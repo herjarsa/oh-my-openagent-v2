@@ -21,7 +21,12 @@ import {
   createFsyncSkipWarningHook,
   createNotepadWriteGuardHook,
   createPlanFormatValidatorHook,
+  createCommitQualityGuardHook,
+  createConfigProtectionGuardHook,
+  createDocFileWarningHook,
+  createDestructiveBashGuardHook,
 } from "../../hooks"
+import { eccRulesRootPath, resolveEccProfiles } from "@oh-my-opencode/skills-loader-core"
 import {
   getOpenCodeVersion,
   isOpenCodeVersionAtLeast,
@@ -49,6 +54,24 @@ export type ToolGuardHooks = {
   teamToolGating: ReturnType<typeof createTeamToolGating> | null
   notepadWriteGuard: ReturnType<typeof createNotepadWriteGuardHook> | null
   planFormatValidator: ReturnType<typeof createPlanFormatValidatorHook> | null
+  commitQualityGuard: ReturnType<typeof createCommitQualityGuardHook> | null
+  configProtectionGuard: ReturnType<typeof createConfigProtectionGuardHook> | null
+  docFileWarning: ReturnType<typeof createDocFileWarningHook> | null
+  destructiveBashGuard: ReturnType<typeof createDestructiveBashGuardHook> | null
+}
+
+/**
+ * Pure options builder for the rules injector (kept side-effect free so the
+ * flag threading is unit-testable without module mocking).
+ */
+export function buildRulesInjectorOptions(args: {
+  skipClaudeUserRules: boolean
+  eccRulesRoot: string | null
+}): { skipClaudeUserRules?: boolean; eccRulesRoot?: string | null } {
+  return {
+    ...(args.skipClaudeUserRules ? { skipClaudeUserRules: true as const } : {}),
+    ...(args.eccRulesRoot ? { eccRulesRoot: args.eccRulesRoot } : {}),
+  }
 }
 
 export function createToolGuardHooks(args: {
@@ -103,9 +126,7 @@ export function createToolGuardHooks(args: {
   const skipClaudeUserRules = cc?.hooks === false
   const rulesInjector = isHookEnabled("rules-injector")
     ? safeHook("rules-injector", () =>
-        createRulesInjectorHook(ctx, modelCacheState, {
-          skipClaudeUserRules,
-        }))
+        createRulesInjectorHook(ctx, modelCacheState, buildRulesInjectorOptions({ skipClaudeUserRules, eccRulesRoot })))
     : null
 
   const tasksTodowriteDisabler = isHookEnabled("tasks-todowrite-disabler")
@@ -157,6 +178,21 @@ export function createToolGuardHooks(args: {
     ? safeHook("notepad-write-guard", () => createNotepadWriteGuardHook())
     : null
 
+  const hasEccProfiles = resolveEccProfiles(pluginConfig.ecc_profiles).length > 0
+  const eccRulesRoot = hasEccProfiles ? (eccRulesRootPath() ?? null) : null
+  const commitQualityGuard = isHookEnabled("commit-quality-guard") && hasEccProfiles
+    ? safeHook("commit-quality-guard", () => createCommitQualityGuardHook(ctx))
+    : null
+  const configProtectionGuard = isHookEnabled("config-protection-guard") && hasEccProfiles
+    ? safeHook("config-protection-guard", () => createConfigProtectionGuardHook(ctx))
+    : null
+  const docFileWarning = isHookEnabled("doc-file-warning") && hasEccProfiles
+    ? safeHook("doc-file-warning", () => createDocFileWarningHook())
+    : null
+  const destructiveBashGuard = isHookEnabled("destructive-bash-guard") && hasEccProfiles
+    ? safeHook("destructive-bash-guard", () => createDestructiveBashGuardHook(ctx))
+    : null
+
   return {
     commentChecker,
     toolOutputTruncator,
@@ -176,5 +212,9 @@ export function createToolGuardHooks(args: {
     teamToolGating,
     notepadWriteGuard,
     planFormatValidator,
+    commitQualityGuard,
+    configProtectionGuard,
+    docFileWarning,
+    destructiveBashGuard,
   }
 }

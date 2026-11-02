@@ -127,3 +127,9 @@ Generator/checker note: update this file with the audited component list, then r
 - Copyright: Copyright (c) 2025 Colin McDonnell.
 - Upstream URL: https://zod.dev
 - Where-bundled: root production dependency.
+
+### ECC (Everything Claude Code) content pack
+- License: MIT.
+- Copyright: affaan-m and contributors.
+- Upstream URL: https://github.com/affaan-m/ECC
+- Where-bundled: vendored build-time content under `packages/shared-skills/ecc-skills` (311 skills), `packages/shared-skills/ecc-agents` (71 agents), `packages/shared-skills/ecc-commands` (35 commands), and `packages/shared-skills/ecc-rules` (standards); behavior ports (commit-quality, config-protection, doc-warning, destructive-bash) reimplement the upstream hook specs natively.

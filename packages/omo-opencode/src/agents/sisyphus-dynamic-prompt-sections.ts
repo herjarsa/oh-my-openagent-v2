@@ -19,11 +19,13 @@ import type {
   AvailableTool,
 } from "./dynamic-agent-prompt-builder";
 import { buildTaskManagementSection } from "./sisyphus/default";
+import { buildEccSkillUsageGuide } from "./ecc-skill-usage-guide";
 
 export interface SisyphusDynamicPromptSections {
   readonly agentIdentity: string;
   readonly antiPatterns: string;
   readonly categorySkillsGuide: string;
+  readonly eccSkillUsageGuide: string;
   readonly delegationTable: string;
   readonly exploreSection: string;
   readonly hardBlocks: string;
@@ -55,6 +57,7 @@ export function buildSisyphusDynamicPromptSections(
       availableCategories,
       availableSkills,
     ),
+    eccSkillUsageGuide: buildEccSkillUsageGuide(availableSkills),
     delegationTable: buildDelegationTable(availableAgents),
     exploreSection: buildExploreSection(availableAgents),
     hardBlocks: buildHardBlocksSection(),
