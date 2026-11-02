@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-11-02
+
 **Goals no longer die silently: hierarchy, enforceable budget, and child inheritance.** Goals gain parent/root linkage with a v2 store (auto-migration), real `auto_start` (plus `default_mode.goal` as legacy alias), and `inherit_goal` propagation into sync and background child sessions with remaining-budget handoff. Idle iterations pause on budget, errors accumulate stalls and pause at `max_stalls` (default 3), and `session.error`/`session.compacted` reactivate active goals. Completing a goal requires evidence text (`require_completion_evidence`, default on), a `_index.json` tracks goal trees, and the parent continuation prompt includes a child-session status table.
+
+**OpenCode v2 plugin port lands.** The `src/v2/` entry (goal tools, session wiring, event bridge, continuation) is ported to the new `packages/omo-opencode/src/v2/` layout on the OpenCode v2 API (`@opencode/plugin`, `effect` as host-provided externals).
+
+**ECC vendor bundle.** 311 skills, 71 agents and 35 commands vendored, with proactive per-agent skill usage (0.2.5-0.2.7).
 
 ## [0.1.10] - 2026-10-23
 
