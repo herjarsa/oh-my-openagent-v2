@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.2] - 2026-11-02
+
+Hermetic CI for the two order/environment-dependent tests that failed the 0.5.0/0.5.1 publishes: v2 wiring now stages project config at `.omo/omo.jsonc`, and the parent-wake liveness test isolates each manager in a fresh directory so foreign persisted task records cannot leak into the wake summary.
+
 ## [0.5.1] - 2026-11-02
 
 Adapts the v2 port to fork invariants: goal message handling keeps the fork contract, v2 tool schemas use zod instead of effect, v2 host dispatch goes through a named host-session helper, and host packages resolve from the `omo-opencode` subpackage (no direct `effect` dependency).
