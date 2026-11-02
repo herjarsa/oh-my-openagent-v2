@@ -1,5 +1,8 @@
 import { tool, type ToolDefinition } from "@opencode-ai/plugin"
 import type { BackgroundTask } from "../../features/background-agent"
+import { getPersistenceRoot } from "../../features/background-agent/persistence/paths"
+import type { PersistedTaskRecord } from "../../features/background-agent/persistence/record"
+import { extractTaskResultText } from "../../features/background-agent/persistence/result-text"
 import { publishToolMetadata } from "../../features/tool-metadata-store"
 import { log } from "../../shared/logger"
 import type { BackgroundOutputArgs } from "./types"
@@ -7,8 +10,10 @@ import type { BackgroundOutputClient, BackgroundOutputManager } from "./clients"
 import { BACKGROUND_OUTPUT_DESCRIPTION } from "./constants"
 import { delay } from "./delay"
 import { formatFullSession } from "./full-session-format"
+import { extractMessages, getErrorMessage } from "./session-messages"
 import { formatTaskResult } from "./task-result-format"
 import { formatTaskStatus } from "./task-status-format"
+import { getBackgroundOutputFetchTimeoutMs, withSdkCallTimeout } from "./with-sdk-call-timeout"
 
 import { getAgentDisplayName } from "../../shared/agent-display-names"
 import { recordBackgroundOutputConsumption } from "../../shared/background-output-consumption"
@@ -79,17 +84,78 @@ async function getTaskWithMissingRetry(
 }
 
 function formatTaskNotFoundMessage(taskId: string): string {
-  if (!isSessionId(taskId)) {
-    return `Task not found: ${taskId}`
+  const storeRoot = getPersistenceRoot()
+  const storeStory = `If the id is a background task id (bg_...):
+  - The result may still be in the durable store under
+    ${storeRoot}/<project hash>/${taskId}.json. The store keeps results for
+    background_task.resultPersistence.retentionMs (7 days by default).
+  - If the task was launched from a different project directory, the record
+    lives under that directory hash, not this one.`
+
+  const sessionStory = `If the id is a session id (ses_...):
+  - Use background_output with the background task id (bg_...) instead. The
+    pinned OpenCode SDK does not implement client.session.list, so session_read,
+    session_info, and session_search cannot resolve sessions in this build.`
+
+  const heading = `Task not found: ${taskId}
+
+No task with that id is known to this plugin.`
+
+  if (isSessionId(taskId)) {
+    return `${heading}
+
+${sessionStory}`
   }
 
-  return `Task not found: ${taskId}
+  if (isBackgroundTaskId(taskId)) {
+    return `${heading}
 
-background_output expects a background task ID such as \`bg_...\`, not a session ID.
-Use the \`background_task_id\` / \`Background Task ID\` from the task launch output or completion notification.
-To inspect this session directly, use \`session_read(session_id="${taskId}")\`, \`session_info\`, or \`session_search\`.`
+${storeStory}`
+  }
+
+  return `${heading}
+
+${storeStory}
+
+${sessionStory}`
 }
 
+async function backfillPersistedResult(
+  manager: BackgroundOutputManager,
+  client: BackgroundOutputClient,
+  task: BackgroundTask,
+  persisted: PersistedTaskRecord,
+): Promise<PersistedTaskRecord> {
+  if (persisted.result !== undefined || !manager.persistTaskRecord || !task.sessionId) {
+    return persisted
+  }
+
+  try {
+    const messagesResult = await withSdkCallTimeout(
+      client.session.messages({ path: { id: task.sessionId } }),
+      getBackgroundOutputFetchTimeoutMs(),
+    )
+    const errorMessage = getErrorMessage(messagesResult)
+    if (errorMessage) return persisted
+    const messages = extractMessages(messagesResult)
+    if (!Array.isArray(messages) || messages.length === 0) return persisted
+    const result = extractTaskResultText(messages)
+    if (!result) return persisted
+    const updated: PersistedTaskRecord = {
+      ...persisted,
+      result,
+      updatedAt: new Date().toISOString(),
+    }
+    manager.persistTaskRecord(updated)
+    return updated
+  } catch (error) {
+    log("[background_output] Failed to backfill the persisted result:", {
+      taskId: task.id,
+      error: String(error),
+    })
+    return persisted
+  }
+}
 export function createBackgroundOutput(manager: BackgroundOutputManager, client: BackgroundOutputClient): ToolDefinition {
   return tool({
     description: BACKGROUND_OUTPUT_DESCRIPTION,
@@ -175,21 +241,31 @@ export function createBackgroundOutput(manager: BackgroundOutputManager, client:
         const includeToolResults = isActive || (args.include_tool_results ?? false)
 
         if (fullSession) {
-          const output = await formatFullSession(resolvedTask, client, {
-            includeThinking,
-            messageLimit: args.message_limit,
-            sinceMessageId: args.since_message_id,
-            includeToolResults,
-            thinkingMaxChars: args.thinking_max_chars,
-            fromEnd: args.from_end,
-          })
+          const persistedTranscript = manager.getPersistedTaskTranscript?.(resolvedTask.id)
+          const output = await formatFullSession(
+            resolvedTask,
+            client,
+            {
+              includeThinking,
+              messageLimit: args.message_limit,
+              sinceMessageId: args.since_message_id,
+              includeToolResults,
+              thinkingMaxChars: args.thinking_max_chars,
+              fromEnd: args.from_end,
+            },
+            persistedTranscript,
+          )
 
           return didTimeoutWhileActive ? appendTimeoutNote(output, timeoutMs) : output
         }
 
         if (resolvedTask.status === "completed") {
           recordBackgroundOutputConsumption(ctx.sessionID, ctx.messageID, resolvedTask.sessionId)
-          return await formatTaskResult(resolvedTask, client)
+          const persistedRecord = manager.getPersistedTaskRecord?.(resolvedTask.id)
+          const currentRecord = persistedRecord
+            ? await backfillPersistedResult(manager, client, resolvedTask, persistedRecord)
+            : undefined
+          return await formatTaskResult(resolvedTask, client, currentRecord)
         }
 
         if (resolvedTask.status === "error" || resolvedTask.status === "cancelled" || resolvedTask.status === "interrupt") {

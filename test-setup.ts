@@ -47,6 +47,7 @@ setDefaultTimeout(process.platform === "win32" ? 30_000 : 20_000)
 const HERMETIC_HOME = mkdtempSync(join(tmpdir(), "omo-test-home-"))
 process.env.HOME = HERMETIC_HOME
 process.env.USERPROFILE = HERMETIC_HOME
+process.env.OMO_RESULT_PERSISTENCE_ROOT = join(HERMETIC_HOME, "delegations")
 delete process.env.OPENCODE_SERVER_PASSWORD
 
 let isGlobalMockCleanup = false

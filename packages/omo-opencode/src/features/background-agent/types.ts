@@ -57,6 +57,8 @@ export interface BackgroundTask {
   startedAt?: Date
   completedAt?: Date
   result?: string
+  /** True when the task was reconstructed from the persisted store instead of from memory */
+  persisted?: boolean
   error?: string
   progress?: TaskProgress
   parentModel?: { providerID: string; modelID: string }

@@ -132,6 +132,20 @@ When running inside cmux (`cmux omo-agent-toolkit`), the same pane integration i
 
 Customize agent models, prompts, and permissions in the `[opencode]` block of `~/.omo/omo.jsonc`.
 
+#### Durable background task results
+
+Every finished background task writes a record to the OpenCode user data dir,
+`~/.local/share/oh-my-opencode/delegations/<project hash>/`:
+
+- `<taskId>.json` holds the task metadata, the final result text, and the timestamps that govern retention.
+- `<taskId>.transcript.json` holds the capped child-session transcript; the oldest messages are dropped past `maxTranscriptBytes`.
+
+The record survives a plugin restart and outlives the child session, so `background_output(task_id="bg_...")` and `background_output(task_id="bg_...", full_session=true)` keep serving the result after that session is deleted, and the output says where it came from. Records are kept for 7 days by default; the child session is kept for 24 hours, so `full_session` normally reads the live session first.
+
+The completion notification counts every task the parent launched, not only the ones still in memory: `**Known tasks:** 3 (2 completed, 1 recoverable, 1 in progress)`, with `[recoverable]` or `[unrecoverable]` on each listed task.
+
+`background_task.resultPersistence` configures the store; set `enabled: false` to restore the previous behaviour, where a result lived only in the child session.
+
 ### Team Mode (experimental, OFF by default)
 
 Parallel multi-agent coordination modeled after Claude Code's experimental Agent Teams. Enable via `team_mode.enabled: true`. Exposes 12 `team_*` tools for spawning a lead + up to 8 members, a shared deferred-ack mailbox, a shared task list with file-locked claims, optional per-member git worktrees, and an optional tmux layout that streams each member's session output into dedicated panes.

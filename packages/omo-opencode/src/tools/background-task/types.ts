@@ -22,19 +22,15 @@ export interface BackgroundCancelArgs {
   all?: boolean
 }
 
-export type BackgroundOutputMessage = {
-  info?: { role?: string; time?: string | { created?: number }; agent?: string }
-  parts?: Array<{
-    type?: string
-    text?: string
-    content?: string | Array<{ type: string; text?: string }>
-    name?: string
-  }>
-}
+import type {
+  BackgroundOutputMessage,
+  BackgroundOutputMessagesResult,
+} from "../../shared/background-output-message"
 
-export type BackgroundOutputMessagesResult =
-  | { data?: BackgroundOutputMessage[]; error?: unknown }
-  | BackgroundOutputMessage[]
+export type {
+  BackgroundOutputMessage,
+  BackgroundOutputMessagesResult,
+} from "../../shared/background-output-message"
 
 export type BackgroundOutputClient = {
   session: {

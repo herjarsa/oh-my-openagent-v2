@@ -1,23 +1,17 @@
 import type { BackgroundManager } from "../../features/background-agent"
+import type {
+  PersistedTaskRecord,
+  PersistedTaskTranscript,
+} from "../../features/background-agent/persistence/record"
+import type {
+  BackgroundOutputMessage,
+  BackgroundOutputMessagesResult,
+} from "../../shared/background-output-message"
 
-export type BackgroundOutputMessage = {
-  id?: string
-  info?: { role?: string; time?: string | { created?: number }; agent?: string; error?: unknown }
-  parts?: Array<{
-    type?: string
-    text?: string
-    thinking?: string
-    content?: string | Array<{ type: string; text?: string }>
-    output?: string
-    name?: string
-    tool?: string
-    input?: unknown
-  }>
-}
-
-export type BackgroundOutputMessagesResult =
-  | { data?: BackgroundOutputMessage[]; error?: unknown }
-  | BackgroundOutputMessage[]
+export type {
+  BackgroundOutputMessage,
+  BackgroundOutputMessagesResult,
+} from "../../shared/background-output-message"
 
 export type BackgroundOutputClient = {
   session: {
@@ -31,4 +25,8 @@ export type BackgroundCancelClient = {
   }
 }
 
-export type BackgroundOutputManager = Pick<BackgroundManager, "getTask">
+export type BackgroundOutputManager = Pick<BackgroundManager, "getTask"> & {
+  getPersistedTaskRecord?: (taskId: string) => PersistedTaskRecord | undefined
+  getPersistedTaskTranscript?: (taskId: string) => PersistedTaskTranscript | undefined
+  persistTaskRecord?: (record: PersistedTaskRecord) => void
+}

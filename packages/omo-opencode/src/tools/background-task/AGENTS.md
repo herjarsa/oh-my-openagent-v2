@@ -50,4 +50,4 @@ tools/background-task/  ← LLM tool interface
 features/background-agent/  ← execution engine (BackgroundManager)
 ```
 
-`createBackgroundOutput` queries `BackgroundManager.getTask(task_id)` — it does not manage task state.
+`createBackgroundOutput` queries `BackgroundManager.getTask(task_id)` for live state, then falls back to the durable store: `getPersistedTaskRecord` feeds `task-result-format.ts`, `getPersistedTaskTranscript` feeds `full-session-format.ts`, and output that came from disk says so. It does not manage task state.

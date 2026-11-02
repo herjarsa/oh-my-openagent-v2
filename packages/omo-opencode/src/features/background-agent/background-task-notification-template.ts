@@ -8,6 +8,7 @@ export interface BackgroundTaskNotificationTask {
   status: BackgroundTaskStatus
   error?: string
   attempts?: BackgroundTaskAttempt[]
+  recoverable?: boolean
 }
 
 function formatAttemptModel(attempt: BackgroundTaskAttempt): string {
@@ -53,9 +54,14 @@ function formatTaskSummaryLine(task: BackgroundTaskNotificationTask): string {
   const statusSuffix = task.status === "completed"
     ? ""
     : ` [${task.status.toUpperCase()}]${task.error ? ` - ${task.error}` : ""}`
+  const recoverabilitySuffix = task.recoverable === undefined
+    ? ""
+    : task.recoverable
+      ? " [recoverable]"
+      : " [unrecoverable]"
   const timeline = formatAttemptTimeline(task)
 
-  return `${baseLine}${statusSuffix}${timeline ? `\n${timeline}` : ""}`
+  return `${baseLine}${statusSuffix}${recoverabilitySuffix}${timeline ? `\n${timeline}` : ""}`
 }
 
 export function buildBackgroundTaskNotificationText(input: {
@@ -65,8 +71,18 @@ export function buildBackgroundTaskNotificationText(input: {
   allComplete: boolean
   remainingCount: number
   completedTasks: BackgroundTaskNotificationTask[]
+  knownCount?: number
+  recoverableCount?: number
+  unrecoverableCount?: number
+  inProgressCount?: number
 }): string {
   const { task, duration, statusText, allComplete, remainingCount, completedTasks } = input
+
+  const knownCount = input.knownCount ?? completedTasks.length + remainingCount
+  const inProgressCount = input.inProgressCount ?? remainingCount
+  const completedCount = Math.max(0, knownCount - inProgressCount)
+  const recoverableCount = input.recoverableCount ?? completedTasks.filter((entry) => entry.recoverable === true).length
+  const knownTasksLine = `**Known tasks:** ${knownCount} (${completedCount} completed, ${recoverableCount} recoverable`
 
   const safeDescription = (t: BackgroundTaskNotificationTask): string => t.description || t.id
   const errorInfo = task.error ? `\n**Error:** ${task.error}` : ""
@@ -87,14 +103,14 @@ export function buildBackgroundTaskNotificationText(input: {
       ? `[ALL BACKGROUND TASKS FINISHED - ${failedTasks.length} FAILED]`
       : "[BACKGROUND TASK COMPLETED]\n[ALL BACKGROUND TASKS COMPLETE]"
 
-    let body = ""
+    let body = `${knownTasksLine})\n\n`
     if (succeededText) {
       body += `**Completed:**\n${succeededText}\n`
     }
     if (failedText) {
       body += `\n**Failed:**\n${failedText}\n`
     }
-    if (!body) {
+    if (!body.trim()) {
       body = `${formatTaskSummaryLine(task)}\n`
     }
 
@@ -117,6 +133,8 @@ ${header}
 **ID:** \`${task.id}\`
 **Description:** ${safeDescription(task)}
 **Duration:** ${duration}${errorInfo}
+
+${knownTasksLine}, ${inProgressCount} in progress)
 
 **${remainingCount} task${remainingCount === 1 ? "" : "s"} still in progress.** You WILL be notified when ALL complete.
 ${isFailure ? "**ACTION REQUIRED:** This task failed. Check the error and decide whether to retry, cancel remaining tasks, or continue." : "Do NOT poll - continue productive work."}

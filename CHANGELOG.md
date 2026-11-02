@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Goals no longer die silently: hierarchy, enforceable budget, and child inheritance.** Goals gain parent/root linkage with a v2 store (auto-migration), real `auto_start` (plus `default_mode.goal` as legacy alias), and `inherit_goal` propagation into sync and background child sessions with remaining-budget handoff. Idle iterations pause on budget, errors accumulate stalls and pause at `max_stalls` (default 3), and `session.error`/`session.compacted` reactivate active goals. Completing a goal requires evidence text (`require_completion_evidence`, default on), a `_index.json` tracks goal trees, and the parent continuation prompt includes a child-session status table.
 
+## [0.1.10] - 2026-10-23
+
+### Fixed
+
+Background task results are durable. Each finished task writes a record and a transcript to the OpenCode user data dir, `background_output` and `background_output(full_session=true)` read from it after the child session is deleted or the plugin restarts, the child session is kept for 24 hours instead of 10 minutes, and the completion notification lists every task the parent launched with a recoverable marker. `background_task.resultPersistence` configures the store; set `enabled: false` to restore the previous behaviour.
+
 ## [5.0.0-beta.90] - 2026-09-24
 
 ### Changed

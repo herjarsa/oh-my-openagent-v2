@@ -328,9 +328,10 @@ function stubNotifyParentSession(manager: BackgroundManager): void {
 }
 
 async function flushBackgroundNotifications(): Promise<void> {
-  for (let i = 0; i < 12; i++) {
+  for (let i = 0; i < 40; i++) {
     await Promise.resolve()
   }
+  await new Promise((resolve) => setImmediate(resolve))
 }
 
 async function waitUntil(predicate: () => boolean, timeoutMs: number): Promise<void> {

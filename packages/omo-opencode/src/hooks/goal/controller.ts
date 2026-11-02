@@ -100,6 +100,14 @@ export function createGoalController(options: GoalControllerOptions) {
       return goal
     },
 
+    listGoals(): Goal[] {
+      return listGoalsFromStore(baseDir)
+    },
+
+    listActiveGoals(): Goal[] {
+      return listGoalsFromStore(baseDir).filter((goal) => goal.status === "active")
+    },
+
     pauseGoal(sessionID: string): Goal | null {
       const goal = updateGoal(storeRef(sessionID), { status: "paused" })
       if (goal !== null) writeTuiMirror(sessionID, goal)

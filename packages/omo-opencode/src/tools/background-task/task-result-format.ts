@@ -1,5 +1,6 @@
 import type { BackgroundTask } from "../../features/background-agent"
 import { extractErrorMessage } from "../../features/background-agent/error-classifier"
+import type { PersistedTaskRecord } from "../../features/background-agent/persistence/record"
 import { consumeNewMessages } from "../../shared/session-cursor"
 import type { BackgroundOutputClient, BackgroundOutputMessagesResult } from "./clients"
 import { extractMessages, getErrorMessage } from "./session-messages"
@@ -10,8 +11,36 @@ function getTimeString(value: unknown): string {
   return typeof value === "string" ? value : ""
 }
 
-export async function formatTaskResult(task: BackgroundTask, client: BackgroundOutputClient): Promise<string> {
+function formatPersistedResult(task: BackgroundTask, persisted: PersistedTaskRecord): string {
+  const duration = formatDuration(task.startedAt ?? new Date(), task.completedAt)
+  const sessionLabel = task.sessionId ?? "(deleted)"
+  const errorLine = persisted.error ? `\nError: ${persisted.error}` : ""
+
+  return `Task Result
+
+Task ID: ${task.id}
+Description: ${task.description}
+Duration: ${duration}
+Session ID: ${sessionLabel}
+
+Status: ${persisted.status}${errorLine}
+
+---
+
+${persisted.result ?? "(No text output)"}
+
+Source: persisted result (the child session is gone)`
+}
+
+export async function formatTaskResult(
+  task: BackgroundTask,
+  client: BackgroundOutputClient,
+  persisted?: PersistedTaskRecord,
+): Promise<string> {
   if (!task.sessionId) {
+    if (persisted?.result) {
+      return formatPersistedResult(task, persisted)
+    }
     return `Error: Task has no sessionID`
   }
 
@@ -22,16 +51,25 @@ export async function formatTaskResult(task: BackgroundTask, client: BackgroundO
       getBackgroundOutputFetchTimeoutMs(),
     )
   } catch (error) {
+    if (persisted?.result) {
+      return formatPersistedResult(task, persisted)
+    }
     return `Error fetching messages: ${error instanceof Error ? error.message : String(error)}`
   }
 
   const errorMessage = getErrorMessage(messagesResult)
   if (errorMessage) {
+    if (persisted?.result) {
+      return formatPersistedResult(task, persisted)
+    }
     return `Error fetching messages: ${errorMessage}`
   }
 
   const messages = extractMessages(messagesResult)
   if (!Array.isArray(messages) || messages.length === 0) {
+    if (persisted?.result) {
+      return formatPersistedResult(task, persisted)
+    }
     return `Task Result
 
 Task ID: ${task.id}
@@ -46,6 +84,9 @@ Session ID: ${task.sessionId}
 
   const relevantMessages = messages.filter((m) => m.info?.role === "assistant" || m.info?.role === "tool")
   if (relevantMessages.length === 0) {
+    if (persisted?.result) {
+      return formatPersistedResult(task, persisted)
+    }
     return `Task Result
 
 Task ID: ${task.id}
