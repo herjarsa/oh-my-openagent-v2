@@ -42,6 +42,7 @@ export function createSkillTool(options: SkillLoadOptions): ToolDefinition {
       disabledSkills: options?.disabledSkills,
       browserProvider: options?.browserProvider,
       teamModeEnabled: options?.teamModeEnabled,
+      eccProfiles: options?.eccProfiles,
       directory: options.directory,
     })) ?? []
     return options.skills ? [...options.skills] : discovered

@@ -5,6 +5,7 @@ import { log } from "../../shared/logger"
 import { parseToolsConfig } from "../../shared/parse-tools-config"
 import { parseJsonAgentFile } from "./json-agent-loader"
 import { mapClaudeModelToOpenCode } from "./claude-model-mapper"
+import { mapClaudeTools } from "./tool-map"
 import type { AgentScope, AgentFrontmatter, ClaudeCodeAgentConfig, LoadedAgent } from "./types"
 
 export function parseMarkdownAgentFile(
@@ -39,7 +40,8 @@ export function parseMarkdownAgentFile(
       ...(modelString ? { model: modelString } : {}),
     }
 
-    const toolsConfig = parseToolsConfig(data.tools)
+    const mappedTools = data.tools ? mapClaudeTools(data.tools as string | string[]) : undefined
+    const toolsConfig = parseToolsConfig(mappedTools)
     if (toolsConfig) {
       config.tools = toolsConfig
     }

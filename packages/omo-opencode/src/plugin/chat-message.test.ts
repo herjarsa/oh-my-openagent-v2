@@ -491,7 +491,7 @@ describe("createChatMessageHandler - goal command handling and stop continuation
     const handler = createChatMessageHandler(args)
     const output: ChatMessageHandlerOutput = {
       message: {},
-      parts: [{ type: "text", text: "Ship it" }],
+      parts: [{ type: "text", text: "/goal Ship it" }],
     }
 
     // when
@@ -639,13 +639,7 @@ describe("createChatMessageHandler - goal command handling and stop continuation
       "test-session",
       "test-session",
     ])
-    expect(goalMock.setGoalCalls).toEqual([
-      {
-        sessionID: "test-session",
-        objective: "<session-context>context</session-context>\nYou are starting an Atlas work session.",
-      },
-      { sessionID: "test-session", objective: "Ship it" },
-    ])
+    expect(goalMock.setGoalCalls).toHaveLength(0)
     expect(goalMock.pauseGoalCalls).toEqual(["test-session"])
     expect(goalMock.resumeGoalCalls).toEqual(["test-session"])
     expect(goalMock.clearGoalCalls).toEqual(["test-session"])
@@ -698,7 +692,7 @@ describe("createChatMessageHandler - /goal raw slash fallback", () => {
     const input = createMockInput("sisyphus")
     const output: ChatMessageHandlerOutput = {
       message: {},
-      parts: [{ type: "text", text: "Ship the dashboard" }],
+      parts: [{ type: "text", text: "/goal Ship the dashboard" }],
     }
 
     // when
@@ -775,7 +769,7 @@ describe("createChatMessageHandler - /goal raw slash fallback", () => {
     const goalMock = createGoalHookMock()
     const args = createMockHandlerArgs({
       shouldOverride: true,
-      pluginConfig: { default_mode: { goal: true } },
+      pluginConfig: { default_mode: { goal: true }, goal: { auto_start: true } },
     })
     args.hooks.goal = goalMock.hook
     const handler = createChatMessageHandler(args)
@@ -792,6 +786,49 @@ describe("createChatMessageHandler - /goal raw slash fallback", () => {
     expect(goalMock.setGoalCalls).toEqual([
       { sessionID: "test-session", objective: "Ship the dashboard" },
     ])
+  })
+
+  test("default goal does not auto-start on a later message", async () => {
+    // given
+    const goalMock = createGoalHookMock()
+    const args = createMockHandlerArgs({
+      pluginConfig: { default_mode: { goal: true }, goal: { auto_start: true } },
+    })
+    args.hooks.goal = goalMock.hook
+    const handler = createChatMessageHandler(args)
+    const input = createMockInput("sisyphus")
+    const output: ChatMessageHandlerOutput = {
+      message: {},
+      parts: [{ type: "text", text: "Ship the dashboard" }],
+    }
+
+    // when
+    await handler(input, output)
+
+    // then
+    expect(goalMock.setGoalCalls).toHaveLength(0)
+  })
+
+  test("default goal does not auto-start when goal.auto_start is disabled", async () => {
+    // given
+    const goalMock = createGoalHookMock()
+    const args = createMockHandlerArgs({
+      shouldOverride: true,
+      pluginConfig: { default_mode: { goal: true }, goal: { auto_start: false } },
+    })
+    args.hooks.goal = goalMock.hook
+    const handler = createChatMessageHandler(args)
+    const input = createMockInput("sisyphus")
+    const output: ChatMessageHandlerOutput = {
+      message: {},
+      parts: [{ type: "text", text: "Ship the dashboard" }],
+    }
+
+    // when
+    await handler(input, output)
+
+    // then
+    expect(goalMock.setGoalCalls).toHaveLength(0)
   })
 
 })

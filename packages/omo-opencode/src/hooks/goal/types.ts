@@ -16,6 +16,12 @@ export const GoalSchema = z.object({
   updatedAt: z.number().int().nonnegative(),
   lastStartedAt: z.number().int().nonnegative().optional(),
   completedAt: z.number().int().nonnegative().optional(),
+  /** How many times startup recovery already restarted this goal. */
+  resumeCount: z.number().int().nonnegative().optional(),
+  /** Epoch seconds of the last usage accounting pass. */
+  lastAccountedAt: z.number().int().nonnegative().optional(),
+  /** Cumulative session token total observed at the last accounting pass. */
+  lastAccountedTokens: z.number().int().nonnegative().optional(),
 })
 
 export type Goal = z.infer<typeof GoalSchema>
@@ -45,6 +51,10 @@ export type GoalUpdate = {
   readonly status?: GoalStatus
   readonly tokensUsed?: number
   readonly timeUsedSeconds?: number
+  readonly lastStartedAt?: number
+  readonly resumeCount?: number
+  readonly lastAccountedAt?: number
+  readonly lastAccountedTokens?: number
 }
 
 export const GoalToolSnapshotSchema = z.object({

@@ -1,4 +1,4 @@
-import { existsSync, readdirSync, readFileSync, statSync } from "fs"
+﻿import { existsSync, readdirSync, readFileSync, statSync } from "fs"
 import { basename, join } from "path"
 import {
   parseFrontmatter,
@@ -12,6 +12,7 @@ import type { CommandFrontmatter } from "../../features/claude-code-command-load
 import { isMarkdownFile } from "../../shared/file-utils"
 import { getClaudeConfigDir } from "../../shared/claude-config-dir"
 import { log } from "../../shared/logger"
+import { eccCommandsRootPath } from "@oh-my-opencode/skills-loader-core"
 import { loadBuiltinCommands } from "../../features/builtin-commands/commands"
 import type { CommandInfo, CommandMetadata, CommandScope } from "./types"
 
@@ -139,6 +140,8 @@ export function discoverCommandsSync(
   const opencodeProjectCommands = opencodeProjectDirs.flatMap((commandsDir) =>
     discoverCommandsFromDir(commandsDir, "opencode-project"),
   )
+  const eccCommandsRoot = eccCommandsRootPath()
+  const eccCommands = eccCommandsRoot ? discoverCommandsFromDir(eccCommandsRoot, "plugin") : []
   const pluginCommands = discoverPluginCommands(options)
 
   const builtinCommandsMap = loadBuiltinCommands()
@@ -162,6 +165,7 @@ export function discoverCommandsSync(
     ...opencodeProjectCommands,
     ...opencodeGlobalCommands,
     ...builtinCommands,
+    ...eccCommands,
     ...pluginCommands,
   ])
 }

@@ -65,7 +65,7 @@ describe("validatePluginConfig pipeline", () => {
     }, (project) => {
       const result = validatePluginConfig(project)
 
-      expect(result.config.goal).toMatchObject({ enabled: true, auto_start: false, default_max_iterations: 50 })
+      expect(result.config.goal).toMatchObject({ enabled: true, auto_start: false, default_max_iterations: 50, resume_on_start: true, resume_window_minutes: 30 })
     })
   })
 

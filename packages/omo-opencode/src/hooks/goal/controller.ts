@@ -1,6 +1,6 @@
 import { mkdirSync, writeFileSync } from "node:fs"
 import { dirname, join } from "node:path"
-import { clearGoal, createGoal, readGoal, updateGoal } from "./store"
+import { clearGoal, createGoal, listGoals as listGoalsFromStore, readGoal, updateGoal } from "./store"
 import type { Goal, GoalStatus, TokenUsageSnapshot } from "./types"
 import { validateObjective } from "./validation"
 
@@ -61,6 +61,14 @@ export function createGoalController(options: GoalControllerOptions) {
       return readGoal(storeRef(sessionID))
     },
 
+    listGoals(): Goal[] {
+      return listGoalsFromStore(baseDir)
+    },
+
+    listActiveGoals(): Goal[] {
+      return listGoalsFromStore(baseDir).filter((goal) => goal.status === "active")
+    },
+
     pauseGoal(sessionID: string): Goal | null {
       const goal = updateGoal(storeRef(sessionID), { status: "paused" })
       if (goal !== null) writeTuiMirror(sessionID, goal)
@@ -87,7 +95,30 @@ export function createGoalController(options: GoalControllerOptions) {
       return goal
     },
 
-    accountUsage(sessionID: string, usage: TokenUsageSnapshot, elapsedSeconds: number): Goal | null {
+    /**
+     * Claim a startup resume for a goal: bump the resume counter and refresh the
+     * start timestamp. The caller dispatches first and marks only on success.
+     */
+    markResumed(sessionID: string): Goal | null {
+      const ref = storeRef(sessionID)
+      const goal = readGoal(ref)
+      if (goal === null) {
+        return null
+      }
+      const updated = updateGoal(ref, {
+        resumeCount: (goal.resumeCount ?? 0) + 1,
+        lastStartedAt: nowSeconds(),
+      })
+      if (updated !== null) writeTuiMirror(sessionID, updated)
+      return updated
+    },
+
+    accountUsage(
+      sessionID: string,
+      usage: TokenUsageSnapshot,
+      elapsedSeconds: number,
+      snapshot?: { readonly sessionTokenTotal?: number; readonly accountedAt?: number },
+    ): Goal | null {
       const ref = storeRef(sessionID)
       const goal = readGoal(ref)
       if (goal === null || goal.status !== "active") {
@@ -97,6 +128,10 @@ export function createGoalController(options: GoalControllerOptions) {
       const updated = updateGoal(ref, {
         tokensUsed: goal.tokensUsed + tokenDelta,
         timeUsedSeconds: goal.timeUsedSeconds + Math.max(0, elapsedSeconds),
+        lastAccountedAt: snapshot?.accountedAt ?? nowSeconds(),
+        ...(snapshot?.sessionTokenTotal !== undefined
+          ? { lastAccountedTokens: snapshot.sessionTokenTotal }
+          : {}),
       })
       if (updated !== null) writeTuiMirror(sessionID, updated)
       return updated
@@ -110,4 +145,8 @@ export function createGoalController(options: GoalControllerOptions) {
 
 export function goalStatusForTui(status: GoalStatus): "in_progress" | "complete" {
   return status === "complete" ? "complete" : "in_progress"
+}
+
+function nowSeconds(): number {
+  return Math.trunc(Date.now() / 1000)
 }

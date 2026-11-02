@@ -536,4 +536,28 @@ describe("createPluginModule()", () => {
       expect(mockCreatePluginInterface).toHaveBeenCalled()
     })
   })
+  describe("#given the goal hook exposes startup recovery", () => {
+    it("#then plugin startup fires recovery once without blocking", async () => {
+      // given
+      const recoverActiveGoals = mock(async () => ({
+        scanned: 1,
+        resumed: [],
+        pruned: [],
+        skipped: 1,
+      }))
+      const pluginModule = createTestPluginModule({
+        createHooks: mock(() => ({ goal: { recoverActiveGoals } })) as never,
+      })
+      mockLoadPluginConfig.mockReturnValue({})
+
+      // when
+      await pluginModule.server({
+        directory: "/tmp/project",
+        client: {},
+      } as Parameters<typeof pluginModule.server>[0])
+
+      // then
+      expect(recoverActiveGoals).toHaveBeenCalledTimes(1)
+    })
+  })
 })

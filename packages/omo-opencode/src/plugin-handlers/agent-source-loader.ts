@@ -1,3 +1,6 @@
+import { existsSync, readdirSync } from "node:fs";
+import { join } from "node:path";
+import { eccAgentsRootPath } from "@oh-my-opencode/skills-loader-core";
 import {
   loadAgentDefinitions,
   loadOpencodeGlobalAgents,
@@ -61,14 +64,28 @@ export function loadAgentSources(params: ApplyAgentConfigParams): AgentSources {
   const opencodeGlobalAgents = loadOpencodeGlobalAgents();
   const opencodeProjectAgents = loadOpencodeProjectAgents(params.ctx.directory);
   const pluginAgents = migratePluginAgents(params.pluginComponents.agents);
-  const agentDefinitionAgents = params.pluginConfig.agent_definitions
+  const opencodeConfigAgents = readOpencodeConfigAgents(params.ctx.directory);
+
+  // Load vendored ECC agents (off-switch via disabled_agents filter by name)
+  let eccAgents: AgentSourceMap = {}
+  const eccDir = eccAgentsRootPath()
+  if (eccDir && existsSync(eccDir)) {
+    const eccPaths = readdirSync(eccDir)
+      .filter((f) => f.toLowerCase().endsWith(".md"))
+      .map((f) => join(eccDir, f))
+    if (eccPaths.length > 0) {
+      eccAgents = loadAgentDefinitions(eccPaths, "opencode", anthropicProvider)
+    }
+  }
+
+  const userDefinitionAgents = params.pluginConfig.agent_definitions
     ? loadAgentDefinitions(
         params.pluginConfig.agent_definitions,
         "definition-file",
         anthropicProvider,
       )
     : {};
-  const opencodeConfigAgents = readOpencodeConfigAgents(params.ctx.directory);
+  const agentDefinitionAgents = { ...eccAgents, ...userDefinitionAgents };
   const configAgent = params.config.agent as AgentConfigRecord | undefined;
   const sourceCounts = {
     user: Object.keys(userAgents).length,
@@ -76,6 +93,7 @@ export function loadAgentSources(params: ApplyAgentConfigParams): AgentSources {
     opencodeGlobal: Object.keys(opencodeGlobalAgents).length,
     opencodeProject: Object.keys(opencodeProjectAgents).length,
     plugin: Object.keys(pluginAgents).length,
+    ecc: Object.keys(eccAgents).length,
     agentDefinitions: Object.keys(agentDefinitionAgents).length,
     opencodeConfig: Object.keys(opencodeConfigAgents).length,
     config: Object.keys(configAgent ?? {}).length,

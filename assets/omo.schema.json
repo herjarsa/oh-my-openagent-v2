@@ -2370,6 +2370,12 @@
             "type": "string"
           }
         },
+        "ecc_profiles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "disabled_hooks": {
           "type": "array",
           "items": {
@@ -11466,12 +11472,24 @@
               "type": "number",
               "minimum": 1,
               "maximum": 1000
+            },
+            "resume_on_start": {
+              "default": true,
+              "type": "boolean"
+            },
+            "resume_window_minutes": {
+              "default": 30,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10080
             }
           },
           "required": [
             "enabled",
             "auto_start",
-            "default_max_iterations"
+            "default_max_iterations",
+            "resume_on_start",
+            "resume_window_minutes"
           ],
           "additionalProperties": false
         },
@@ -20332,6 +20350,12 @@
                 }
               },
               "disabled_skills": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "ecc_profiles": {
                 "type": "array",
                 "items": {
                   "type": "string"
@@ -29433,12 +29457,24 @@
                     "type": "number",
                     "minimum": 1,
                     "maximum": 1000
+                  },
+                  "resume_on_start": {
+                    "default": true,
+                    "type": "boolean"
+                  },
+                  "resume_window_minutes": {
+                    "default": 30,
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10080
                   }
                 },
                 "required": [
                   "enabled",
                   "auto_start",
-                  "default_max_iterations"
+                  "default_max_iterations",
+                  "resume_on_start",
+                  "resume_window_minutes"
                 ],
                 "additionalProperties": false
               },
