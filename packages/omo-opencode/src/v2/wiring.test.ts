@@ -25,9 +25,9 @@ describe("v2 wiring", () => {
   test("given staged project config and active goal #when setup runs #then it dispatches continuation, registers tools/command, and auto-starts via prompt hook", async () => {
     // given: a staged project with goal enabled + auto_start
     const dir = freshDir()
-    mkdirSync(join(dir, ".opencode"), { recursive: true })
+    mkdirSync(join(dir, ".omo"), { recursive: true })
     writeFileSync(
-      join(dir, ".opencode", "oh-my-openagent.jsonc"),
+      join(dir, ".omo", "omo.jsonc"),
       `{"goal":{"enabled":true,"auto_start":true}}`,
       "utf-8",
     )

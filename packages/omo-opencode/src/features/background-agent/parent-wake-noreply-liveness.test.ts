@@ -1,5 +1,7 @@
 import { afterEach, describe, expect, test } from "bun:test"
+import { mkdtempSync, rmSync } from "node:fs"
 import { tmpdir } from "node:os"
+import { join } from "node:path"
 import type { PluginInput } from "@opencode-ai/plugin"
 import { BackgroundManager } from "./manager"
 import { ParentWakeNotifier } from "./parent-wake-notifier"
@@ -551,11 +553,19 @@ describe("parent wake admitted-consumption drop (duplicate ALL-COMPLETE regressi
 
 describe("BackgroundManager parent wake recent-activity admission liveness", () => {
   let managerUnderTest: BackgroundManager | undefined
+  const createdDirs: string[] = []
 
   afterEach(() => {
     managerUnderTest?.shutdown()
     releaseAllPromptAsyncReservationsForTesting()
     managerUnderTest = undefined
+    // Isolated per-test directories (see createManager): a shared tmpdir lets
+    // records persisted by other files leak into this manager's reconcile and
+    // corrupt wake classification.
+    while (createdDirs.length > 0) {
+      const dir = createdDirs.pop() as string
+      rmSync(dir, { recursive: true, force: true })
+    }
   })
 
   function createManager(sessionStatuses: Record<string, { type: string }>): {
@@ -575,11 +585,17 @@ describe("BackgroundManager parent wake recent-activity admission liveness", () 
         abort: async () => ({}),
       },
     }
+    // Fresh directory per manager: reconcilePersistedTasks() loads any record
+    // persisted under directory into the ledger, so sharing tmpdir() with
+    // other test files leaks foreign tasks (e.g. task-stale) into the wake
+    // summary and flips isFailureParentWake.
+    const dir = mkdtempSync(join(tmpdir(), "parent-wake-liveness-"))
+    createdDirs.push(dir)
     const ctx: PluginInput = {
       client: client as PluginInput["client"],
       project: {} as PluginInput["project"],
-      directory: tmpdir(),
-      worktree: tmpdir(),
+      directory: dir,
+      worktree: dir,
       serverUrl: new URL("http://localhost"),
       $: {} as PluginInput["$"],
     }
