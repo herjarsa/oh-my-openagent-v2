@@ -1,8 +1,10 @@
 import { afterEach, describe, expect, test } from "bun:test"
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs"
-import { tmpdir } from "node:os"
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs"
+import { homedir, tmpdir } from "node:os"
 import { join } from "node:path"
+import { loadOmoConfig } from "@oh-my-opencode/omo-config-core"
 import type { Context } from "@opencode/plugin/promise/plugin"
+import { validatePluginConfig } from "../config/validate"
 import { createGoalController } from "../hooks/goal/controller"
 import { definition } from "./definition"
 
@@ -83,6 +85,37 @@ describe("v2 wiring", () => {
           },
         },
       }
+
+      // Diagnostic 0.5.4 (CI-only wiring failure): log every layer boundary
+      // of the config chain so the failing CI run shows WHERE the staged
+      // project layer is lost. Read-only: no assertion changes.
+      const stagedPath = join(dir, ".omo", "omo.jsonc")
+      const loaded = loadOmoConfig({ cwd: dir, env: process.env })
+      const validated = validatePluginConfig(dir, process.env)
+      // eslint-disable-next-line no-console
+      console.log(`[goal-bridge-diag] ${JSON.stringify({
+        stagedExists: existsSync(stagedPath),
+        stagedContent: existsSync(stagedPath) ? readFileSync(stagedPath, "utf-8") : null,
+        HOME: process.env.HOME ?? null,
+        USERPROFILE: process.env.USERPROFILE ?? null,
+        OMO_PROFILE: process.env.OMO_PROFILE ?? null,
+        OPENCODE_CONFIG_DIR: process.env.OPENCODE_CONFIG_DIR ?? null,
+        cwd: process.cwd(),
+        osHomedir: homedir(),
+        sources: loaded.sources,
+        layers: loaded.layers.map((layer) => ({
+          exists: layer.source.exists,
+          keys: Object.keys(layer.config),
+          loaded: layer.source.loaded,
+          path: layer.source.path,
+          scope: layer.source.scope,
+        })),
+        loaderDiagnostics: loaded.diagnostics,
+        loaderProfile: loaded.profile ?? null,
+        validatedGoal: validated.config.goal ?? null,
+        validatedMessages: validated.messages,
+        validatedPath: validated.path,
+      })}`)
 
       // when: the real setup() wires everything against the fakes
       const cleanup = await definition.setup(fake as unknown as Context)

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.4] - 2026-11-03
+
+Diagnostic release for the CI-only v2 wiring failure: the wiring test now logs a `[goal-bridge-diag]` line with every config-chain layer boundary (staged file presence/content, HOME/USERPROFILE/cwd/osHomedir, loader sources and layers with keys, loader diagnostics and profile, validated `goal` value plus validation messages). No assertion changes; the 0.5.3 HOME isolation proved insufficient and the local evidence already shows the staged top-level `goal` key is stripped as unknown-keys while an ambient `[opencode].goal` layer decides the local result. The CI log line will confirm the same signature on the runner.
+
 ## [0.5.3] - 2026-11-02
 
 Makes the v2 wiring test hermetic: it now runs setup with HOME/USERPROFILE pointed at an empty dir so the staged project config is the only layer the loader can see, immune to ambient user-layer state or leaked env from earlier tests in the CI shard.
