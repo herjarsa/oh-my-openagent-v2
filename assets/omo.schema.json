@@ -824,6 +824,60 @@
       ],
       "additionalProperties": false
     },
+    "goal": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "default": false,
+          "type": "boolean"
+        },
+        "auto_start": {
+          "default": true,
+          "type": "boolean"
+        },
+        "default_max_iterations": {
+          "default": 100,
+          "type": "number",
+          "minimum": 1,
+          "maximum": 1000
+        },
+        "resume_on_start": {
+          "default": true,
+          "type": "boolean"
+        },
+        "resume_window_minutes": {
+          "default": 30,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10080
+        },
+        "require_completion_evidence": {
+          "default": true,
+          "type": "boolean"
+        },
+        "inherit_to_children": {
+          "default": true,
+          "type": "boolean"
+        },
+        "max_stalls": {
+          "default": 3,
+          "type": "number",
+          "minimum": 1,
+          "maximum": 10
+        }
+      },
+      "required": [
+        "enabled",
+        "auto_start",
+        "default_max_iterations",
+        "resume_on_start",
+        "resume_window_minutes",
+        "require_completion_evidence",
+        "inherit_to_children",
+        "max_stalls"
+      ],
+      "additionalProperties": false
+    },
     "task": {
       "type": "object",
       "properties": {
@@ -13092,6 +13146,42 @@
           },
           "additionalProperties": false
         },
+        "goal": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "auto_start": {
+              "type": "boolean"
+            },
+            "default_max_iterations": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "resume_on_start": {
+              "type": "boolean"
+            },
+            "resume_window_minutes": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10080
+            },
+            "require_completion_evidence": {
+              "type": "boolean"
+            },
+            "inherit_to_children": {
+              "type": "boolean"
+            },
+            "max_stalls": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 10
+            }
+          },
+          "additionalProperties": false
+        },
         "task": {
           "type": "object",
           "properties": {
@@ -15107,6 +15197,42 @@
           },
           "additionalProperties": false
         },
+        "goal": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "auto_start": {
+              "type": "boolean"
+            },
+            "default_max_iterations": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "resume_on_start": {
+              "type": "boolean"
+            },
+            "resume_window_minutes": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10080
+            },
+            "require_completion_evidence": {
+              "type": "boolean"
+            },
+            "inherit_to_children": {
+              "type": "boolean"
+            },
+            "max_stalls": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 10
+            }
+          },
+          "additionalProperties": false
+        },
         "task": {
           "type": "object",
           "properties": {
@@ -17118,6 +17244,42 @@
             },
             "include_co_authored_by": {
               "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "goal": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "auto_start": {
+              "type": "boolean"
+            },
+            "default_max_iterations": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "resume_on_start": {
+              "type": "boolean"
+            },
+            "resume_window_minutes": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10080
+            },
+            "require_completion_evidence": {
+              "type": "boolean"
+            },
+            "inherit_to_children": {
+              "type": "boolean"
+            },
+            "max_stalls": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 10
             }
           },
           "additionalProperties": false
@@ -19139,6 +19301,42 @@
               },
               "include_co_authored_by": {
                 "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          },
+          "goal": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "auto_start": {
+                "type": "boolean"
+              },
+              "default_max_iterations": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 1000
+              },
+              "resume_on_start": {
+                "type": "boolean"
+              },
+              "resume_window_minutes": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 10080
+              },
+              "require_completion_evidence": {
+                "type": "boolean"
+              },
+              "inherit_to_children": {
+                "type": "boolean"
+              },
+              "max_stalls": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 10
               }
             },
             "additionalProperties": false
@@ -31122,6 +31320,42 @@
                 },
                 "additionalProperties": false
               },
+              "goal": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "auto_start": {
+                    "type": "boolean"
+                  },
+                  "default_max_iterations": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 1000
+                  },
+                  "resume_on_start": {
+                    "type": "boolean"
+                  },
+                  "resume_window_minutes": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10080
+                  },
+                  "require_completion_evidence": {
+                    "type": "boolean"
+                  },
+                  "inherit_to_children": {
+                    "type": "boolean"
+                  },
+                  "max_stalls": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 10
+                  }
+                },
+                "additionalProperties": false
+              },
               "task": {
                 "type": "object",
                 "properties": {
@@ -33137,6 +33371,42 @@
                 },
                 "additionalProperties": false
               },
+              "goal": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "auto_start": {
+                    "type": "boolean"
+                  },
+                  "default_max_iterations": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 1000
+                  },
+                  "resume_on_start": {
+                    "type": "boolean"
+                  },
+                  "resume_window_minutes": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10080
+                  },
+                  "require_completion_evidence": {
+                    "type": "boolean"
+                  },
+                  "inherit_to_children": {
+                    "type": "boolean"
+                  },
+                  "max_stalls": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 10
+                  }
+                },
+                "additionalProperties": false
+              },
               "task": {
                 "type": "object",
                 "properties": {
@@ -35148,6 +35418,42 @@
                   },
                   "include_co_authored_by": {
                     "type": "boolean"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "goal": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "auto_start": {
+                    "type": "boolean"
+                  },
+                  "default_max_iterations": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 1000
+                  },
+                  "resume_on_start": {
+                    "type": "boolean"
+                  },
+                  "resume_window_minutes": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10080
+                  },
+                  "require_completion_evidence": {
+                    "type": "boolean"
+                  },
+                  "inherit_to_children": {
+                    "type": "boolean"
+                  },
+                  "max_stalls": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 10
                   }
                 },
                 "additionalProperties": false

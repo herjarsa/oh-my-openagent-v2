@@ -287,3 +287,24 @@ test("#given cwd outside home #when loading #then ancestor project configs are r
   expect(result.config.task?.default_concurrency).toBe(7)
   expect(result.sources.some((source) => source.path.endsWith(join("elsewhere", ".omo", "omo.jsonc")))).toBe(true)
 })
+
+test("#given project config with top-level goal #when loading #then goal layer survives without unknown-keys", () => {
+  // given
+  const fixture = makeFixture()
+  writeJsonc(
+    join(fixture.projectDir, ".omo", "omo.jsonc"),
+    `{"goal":{"enabled":true,"auto_start":true}}`,
+  )
+
+  // when
+  const result = loadOmoConfig({
+    cwd: fixture.cwd,
+    env: { HOME: fixture.homeDir },
+    platform: "linux",
+  })
+
+  // then
+  expect(result.diagnostics).toEqual([])
+  expect(result.config.goal?.enabled).toBe(true)
+  expect(result.config.goal?.auto_start).toBe(true)
+})

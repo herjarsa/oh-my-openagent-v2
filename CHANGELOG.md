@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.5] - 2026-11-03
+
+Root-cause fix for the CI-only v2 wiring failure: the loader's `OmoConfigSchema` (plus `OmoConfigLayerSchema`, profile and typed-harness variants) now accepts a top-level `goal` section via new `OmoGoalSettingsSchema` / `OmoGoalSettingsLayerSchema` in `omo-config-core`, mirroring the plugin-side `GoalConfigSchema` bounds. A top-level `{"goal":{"enabled":true}}` project layer is no longer stripped as `unknown-keys`, so `validatePluginConfig` resolves `goal.enabled=true` with zero diagnostics and the bridge dispatches. Regenerated `assets/omo.schema.json` publishes the section. The wiring test keeps its one-cycle `[goal-bridge-diag]` layer log as CI evidence.
+
 ## [0.5.4] - 2026-11-03
 
 Diagnostic release for the CI-only v2 wiring failure: the wiring test now logs a `[goal-bridge-diag]` line with every config-chain layer boundary (staged file presence/content, HOME/USERPROFILE/cwd/osHomedir, loader sources and layers with keys, loader diagnostics and profile, validated `goal` value plus validation messages). No assertion changes; the 0.5.3 HOME isolation proved insufficient and the local evidence already shows the staged top-level `goal` key is stripped as unknown-keys while an ambient `[opencode].goal` layer decides the local result. The CI log line will confirm the same signature on the runner.
