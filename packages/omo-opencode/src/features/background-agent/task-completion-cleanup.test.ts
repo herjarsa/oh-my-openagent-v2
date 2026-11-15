@@ -1,4 +1,6 @@
+import { mkdtempSync, rmSync } from "node:fs"
 import { tmpdir } from "node:os"
+import { join } from "node:path"
 import { afterEach, describe, expect, test } from "bun:test"
 import type { PluginInput } from "@opencode-ai/plugin"
 import { TASK_CLEANUP_DELAY_MS } from "./constants"
@@ -45,10 +47,16 @@ type PendingParentWakeForTest = {
 let managerUnderTest: BackgroundManager | undefined
 let fakeTimers: FakeTimers | undefined
 
+const createdRoots: string[] = []
+
 afterEach(() => {
   managerUnderTest?.shutdown()
   fakeTimers?.restore()
   releaseAllPromptAsyncReservationsForTesting()
+  while (createdRoots.length > 0) {
+    const root = createdRoots.pop()
+    if (root) rmSync(root, { recursive: true, force: true })
+  }
   managerUnderTest = undefined
   fakeTimers = undefined
 })
@@ -113,8 +121,19 @@ function createManager(
     $: {} as PluginInput["$"],
   }
 
+  // Each manager gets a private on-disk task store. The durable ledger
+  // (persist on terminal transition + reconcile on boot) otherwise shares
+  // one store across the whole suite run, so earlier suites' records leak
+  // into this spec's notifications via the reused parent-1 key.
+  const persistenceRoot = mkdtempSync(join(tmpdir(), "omo-bg-cleanup-"))
+  createdRoots.push(persistenceRoot)
+
   const manager = new BackgroundManager(
-    { pluginContext: ctx, config: undefined, enableParentSessionNotifications }
+    {
+      pluginContext: ctx,
+      config: { resultPersistence: { root: persistenceRoot } },
+      enableParentSessionNotifications,
+    }
   )
 
   return { manager, promptAsyncCalls }
